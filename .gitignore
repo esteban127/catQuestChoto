@@ -1,9 +1,9 @@
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/Assets/AssetStoreTools*
+/catQuestChoto/[Ll]ibrary/
+/catQuestChoto/[Tt]emp/
+/catQuestChoto/[Oo]bj/
+/catQuestChoto/[Bb]uild/
+/catQuestChoto/[Bb]uilds/
+/catQuestChoto/Assets/AssetStoreTools*
 
 # Visual Studio 2015 cache directory
 /.vs/
@@ -32,3 +32,4 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+catQuestChoto/.vs/catQuestChoto/v15/Server/sqlite3/db.lock
