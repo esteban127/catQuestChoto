@@ -11,9 +11,7 @@ public class RigidBodyMovement : MonoBehaviour {
     [SerializeField]
     private float speed = 6.0f;
     [SerializeField]
-    private float jumpSpeed = 8.0f;
-    [SerializeField]
-    private float gravity = 20.0f;
+    private float jumpSpeed = 8.0f;  
     [SerializeField]
     private int maxJumpCap = 1;
 
