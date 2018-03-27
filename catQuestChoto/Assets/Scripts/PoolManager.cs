@@ -27,13 +27,14 @@ public class PoolManager : MonoBehaviour {
         myArray = new GameObject[poolSize];
         for (int i = 0; i < myArray.Length; i++)
         {
-            Instantiate(objectToPool);
-            myArray[i] = (objectToPool);
-            PreInitializeObject(objectToPool, deletedPos);
-        }        
-	}
-        
-   private void InitializePoolContainer()
+            GameObject instancie = Instantiate(objectToPool);
+            PreInitializeObject(instancie, deletedPos);
+            myArray[i] = instancie;            
+        }
+    }
+    
+
+    private void InitializePoolContainer()
     {
         if(poolContainer == null)
         {
@@ -47,72 +48,49 @@ public class PoolManager : MonoBehaviour {
     public GameObject PoolRequest(Vector3 pos, Vector3 rotation, Vector3 scale, bool forceExpand = false)
     {
         GameObject objectToReturn = null;
-        int arrayPos = 0;
-
-        while (myArray[arrayPos].activeInHierarchy && arrayPos<myArray.Length)
+        int arrayPos = 0;        
+        while (arrayPos<myArray.Length && myArray[arrayPos].activeInHierarchy)
         {
             arrayPos++;
         }
-        if(arrayPos>= myArray.Length)
+
+        if(arrayPos < myArray.Length)
+        {
+            Debug.Log("entre, array pos=" + arrayPos);
+            objectToReturn = myArray[arrayPos];
+            InitializeObject(objectToReturn, pos, rotation, scale);
+        }
+        else
         {
             if (!forceExpand)
                 Debug.LogError("Pool is full");
             else
             {
-                ExandPool();
-                objectToReturn = (GameObject)Instantiate(objectToPool);
-                myArray.Add(objectToReturn);
+                ExpandPool();
+                objectToReturn = myArray[arrayPos];
                 InitializeObject(objectToReturn, pos, rotation, scale);
             }
         }
-
-
-
-        if( myArray.Length < poolSize)
-        {
-            for (int i = 0; i < myArray.Length; i++)
-            {
-                objectToReturn = (GameObject)Instantiate(objectToPool);
-                myArray.Add(objectToReturn);
-                InitializeObject(objectToReturn, pos, rotation, scale);
-
-            }
-            
-        }
-        else {
-            if (myArray.Find(x => !x.activeInHierarchy))
-            {
-                objectToReturn = myArray.Find(x => !x.activeInHierarchy);
-                InitializeObject(objectToReturn, pos, rotation, scale);
-            }
-            else
-            {
-                if (!forceExpand)
-                    Debug.LogError("Pool is full");
-                else
-                {
-                    objectToReturn = (GameObject)Instantiate(objectToPool);
-                    myArray.Add(objectToReturn);
-                    InitializeObject(objectToReturn, pos, rotation, scale);
-                }
-            }
-        }     
-
+                
         return objectToReturn;
     }
 
-    private void ExandPool()
+    private void ExpandPool()
     {
-        GameObject[]auxPool = new GameObject[myArray.Length + 1];
+        GameObject[]auxArray = new GameObject[myArray.Length + 1];
         for (int i = 0; i < myArray.Length; i++)
         {
-            auxPool[i] = myArray[i];
+            auxArray[i] = myArray[i];
         }
+        GameObject instancie = Instantiate(objectToPool);
+        PreInitializeObject(instancie, deletedPos);
+        auxArray[auxArray.Length - 1] = instancie;
+        myArray = new GameObject[0];
+        myArray = auxArray;
     }
 
     private void InitializeObject(GameObject objectToInitialize, Vector3 pos, Vector3 rotation, Vector3 scale)
     {
-        objectToInitialize.transform.SetParent(poolContainer.transform);
         objectToInitialize.transform.position = pos;       
         objectToInitialize.transform.eulerAngles = rotation;
         objectToInitialize.transform.localScale = scale;
@@ -127,7 +105,7 @@ public class PoolManager : MonoBehaviour {
         objectToInitialize.transform.localScale = new Vector3 (1,1,1);
         objectToInitialize.SetActive(false);
     }
-    public void poolObjectDelete(GameObject objectToDelete, Vector3 deletedPos)
+    public void poolObjectDelete(GameObject objectToDelete)
     {
         objectToDelete.transform.position = deletedPos;
         objectToDelete.SetActive(false);
@@ -135,11 +113,39 @@ public class PoolManager : MonoBehaviour {
 
     public void deleteFirstObject()
     {
-        if (myArray.Find(x => x.activeInHierarchy))
-            poolObjectDelete(myArray.Find(x => x.activeInHierarchy));
+        int arrayPos = 0;
+
+        while (arrayPos < myArray.Length && !myArray[arrayPos].activeInHierarchy )
+        {
+            arrayPos++;
+        }
+        if(arrayPos < myArray.Length)
+        {
+            poolObjectDelete(myArray[arrayPos]);
+        }
         else
+        {
             Debug.LogError("The pool is empty");
+        }        
     }
-    
-	
+
+    public void deleteLastObject()
+    {
+        int arrayPos = myArray.Length-1;
+
+        while (arrayPos >= 0 &&!myArray[arrayPos].activeInHierarchy )
+        {
+            arrayPos--;
+        }
+        if (arrayPos >= 0)
+        {
+            poolObjectDelete(myArray[arrayPos]);
+        }
+        else
+        {
+            Debug.LogError("The pool is empty");
+        }
+    }
+
+
 }

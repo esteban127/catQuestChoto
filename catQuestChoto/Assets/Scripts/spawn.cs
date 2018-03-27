@@ -15,7 +15,7 @@ public class spawn : MonoBehaviour {
     void Update () {
         if (Input.GetKeyDown(KeyCode.J))
         {
-            myPoolManager.PoolRequest(transform.position, new Vector3(0, 0, 0), transform.localScale);
+            myPoolManager.PoolRequest(transform.position, new Vector3(0, 0, 0), transform.localScale,true);
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
