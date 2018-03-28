@@ -5,147 +5,249 @@ using UnityEngine;
 
 public class PoolManager : MonoBehaviour {
 
-    private GameObject[] myArray;
-    
-    [SerializeField]
-    private int poolSize = 5;
 
-    [SerializeField]
-    private GameObject objectToPool;
+    [SerializeField] pool[] poolArray;      
 
-    [SerializeField]
-    private string poolName = "pool";
+    static private PoolManager instance = null;
+    static public PoolManager Instance { get { return instance; } }
 
-    [SerializeField]
-    private Vector3 deletedPos;
-
-    private GameObject poolContainer;
-    
-
-	void Awake () {
-        InitializePoolContainer();
-        myArray = new GameObject[poolSize];
-        for (int i = 0; i < myArray.Length; i++)
-        {
-            GameObject instancie = Instantiate(objectToPool);
-            PreInitializeObject(instancie, deletedPos);
-            myArray[i] = instancie;            
-        }
-    }
-    
-
-    private void InitializePoolContainer()
+    private void Awake()
     {
-        if(poolContainer == null)
+        if (instance == null)
         {
-            poolContainer = new GameObject();
-            poolContainer.name = poolName;
-
+            instance = this;
+            DontDestroyOnLoad(gameObject);
         }
-
-    }
-
-    public GameObject PoolRequest(Vector3 pos, Vector3 rotation, Vector3 scale, bool forceExpand = false)
-    {
-        GameObject objectToReturn = null;
-        int arrayPos = 0;        
-        while (arrayPos<myArray.Length && myArray[arrayPos].activeInHierarchy)
+        else if (instance != this)
+            Destroy(gameObject);
+        
+        for (int i = 0; i < poolArray.Length; i++)
         {
-            arrayPos++;
-        }
-
-        if(arrayPos < myArray.Length)
-        {
-            Debug.Log("entre, array pos=" + arrayPos);
-            objectToReturn = myArray[arrayPos];
-            InitializeObject(objectToReturn, pos, rotation, scale);
-        }
-        else
-        {
-            if (!forceExpand)
-                Debug.LogError("Pool is full");
-            else
-            {
-                ExpandPool();
-                objectToReturn = myArray[arrayPos];
-                InitializeObject(objectToReturn, pos, rotation, scale);
-            }
-        }
-                
-        return objectToReturn;
-    }
-
-    private void ExpandPool()
-    {
-        GameObject[]auxArray = new GameObject[myArray.Length + 1];
-        for (int i = 0; i < myArray.Length; i++)
-        {
-            auxArray[i] = myArray[i];
-        }
-        GameObject instancie = Instantiate(objectToPool);
-        PreInitializeObject(instancie, deletedPos);
-        auxArray[auxArray.Length - 1] = instancie;
-        myArray = new GameObject[0];
-        myArray = auxArray;
-    }
-
-    private void InitializeObject(GameObject objectToInitialize, Vector3 pos, Vector3 rotation, Vector3 scale)
-    {
-        objectToInitialize.transform.position = pos;       
-        objectToInitialize.transform.eulerAngles = rotation;
-        objectToInitialize.transform.localScale = scale;
-        objectToInitialize.SetActive(true);
-    }
-
-    private void PreInitializeObject(GameObject objectToInitialize, Vector3 deletedPos)
-    {
-        objectToInitialize.transform.SetParent(poolContainer.transform);
-        objectToInitialize.transform.position = deletedPos;
-        objectToInitialize.transform.eulerAngles = new Vector3(0,0,0);
-        objectToInitialize.transform.localScale = new Vector3 (1,1,1);
-        objectToInitialize.SetActive(false);
-    }
-    public void poolObjectDelete(GameObject objectToDelete)
-    {
-        objectToDelete.transform.position = deletedPos;
-        objectToDelete.SetActive(false);
-    }
-
-    public void deleteFirstObject()
-    {
-        int arrayPos = 0;
-
-        while (arrayPos < myArray.Length && !myArray[arrayPos].activeInHierarchy )
-        {
-            arrayPos++;
-        }
-        if(arrayPos < myArray.Length)
-        {
-            poolObjectDelete(myArray[arrayPos]);
-        }
-        else
-        {
-            Debug.LogError("The pool is empty");
+            poolArray[i].InitializePool(gameObject);
         }        
     }
 
-    public void deleteLastObject()
-    {
-        int arrayPos = myArray.Length-1;
+    [System.Serializable]
+    class pool
 
-        while (arrayPos >= 0 &&!myArray[arrayPos].activeInHierarchy )
+    {  
+
+        [SerializeField] private string poolName;
+
+        [SerializeField] private int poolSize = 5;
+
+        [SerializeField] private GameObject objectToPool;
+
+        [SerializeField] private Vector3 deletedPos;
+
+        [SerializeField] private bool forceExpand = false;
+
+        private GameObject poolContainer;
+        private GameObject[] myArray;
+
+        public string PoolName { get { return poolName; } }
+        public int PoolSize { get{ return poolSize; } }
+        public GameObject ObjectToPool { get{ return objectToPool; } }
+
+
+
+	    public void InitializePool (GameObject poolParent)
         {
-            arrayPos--;
+            InitializePoolContainer(poolParent);
+            myArray = new GameObject[poolSize];
+            for (int i = 0; i < myArray.Length; i++)
+            {
+                GameObject instancie = Instantiate(objectToPool);
+                PreInitializeObject(instancie);
+                myArray[i] = instancie;            
+            }
         }
-        if (arrayPos >= 0)
+    
+
+        private void InitializePoolContainer(GameObject poolParent)
         {
-            poolObjectDelete(myArray[arrayPos]);
+            if(poolContainer == null)
+            {
+                poolContainer = new GameObject();
+                poolContainer.transform.SetParent(poolParent.transform);
+                poolContainer.name = poolName;
+
+            }
+
         }
-        else
+
+        public GameObject PoolRequest(Vector3 pos, Vector3 rotation, Vector3 scale)
         {
-            Debug.LogError("The pool is empty");
+            GameObject objectToReturn = null;
+            int arrayPos = 0;        
+            while (arrayPos<myArray.Length && myArray[arrayPos].activeInHierarchy)
+            {
+                arrayPos++;
+            }
+
+            if(arrayPos < myArray.Length)
+            {               
+                objectToReturn = myArray[arrayPos];
+                InitializeObject(objectToReturn, pos, rotation, scale);
+            }
+            else
+            {
+                if (!forceExpand)
+                    Debug.LogError("Pool is full");
+                else
+                {
+                    ExpandPool();
+                    objectToReturn = myArray[arrayPos];
+                    InitializeObject(objectToReturn, pos, rotation, scale);
+                }
+            }
+                
+            return objectToReturn;
         }
+        
+        public void SetForceExpand(bool setActive) {
+            forceExpand = setActive;
+        }
+
+        private void ExpandPool()
+        {
+            GameObject[]auxArray = new GameObject[myArray.Length + 1];
+            for (int i = 0; i < myArray.Length; i++)
+            {
+                auxArray[i] = myArray[i];
+            }
+            GameObject instancie = Instantiate(objectToPool);
+            PreInitializeObject(instancie);
+            auxArray[auxArray.Length - 1] = instancie;
+            myArray = new GameObject[0];
+            myArray = auxArray;
+        }
+
+    
+
+        private void InitializeObject(GameObject objectToInitialize, Vector3 pos, Vector3 rotation, Vector3 scale)
+        {
+            objectToInitialize.transform.position = pos;       
+            objectToInitialize.transform.eulerAngles = rotation;
+            objectToInitialize.transform.localScale = scale;
+            objectToInitialize.SetActive(true);
+        }
+
+        private void PreInitializeObject(GameObject objectToInitialize)
+        {
+            objectToInitialize.transform.SetParent(poolContainer.transform);
+            objectToInitialize.transform.position = deletedPos;
+            objectToInitialize.transform.eulerAngles = new Vector3(0,0,0);
+            objectToInitialize.transform.localScale = new Vector3 (1,1,1);
+            objectToInitialize.SetActive(false);
+        }
+        public void PoolObjectDelete(GameObject objectToDelete)
+        {
+            objectToDelete.transform.position = deletedPos;
+            objectToDelete.SetActive(false);
+        }
+
+        public void DeleteFirstObject()
+        {
+            int arrayPos = 0;
+
+            while (arrayPos < myArray.Length && !myArray[arrayPos].activeInHierarchy )
+            {
+                arrayPos++;
+            }
+            if(arrayPos < myArray.Length)
+            {
+                PoolObjectDelete(myArray[arrayPos]);
+            }
+            else
+            {
+                Debug.LogError("The pool is empty");
+            }        
+        }
+
+        public void DeleteLastObject()
+        {
+            int arrayPos = myArray.Length-1;
+
+            while (arrayPos >= 0 &&!myArray[arrayPos].activeInHierarchy )
+            {
+                arrayPos--;
+            }
+            if (arrayPos >= 0)
+            {
+                PoolObjectDelete(myArray[arrayPos]);
+            }
+            else
+            {
+                Debug.LogError("The pool is empty");
+            }
+        }
+
     }
+
+    private pool SearchPoolForName(string poolName)
+    {
+        for (int i = 0; i < poolArray.Length; i++)
+        {
+            if (poolArray[i].PoolName == poolName)
+                return poolArray[i];
+        }
+        Debug.LogError("Isnt a pool with that name");
+        return null;
+    }
+    public GameObject RequestToPool(string poolName,Vector3 pos, Vector3 rotation,Vector3 scale)
+    {
+        pool poolToRequest = SearchPoolForName(poolName);      
+                 
+        return poolToRequest.PoolRequest(pos, rotation, scale);
+        
+    }       
+
+    public void DeleteFirstFromPool(string poolName) {
+
+        SearchPoolForName(poolName).DeleteFirstObject();
+
+    }
+
+    public string ArrayVerify()
+    {
+        string mensage;
+        int count = 0;
+        foreach(pool p in poolArray)
+        {
+            count++;
+            if (string.IsNullOrEmpty(p.PoolName))
+            {
+                mensage = "WARNING The slot " + count + " Name is empty";
+                return mensage;
+            }
+            if(p.ObjectToPool == null)
+            {
+                mensage = "WARNING " + p.PoolName + " has no object to pool";
+                return mensage;
+            }
+            if(p.PoolSize == 0)
+            {
+                mensage = "WARNING The pool " + p.PoolName + " has no size";
+                return mensage;
+            }
+            for (int i = 0; i < poolArray.Length; i++)
+            {
+                if (p.PoolName == poolArray[i].PoolName)
+                {
+                    if(p != poolArray[i])
+                    {
+                        mensage = "WARNING The name " + p.PoolName + " is repeated ";
+                        return mensage;
+                    }                    
+                }
+            }
+            
+        }
+        mensage = "All is fine";
+        return mensage;
+    }
+
 
 
 }

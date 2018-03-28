@@ -6,20 +6,23 @@ public class spawn : MonoBehaviour {
     
     private PoolManager myPoolManager;
 
+    [SerializeField] string poolNameToUse;
+
     private void Awake()
     {
-        myPoolManager = GetComponent<PoolManager>();
+        myPoolManager = PoolManager.Instance;
     }
 
 
     void Update () {
         if (Input.GetKeyDown(KeyCode.J))
         {
-            myPoolManager.PoolRequest(transform.position, new Vector3(0, 0, 0), transform.localScale,true);
+            myPoolManager.RequestToPool(poolNameToUse,transform.position, new Vector3(0, 0, 0), transform.localScale);
+
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            myPoolManager.deleteFirstObject();
+            myPoolManager.DeleteFirstFromPool("cubePool");
         }
 	}
 }
