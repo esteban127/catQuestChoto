@@ -78,31 +78,30 @@ public class PoolManager : MonoBehaviour {
 
         public GameObject PoolRequest(Vector3 pos, Vector3 rotation, Vector3 scale)
         {
-            GameObject objectToReturn = null;
-            int arrayPos = 0;        
-            while (arrayPos<myArray.Length && myArray[arrayPos].activeInHierarchy)
+            GameObject objectToReturn = null;            
+            for (int i = 0; i < myArray.Length; i++)
             {
-                arrayPos++;
-            }
-
-            if(arrayPos < myArray.Length)
-            {               
-                objectToReturn = myArray[arrayPos];
-                InitializeObject(objectToReturn, pos, rotation, scale);
-            }
-            else
-            {
-                if (!forceExpand)
-                    Debug.LogError("Pool is full");
-                else
+                if (!myArray[i].activeInHierarchy)
                 {
-                    ExpandPool();
-                    objectToReturn = myArray[arrayPos];
+                    objectToReturn = myArray[i];
                     InitializeObject(objectToReturn, pos, rotation, scale);
+                    return objectToReturn;
                 }
-            }
                 
+                if(i==myArray.Length-1)
+                {
+                    if (!forceExpand)
+                        Debug.LogError("Pool is full");
+                    else
+                    {
+                        ExpandPool();
+                        objectToReturn = myArray[i];
+                        InitializeObject(objectToReturn, pos, rotation, scale);
+                    }
+                }                               
+            }
             return objectToReturn;
+
         }
         
         public void SetForceExpand(bool setActive) {
@@ -148,38 +147,35 @@ public class PoolManager : MonoBehaviour {
         }
 
         public void DeleteFirstObject()
-        {
-            int arrayPos = 0;
-
-            while (arrayPos < myArray.Length && !myArray[arrayPos].activeInHierarchy )
+        {       
+            for (int i = 0; i < myArray.Length; i++)
             {
-                arrayPos++;
+                if (myArray[i].activeInHierarchy)
+                {
+                    PoolObjectDelete(myArray[i]);
+                    return;
+                }
+                if(i==myArray.Length-1)
+                {
+                    Debug.LogError("The pool is empty");
+                }
             }
-            if(arrayPos < myArray.Length)
-            {
-                PoolObjectDelete(myArray[arrayPos]);
-            }
-            else
-            {
-                Debug.LogError("The pool is empty");
-            }        
+                
         }
 
         public void DeleteLastObject()
         {
-            int arrayPos = myArray.Length-1;
-
-            while (arrayPos >= 0 &&!myArray[arrayPos].activeInHierarchy )
+            for (int i = 1; i <= myArray.Length; i++)
             {
-                arrayPos--;
-            }
-            if (arrayPos >= 0)
-            {
-                PoolObjectDelete(myArray[arrayPos]);
-            }
-            else
-            {
-                Debug.LogError("The pool is empty");
+                if (myArray[myArray.Length-i].activeInHierarchy)
+                {
+                    PoolObjectDelete(myArray[myArray.Length - i]);
+                    return;
+                }
+                if (i == myArray.Length)
+                {
+                    Debug.LogError("The pool is empty");
+                }
             }
         }
 
@@ -189,7 +185,7 @@ public class PoolManager : MonoBehaviour {
     {
         for (int i = 0; i < poolArray.Length; i++)
         {
-            if (poolArray[i].PoolName == poolName)
+            if (poolArray[i].PoolName == poolName)                
                 return poolArray[i];
         }
         Debug.LogError("Isnt a pool with that name");
@@ -197,6 +193,7 @@ public class PoolManager : MonoBehaviour {
     }
     public GameObject RequestToPool(string poolName,Vector3 pos, Vector3 rotation,Vector3 scale)
     {
+
         pool poolToRequest = SearchPoolForName(poolName);      
                  
         return poolToRequest.PoolRequest(pos, rotation, scale);
@@ -206,6 +203,12 @@ public class PoolManager : MonoBehaviour {
     public void DeleteFirstFromPool(string poolName) {
 
         SearchPoolForName(poolName).DeleteFirstObject();
+
+    }
+    public void DeleteLastFromPool(string poolName)
+    {
+
+        SearchPoolForName(poolName).DeleteLastObject();
 
     }
 

@@ -8,7 +8,7 @@ public class spawn : MonoBehaviour {
 
     [SerializeField] string poolNameToUse;
 
-    private void Awake()
+    private void Start()
     {
         myPoolManager = PoolManager.Instance;
     }
@@ -22,7 +22,7 @@ public class spawn : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            myPoolManager.DeleteFirstFromPool("cubePool");
+            myPoolManager.DeleteFirstFromPool(poolNameToUse);
         }
 	}
 }
