@@ -6,6 +6,12 @@ public enum StatesID
 {
     NullState = 0,
     Patrolling,
+    ChasingPlayer,
+    AttackingPlayer,
+    Hurt,
+    Die,
+    Stunt,
+    Idle,
 
 }
 
@@ -13,6 +19,16 @@ public enum TransitionsID
 {
     NullTransition = 0,
     SawPlayer,
+    LostPlayer,
+    OnRageToAtack,
+    OutOfRange,
+    GettingHit,
+    Dying,
+    StealthAttack,    
+    StopPatrolling,
+    StartPatrolling,
+    NoLongerHurt,
+
 
 
 }
@@ -173,7 +189,7 @@ public abstract class FSMState{
     public virtual void DoBeforeLeaving() { }
 
 
-    public abstract void Razon(GameObject player, GameObject npc);
+    public abstract void Rason(GameObject player, GameObject npc);
     public abstract void Behavior(GameObject player, GameObject npc);
 
 

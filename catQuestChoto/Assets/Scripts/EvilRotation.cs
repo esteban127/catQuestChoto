@@ -6,8 +6,7 @@ public class EvilRotation : MonoBehaviour {
     
     public float evilness = 1.0f;
     
-    void Update () {
+    void Update () {        
         transform.RotateAround(transform.position , new Vector3(0, 1, 0),evilness*Time.deltaTime);
-       
-	}
+  	}
 }
