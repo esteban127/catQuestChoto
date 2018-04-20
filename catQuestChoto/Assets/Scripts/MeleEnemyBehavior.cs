@@ -32,7 +32,7 @@ public class MeleEnemyBehavior : MonoBehaviour {
         idle.AddTransition(TransitionsID.StartPatrolling, StatesID.Patrolling);
         idle.AddTransition(TransitionsID.SawPlayer, StatesID.ChasingPlayer);
 
-        PatrollState patroll = new PatrollState(5);
+        PatrollState patroll = new PatrollState(patrollDistance);
         patroll.AddTransition(TransitionsID.SawPlayer, StatesID.ChasingPlayer);
         patroll.AddTransition(TransitionsID.StealthAttack, StatesID.Stunt);
         patroll.AddTransition(TransitionsID.StopPatrolling, StatesID.Idle);
@@ -88,16 +88,17 @@ public class IdleState : FSMState
         Vector3 direction = new Vector3(1, 0, 0);
 
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.StealthAttack);
-        }
-
+        
         if (idleTime <= 0)
         {
             idleTime = 10;
             Debug.Log("Gotham me necesita");
             npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.StartPatrolling);
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.StealthAttack);
         }
 
 
@@ -154,7 +155,7 @@ public class PatrollState : FSMState
         {
             npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.StealthAttack);
         }
-
+        
         if (patrollingTime <= 0)
         {
             patrollingTime = 10;
@@ -177,6 +178,7 @@ public class PatrollState : FSMState
                     npc.GetComponentInChildren<EvilRotation>().SetEvilness(900);
                     npc.transform.GetChild(1).gameObject.SetActive(true);
                     npc.transform.GetChild(2).gameObject.SetActive(false);
+                    break;
                 }                    
             }
         }
