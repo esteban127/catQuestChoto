@@ -9,4 +9,9 @@ public class EvilRotation : MonoBehaviour {
     void Update () {        
         transform.RotateAround(transform.position , new Vector3(0, 1, 0),evilness*Time.deltaTime);
   	}
+
+    public void SetEvilness(int evilness)
+    {
+        this.evilness = evilness;
+    }
 }

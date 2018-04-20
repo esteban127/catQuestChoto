@@ -174,6 +174,7 @@ public class PatrollState : FSMState
                     Debug.Log("Te vi vieja");
                     npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.SawPlayer);
                     npc.GetComponent<MeleEnemyBehavior>().SetPlayer(hit.transform.gameObject);
+                    npc.GetComponentInChildren<EvilRotation>().SetEvilness(900);
                     npc.transform.GetChild(1).gameObject.SetActive(true);
                     npc.transform.GetChild(2).gameObject.SetActive(false);
                 }                    
@@ -230,6 +231,7 @@ public class ChasePlayerState : FSMState
                 Debug.Log("Donde te fuiste loco?");
                 npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.LostPlayer);
                 npc.GetComponent<MeleEnemyBehavior>().SetPlayer(null);
+                npc.GetComponentInChildren<EvilRotation>().SetEvilness(150);
                 npc.transform.GetChild(2).gameObject.SetActive(true);
                 npc.transform.GetChild(1).gameObject.SetActive(false);
             }
