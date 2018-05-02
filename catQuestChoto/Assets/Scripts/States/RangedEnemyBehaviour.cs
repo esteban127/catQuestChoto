@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleEnemyBehavior : MonoBehaviour {
+public class RangedEnemyBehaviour : MonoBehaviour {
+
 
     private GameObject player;
     private FSM fsm;
@@ -10,51 +11,51 @@ public class MeleEnemyBehavior : MonoBehaviour {
     [SerializeField] int patrollDistance;
 
     public void SetTransition(TransitionsID t) { fsm.PerformTransition(t); }
-    public void SetPlayer(GameObject player) { this.player = player;}
+    public void SetPlayer(GameObject player) { this.player = player; }
 
 
     private void Awake()
     {
         BuildFSM();
-        
+
     }
 
     private void Update()
     {
         fsm.CurrentState.Rason(player, gameObject);
-        fsm.CurrentState.Behavior(player, gameObject);        
+        fsm.CurrentState.Behavior(player, gameObject);
     }
 
     private void BuildFSM()
     {
-        IdleState idle = new IdleState();
+        RangedIdleState idle = new RangedIdleState();
         idle.AddTransition(TransitionsID.StealthAttack, StatesID.Stunt);
         idle.AddTransition(TransitionsID.StartPatrolling, StatesID.Patrolling);
         idle.AddTransition(TransitionsID.SawPlayer, StatesID.ChasingPlayer);
 
-        PatrollState patroll = new PatrollState(patrollDistance);
+        RangedPatrollState patroll = new RangedPatrollState(patrollDistance);
         patroll.AddTransition(TransitionsID.SawPlayer, StatesID.ChasingPlayer);
         patroll.AddTransition(TransitionsID.StealthAttack, StatesID.Stunt);
         patroll.AddTransition(TransitionsID.StopPatrolling, StatesID.Idle);
- 
-        ChasePlayerState chase = new ChasePlayerState();
+
+        RangedChasePlayerState chase = new RangedChasePlayerState();
         chase.AddTransition(TransitionsID.LostPlayer, StatesID.Patrolling);
         chase.AddTransition(TransitionsID.OnRageToAtack, StatesID.AttackingPlayer);
 
-        AtackingState atacking = new AtackingState();
+        RangedAtackingState atacking = new RangedAtackingState();
         atacking.AddTransition(TransitionsID.OutOfRange, StatesID.ChasingPlayer);
         atacking.AddTransition(TransitionsID.GettingHit, StatesID.Hurt);
 
-        StuntState stunting = new StuntState();
+        RangedStuntState stunting = new RangedStuntState();
         stunting.AddTransition(TransitionsID.GettingHit, StatesID.Hurt);
 
-        HurtState hurting = new HurtState();
+        RangedHurtState hurting = new RangedHurtState();
         hurting.AddTransition(TransitionsID.Dying, StatesID.Die);
         hurting.AddTransition(TransitionsID.NoLongerHurt, StatesID.ChasingPlayer);
 
-        DyingState die = new DyingState();
+        RangedDyingState die = new RangedDyingState();
 
-   
+
 
 
 
@@ -66,19 +67,19 @@ public class MeleEnemyBehavior : MonoBehaviour {
         fsm.AddState(stunting);
         fsm.AddState(hurting);
         fsm.AddState(die);
-        
+
     }
 
-    
+
 }
 
-public class IdleState : FSMState
+public class RangedIdleState : FSMState
 {
     private float idleTime = 10;
 
-    public IdleState()
+    public RangedIdleState()
     {
-        
+
         stateID = StatesID.Idle;
     }
 
@@ -88,17 +89,17 @@ public class IdleState : FSMState
         Vector3 direction = new Vector3(1, 0, 0);
 
 
-        
+
         if (idleTime <= 0)
         {
             idleTime = 10;
             Debug.Log("Gotham me necesita");
-            npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.StartPatrolling);
+            npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.StartPatrolling);
         }
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.StealthAttack);
+            npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.StealthAttack);
         }
 
 
@@ -111,10 +112,11 @@ public class IdleState : FSMState
                 if (hit.transform.gameObject.tag == "Player")
                 {
                     Debug.Log("Te vi vieja");
-                    npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.SawPlayer);
-                    npc.GetComponent<MeleEnemyBehavior>().SetPlayer(hit.transform.gameObject);
+                    npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.SawPlayer);
+                    npc.GetComponent<RangedEnemyBehaviour>().SetPlayer(hit.transform.gameObject);
                     npc.transform.GetChild(1).gameObject.SetActive(true);
                     npc.transform.GetChild(2).gameObject.SetActive(false);
+                    break;
                 }
             }
         }
@@ -127,21 +129,21 @@ public class IdleState : FSMState
     }
 }
 
-public class PatrollState : FSMState
+public class RangedPatrollState : FSMState
 {
     private CharacterController controller;
-    private float speed = 5.0f;    
+    private float speed = 5.0f;
     private float walkedDistance = 0;
     private int maxDistance;
     private float facingDirection = 1;
     private float patrollingTime = 10;
 
-    public PatrollState(int patrollDistance)
+    public RangedPatrollState(int patrollDistance)
     {
         stateID = StatesID.Patrolling;
         maxDistance = patrollDistance;
-        
-    }  
+
+    }
 
 
 
@@ -153,44 +155,47 @@ public class PatrollState : FSMState
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.StealthAttack);
+            npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.StealthAttack);
         }
-        
+
         if (patrollingTime <= 0)
         {
             patrollingTime = 10;
             Debug.Log("Uff me re canse loco");
-            npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.StopPatrolling);
+            npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.StopPatrolling);
         }
 
-
+        
         for (int i = 0; i < 35; i++)
         {
-            direction.x = Mathf.Cos(10*i)*direction.x - Mathf.Sin(10*i)*direction.z;
-            direction.z = Mathf.Sin(10*i)*direction.x - Mathf.Cos(10*i)*direction.z;
-            if (Physics.Raycast(npc.transform.position,direction,out hit,15))
+            
+
+
+            direction.x = Mathf.Cos(10 * i) * direction.x - Mathf.Sin(10 * i) * direction.z;
+            direction.z = Mathf.Sin(10 * i) * direction.x - Mathf.Cos(10 * i) * direction.z;
+            if (Physics.Raycast(npc.transform.position, direction, out hit, 15))
             {
                 if (hit.transform.gameObject.tag == "Player")
                 {
                     Debug.Log("Te vi vieja");
-                    npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.SawPlayer);
-                    npc.GetComponent<MeleEnemyBehavior>().SetPlayer(hit.transform.gameObject);
+                    npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.SawPlayer);
+                    npc.GetComponent<RangedEnemyBehaviour>().SetPlayer(hit.transform.gameObject);
                     npc.GetComponentInChildren<EvilRotation>().SetEvilness(900);
                     npc.transform.GetChild(1).gameObject.SetActive(true);
                     npc.transform.GetChild(2).gameObject.SetActive(false);
                     break;
-                }                    
+                }
             }
         }
-        
+
     }
 
     public override void Behavior(GameObject player, GameObject npc)
-    {     
+    {
         Vector3 moveDirection = facingDirection * npc.transform.forward;
         if (!controller)
         {
-          controller = npc.gameObject.GetComponent<CharacterController>();
+            controller = npc.gameObject.GetComponent<CharacterController>();
         }
 
         if (walkedDistance >= maxDistance)
@@ -202,22 +207,22 @@ public class PatrollState : FSMState
         walkedDistance += speed * Time.deltaTime;
 
         if (!controller.isGrounded)
-            moveDirection.y = -50 *Time.deltaTime;
+            moveDirection.y = -50 * Time.deltaTime;
 
-        controller.Move(moveDirection* speed * Time.deltaTime);
+        controller.Move(moveDirection * speed * Time.deltaTime);
         patrollingTime -= Time.deltaTime;
     }
 
 
 }
 
-public class ChasePlayerState : FSMState
+public class RangedChasePlayerState : FSMState
 {
     private CharacterController controller;
     private float speed = 5.0f;
 
 
-    public ChasePlayerState()
+    public RangedChasePlayerState()
     {
         stateID = StatesID.ChasingPlayer;
     }
@@ -231,8 +236,8 @@ public class ChasePlayerState : FSMState
             if (hit.transform.gameObject.tag != "Player")
             {
                 Debug.Log("Donde te fuiste loco?");
-                npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.LostPlayer);
-                npc.GetComponent<MeleEnemyBehavior>().SetPlayer(null);
+                npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.LostPlayer);
+                npc.GetComponent<RangedEnemyBehaviour>().SetPlayer(null);
                 npc.GetComponentInChildren<EvilRotation>().SetEvilness(150);
                 npc.transform.GetChild(2).gameObject.SetActive(true);
                 npc.transform.GetChild(1).gameObject.SetActive(false);
@@ -241,7 +246,7 @@ public class ChasePlayerState : FSMState
             if ((player.transform.position - npc.transform.position).magnitude < 2)
             {
                 Debug.Log("Omae wa mou shindeiru");
-                npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.OnRageToAtack);
+                npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.OnRageToAtack);
             }
         }
 
@@ -263,21 +268,21 @@ public class ChasePlayerState : FSMState
 
 }
 
-public class AtackingState : FSMState
+public class RangedAtackingState : FSMState
 {
 
-    public AtackingState()
+    public RangedAtackingState()
     {
         stateID = StatesID.AttackingPlayer;
     }
 
-    public override void Rason (GameObject player, GameObject npc)
+    public override void Rason(GameObject player, GameObject npc)
     {
         if (!player.GetComponent<healthManager>().isAlive())
         {
             Debug.Log("Harakiri");
-            npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.GettingHit);
-            
+            npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.GettingHit);
+
         }
     }
 
@@ -286,18 +291,18 @@ public class AtackingState : FSMState
         Debug.Log("Shine");
         player.GetComponent<healthManager>().Death();
     }
-    
+
 }
 
-public class StuntState : FSMState
+public class RangedStuntState : FSMState
 {
-    public StuntState()
+    public RangedStuntState()
     {
         stateID = StatesID.Stunt;
     }
     public override void Rason(GameObject player, GameObject npc)
     {
-        npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.GettingHit);
+        npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.GettingHit);
     }
     public override void Behavior(GameObject player, GameObject npc)
     {
@@ -305,10 +310,10 @@ public class StuntState : FSMState
     }
 }
 
-public class HurtState : FSMState
+public class RangedHurtState : FSMState
 {
     float hurtTime = 1;
-    public HurtState()
+    public RangedHurtState()
     {
         stateID = StatesID.Hurt;
     }
@@ -317,12 +322,12 @@ public class HurtState : FSMState
     {
         if (!npc.GetComponent<healthManager>().isAlive())
         {
-            npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.Dying);
+            npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.Dying);
         }
         else
-        if(hurtTime<= 0)
+        if (hurtTime <= 0)
         {
-            npc.GetComponent<MeleEnemyBehavior>().SetTransition(TransitionsID.NoLongerHurt);
+            npc.GetComponent<RangedEnemyBehaviour>().SetTransition(TransitionsID.NoLongerHurt);
         }
     }
 
@@ -336,9 +341,9 @@ public class HurtState : FSMState
 
 }
 
-public class DyingState : FSMState
+public class RangedDyingState : FSMState
 {
-    public DyingState()
+    public RangedDyingState()
     {
         stateID = StatesID.Die;
     }
@@ -353,8 +358,4 @@ public class DyingState : FSMState
         Debug.Log("Yea, noise? Then I'll be brief. O happy dagger! This is thy sheath; there rust, and let me die");
         npc.SetActive(false);
     }
-
 }
-
-
-
