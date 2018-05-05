@@ -32,6 +32,7 @@ public class AuditionBehaviour : MonoBehaviour {
                     }
                     else
                     {
+                        Debug.Log(hit.transform.tag);
                         detect = false;
                     }
                 }
