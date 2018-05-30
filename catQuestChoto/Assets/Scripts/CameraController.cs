@@ -11,14 +11,14 @@ public class CameraController : MonoBehaviour {
 
     private float mauseInitialPos = 0.0f;
     private float currentRotation = 0.0f;
-    int currentZoomOut = 0 ;
+    float currentZoomOut = 0 ;
    
     
     private void Update()
     {
 
         Rotate();
-        if (Input.GetAxis("Mouse ScrollWheel") < 0 && currentZoomOut <maxZoomOut) // forward
+        if (Input.GetAxis("Mouse ScrollWheel") < 0 && currentZoomOut <maxZoomOut ) // forward
         {
             currentZoomOut+=3;
         }
@@ -26,6 +26,13 @@ public class CameraController : MonoBehaviour {
         {
             currentZoomOut-=3;
         }
+        if( (Input.GetAxis("DpadY") < 0 && currentZoomOut < maxZoomOut) || (Input.GetAxis("DpadY") > 0 && currentZoomOut > 0))
+        {
+                currentZoomOut += (Input.GetAxis("DpadY")*-1);
+        } 
+
+
+
         GetComponent<Camera>().fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, initialZoom + currentZoomOut,0.5f);
     }
 
@@ -43,7 +50,18 @@ public class CameraController : MonoBehaviour {
         {
             currentRotation = 0;
         }
-        if(transform.localPosition.y > 0 && currentRotation < 0)
+        if (Input.GetAxis("RigthtStickY") != 0)
+        {
+            currentRotation = Input.GetAxis("RigthtStickY");
+        }
+        else
+        {
+            currentRotation = 0;
+        }
+
+
+
+        if (transform.localPosition.y > 0.5 && currentRotation < 0)
             transform.RotateAround(transform.parent.position, transform.parent.right, rotateSpeed * currentRotation * Time.deltaTime);  
         else       
         if(transform.localPosition.y < 3.75 && currentRotation > 0)

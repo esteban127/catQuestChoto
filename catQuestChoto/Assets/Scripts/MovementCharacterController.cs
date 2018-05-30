@@ -26,12 +26,15 @@ public class MovementCharacterController : MonoBehaviour {
     private float inputAxisX;
     private float inputAxisY;
     private float inputAxisZ;
+    private bool isAtacking = false;
+    private Animator playerAnimator;
 
-    private
+    public void setIsAtacking(bool atacking) { isAtacking = atacking; }
 
     void Awake()
     {
         controller = this.gameObject.GetComponent<CharacterController>();
+        playerAnimator = GetComponentInChildren<Animator>();
         if (!controller)
         {
             Debug.LogError("Failed on get the Player controller");
@@ -43,12 +46,36 @@ public class MovementCharacterController : MonoBehaviour {
 
     void Update()
     {
+        /*if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle1"))
+            isAtacking = false;*/
 
-        GetImput(ref inputAxisX,ref inputAxisY,ref inputAxisZ);        
-        Move();
+        GetImput(ref inputAxisX,ref inputAxisY,ref inputAxisZ);
+        if (!isAtacking)
+        {
+            Move();
+            Rotate();
+        }            
+        MovementAnimation();
         ResetJumpCount();
-        Rotate();
+        
 
+
+    }
+
+    private void MovementAnimation()
+    {
+        if(inputAxisZ == 0 && inputAxisX == 0)
+        {
+            playerAnimator.SetBool("IsMoving", false);
+            playerAnimator.SetFloat("HorizontalMovement", 0);
+            playerAnimator.SetFloat("VerticalMovement", 0);
+        }
+        else
+        {
+            playerAnimator.SetBool("IsMoving", true);        
+            playerAnimator.SetFloat("HorizontalMovement", inputAxisX);
+            playerAnimator.SetFloat("VerticalMovement", inputAxisZ);
+        }
 
     }
 
@@ -62,20 +89,22 @@ public class MovementCharacterController : MonoBehaviour {
         {
             currentRotation = ((Input.mousePosition.x - mauseInitialPos)/(Screen.width/2));
         }
-        if (Input.GetMouseButtonUp(1))
-        {
-            currentRotation = 0;
+        
+
+        if (Input.GetAxis("RigthtStickX") != 0)
+        {           
+            currentRotation = Input.GetAxis("RigthtStickX") ;
         }
 
         transform.Rotate(0, rotateSpeed * currentRotation * Time.deltaTime, 0);
-
+        currentRotation = 0;
     }
 
     private void ResetJumpCount()
     {
         if (controller.isGrounded)
         {
-            currentJumpCount = 0;
+            currentJumpCount = 0;            
         }
     }
 
@@ -86,26 +115,41 @@ public class MovementCharacterController : MonoBehaviour {
         moveDirection *= speed;
 
         if (!controller.isGrounded)
-            inputAxisY -= gravity * Time.deltaTime;
+        {
+            inputAxisY -= gravity * Time.deltaTime;            
+        }
 
         moveDirection.y = inputAxisY;
 
-        controller.Move(moveDirection*Time.deltaTime);
+        controller.Move(moveDirection*Time.deltaTime);             
+
     }
 
     private void GetImput(ref float inputX,ref float inputY,ref float inputZ)
     {
 
         inputX = Input.GetAxis("Horizontal");
+        
 
         inputZ = Input.GetAxis("Vertical");
+        
 
         if (Input.GetButtonDown("Jump"))
         {            
-                Jump(ref inputY);
+            Jump(ref inputY);
         }
 
+        if (Input.GetButtonUp("Fire1") && controller.isGrounded)
+        {
+            Atack();
+        }
 
+    }
+
+    private void Atack()
+    {
+        playerAnimator.SetTrigger("Atack");
+        isAtacking = true;
     }
 
     private void Jump(ref float inputY)
@@ -113,6 +157,7 @@ public class MovementCharacterController : MonoBehaviour {
         if (currentJumpCount < maxJumpCap)
         {
             inputY = jumpSpeed;
+            playerAnimator.SetTrigger("Jump");
             currentJumpCount++;
         }
     }
