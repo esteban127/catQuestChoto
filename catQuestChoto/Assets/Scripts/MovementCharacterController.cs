@@ -52,6 +52,7 @@ public class MovementCharacterController : MonoBehaviour {
         GetImput(ref inputAxisX,ref inputAxisY,ref inputAxisZ);
         if (!isAtacking)
         {
+            playerAnimator.ResetTrigger("Atack");
             Move();
             Rotate();
         }            
