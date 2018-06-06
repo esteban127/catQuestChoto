@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StopAtacking : StateMachineBehaviour {
-
+public class ComboManager : StateMachineBehaviour {
     GameObject playerReference;
-    public override void OnStateEnter(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
-    {
-        playerReference.GetComponent<MovementCharacterController>().setIsAtacking(false);
+    [SerializeField] int atackTipe;
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+    
+        playerReference.GetComponentInChildren<Weapon>().SetState(atackTipe);
     }
     private void Awake()
     {
@@ -15,7 +15,6 @@ public class StopAtacking : StateMachineBehaviour {
         playerReference = GameObject.FindGameObjectWithTag("Player");
 
     }
-    
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
     //

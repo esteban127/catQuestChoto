@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class healthManager : MonoBehaviour {
-    public bool alive = true;
-	public void Death()
+    bool alive = true;
+    [SerializeField] float HealthPoints;
+
+
+	public void Death()    
     {
         Debug.Log(gameObject.name + ": Estoy murido");
         alive = false;
     }
 
-    public void getDamage(int damage)
+    public void getDamage(float damage)
     {
-        alive = false; //The damage was to his feelings, he die for loneliness
+        HealthPoints -= damage;
+        if(HealthPoints<= 0)
+            alive = false;
     }
 	
     public bool isAlive()

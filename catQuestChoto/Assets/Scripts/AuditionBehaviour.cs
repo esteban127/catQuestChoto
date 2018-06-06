@@ -20,7 +20,7 @@ public class AuditionBehaviour : MonoBehaviour {
         RaycastHit hit;
         if (collide.tag == "Player")
         {
-            //soundSource = collide.transform.position;
+            
             player = collide.gameObject;
             Vector3 direction =  player.transform.position - transform.position ;
             if (Vector3.Angle(transform.forward, direction ) < fieldOfView/2)
@@ -28,7 +28,7 @@ public class AuditionBehaviour : MonoBehaviour {
                 if(Physics.Raycast(transform.position, direction, out hit)){
                     if(hit.transform.gameObject.tag == "Player")
                     {
-                        detect = true;
+                        
                     }
                     else
                     {                       

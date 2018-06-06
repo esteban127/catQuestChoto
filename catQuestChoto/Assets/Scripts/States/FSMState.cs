@@ -11,6 +11,7 @@ public enum StatesID
     Hurt,
     Die,
     Stunt,
+    Stunned,
     Idle,
 
 }
@@ -24,6 +25,7 @@ public enum TransitionsID
     OutOfRange,
     GettingHit,
     Dying,
+    Stun,
     StealthAttack,    
     StopPatrolling,
     StartPatrolling,
