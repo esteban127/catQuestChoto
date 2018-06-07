@@ -146,6 +146,18 @@ public class PoolManager : MonoBehaviour {
             objectToDelete.SetActive(false);
         }
 
+        public void DeleteObject(GameObject objectToDelete)
+        {
+            for (int i = 0; i < myArray.Length; i++)
+            {
+                if (myArray[i] == objectToDelete)
+                {
+                    PoolObjectDelete(myArray[i]);
+                    return;
+                }
+            }
+        }
+
         public void DeleteFirstObject()
         {       
             for (int i = 0; i < myArray.Length; i++)
@@ -203,6 +215,12 @@ public class PoolManager : MonoBehaviour {
     public void DeleteFirstFromPool(string poolName) {
 
         SearchPoolForName(poolName).DeleteFirstObject();
+
+    }
+    public void DeleteThisFromPool(string poolName, GameObject objectToDelete)
+    {
+
+        SearchPoolForName(poolName).DeleteObject(objectToDelete);
 
     }
     public void DeleteLastFromPool(string poolName)

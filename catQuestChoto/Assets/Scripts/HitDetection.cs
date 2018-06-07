@@ -71,7 +71,7 @@ public class HitDetection : MonoBehaviour{
             healtM.getDamage(damage);
 
     
-            GameObject newText = Instantiate(damageTextPrefab, gameObject.transform.position, Quaternion.identity);
+            GameObject newText = Instantiate(damageTextPrefab, gameObject.transform.position, gameObject.transform.rotation);
             newText.transform.SetParent(gameObject.transform);
             newText.transform.localPosition = new Vector3(0, 0, 0);
             newText.GetComponent<damageTextController>().SetTextAndMove((Mathf.Round(damage * 100f)).ToString(), textColor);

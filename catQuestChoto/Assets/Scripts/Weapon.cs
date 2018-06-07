@@ -13,5 +13,10 @@ public class Weapon : MonoBehaviour {
     public void SetState(int state)
     {
         currentState = state;
-    }  
+    }
+    public void SetDamage(float damage)
+    {
+        this.damage = damage;
+    }
+
 }

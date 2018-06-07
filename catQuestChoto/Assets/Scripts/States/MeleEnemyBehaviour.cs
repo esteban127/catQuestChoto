@@ -5,9 +5,11 @@ using UnityEngine;
 public class MeleEnemyBehaviour : MonoBehaviour {
 
     private GameObject player;
+    private PoolManager myPoolManager;
     private FSM fsm;
     private Animator enemyAnimator;
-    private bool stunned = false; 
+    private bool stunned = false;
+    [SerializeField] int killXp;
     [SerializeField] int patrollDistance;
     [SerializeField] float atackSpeed = 2.5f;
     [SerializeField] float damage = 2.5f;
@@ -17,15 +19,17 @@ public class MeleEnemyBehaviour : MonoBehaviour {
     public float AtackSpeed {get { return atackSpeed; } }
     public float Damage { get { return damage; } }
     public bool Stunned { get { return stunned; } }
-
+    public int KillXP { get { return killXp; } }
 
     private void Awake()
     {
         BuildFSM();
         enemyAnimator = GetComponentInChildren<Animator>();
     }
-    
-
+    private void Start()
+    {
+        myPoolManager = PoolManager.Instance;
+    }
 
     private void Update()
     {
@@ -58,6 +62,7 @@ public class MeleEnemyBehaviour : MonoBehaviour {
         stunned.AddTransition(TransitionsID.Dying, StatesID.Die);
 
         DyingState die = new DyingState();
+        die.AddTransition(TransitionsID.Respawn, StatesID.Idle);
 
    
 
@@ -85,6 +90,15 @@ public class MeleEnemyBehaviour : MonoBehaviour {
     public void StopRunning()
     {
         enemyAnimator.SetBool("Run", false);
+    }
+
+    public void Die()
+    {
+        enemyAnimator.ResetTrigger("Stuned");
+        enemyAnimator.ResetTrigger("Atack");
+        enemyAnimator.ResetTrigger("Dead");
+        StopRunning();
+        myPoolManager.DeleteThisFromPool("EnemyPool", gameObject);
     }
 
 }
@@ -262,11 +276,13 @@ public class AtackingState : FSMState
             npc.GetComponent<MeleEnemyBehaviour>().TriggerAnim("Dead");
             npc.GetComponent<MeleEnemyBehaviour>().SetTransition(TransitionsID.Dying);
         }
+        else
         if(npc.GetComponent<MeleEnemyBehaviour>().Stunned)
         {
             npc.GetComponent<MeleEnemyBehaviour>().TriggerAnim("Stunned");
             npc.GetComponent<MeleEnemyBehaviour>().SetTransition(TransitionsID.Stun);
         }
+        else
         if ((new Vector2(player.transform.position.x, player.transform.position.z) - new Vector2(npc.transform.position.x, npc.transform.position.z)).magnitude > 1.8)
         {
             npc.GetComponent<MeleEnemyBehaviour>().Run();
@@ -308,6 +324,7 @@ public class StunnedState : FSMState
             npc.GetComponent<MeleEnemyBehaviour>().TriggerAnim("Dead");
             npc.GetComponent<MeleEnemyBehaviour>().SetTransition(TransitionsID.Dying);
         }
+        else
         if (StunTime<=0)
         {
             npc.GetComponent<MeleEnemyBehaviour>().Stun(false);
@@ -342,8 +359,14 @@ public class DyingState : FSMState
     public override void Rason(GameObject player, GameObject npc)
     {
         if (despawnTime <= 0)
-            npc.SetActive(false);
-    }
+        {
+            despawnTime = 5;
+            player.GetComponent<CharacterProgression>().GainXp(npc.GetComponent<MeleEnemyBehaviour>().KillXP);
+            npc.GetComponent<MeleEnemyBehaviour>().SetTransition(TransitionsID.Respawn);
+            npc.GetComponent<healthManager>().Revive();
+            npc.GetComponent<MeleEnemyBehaviour>().Die();
+        }
+    }   
 
     public override void Behavior(GameObject player, GameObject npc)
     {
