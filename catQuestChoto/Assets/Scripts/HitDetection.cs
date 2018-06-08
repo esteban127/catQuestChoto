@@ -9,7 +9,7 @@ public class HitDetection : MonoBehaviour{
     [SerializeField] float texTime;
     private healthManager healtM;
     private Weapon weapon;
-    private float cFrames = 0;
+    private float iFrames = 0;
 
     private float damage;
 
@@ -18,7 +18,7 @@ public class HitDetection : MonoBehaviour{
 	}
     private void Update()
     {
-        cFrames -= Time.deltaTime;
+        iFrames -= Time.deltaTime;
     }
     private void OnTriggerEnter(Collider collide)
     {
@@ -27,9 +27,9 @@ public class HitDetection : MonoBehaviour{
         {
             if (collide.tag == "Sword")
             {
-                if(cFrames<=0)
+                if(iFrames<=0)
                 {
-                    cFrames = 0.8f;
+                    iFrames = 0.8f;
 
                     Debug.Log("Auch!");
                     weapon = collide.GetComponent<Weapon>();
@@ -58,7 +58,7 @@ public class HitDetection : MonoBehaviour{
                     damage = weapon.Damage * 1.25f;
                     break;
                 case 3:
-                    cFrames += 1f;
+                    iFrames += 1f;
                     damage = weapon.Damage * 1.5f;
                     break;
                 case 4:
@@ -67,8 +67,8 @@ public class HitDetection : MonoBehaviour{
                     break;
 
             }
-            damage += (damage * Random.Range(-0.2f, 0.2f));
-            healtM.getDamage(damage);
+            damage += Mathf.Round(damage * Random.Range(-0.2f, 0.2f));
+            healtM.getDamage((int)damage);
 
     
             GameObject newText = Instantiate(damageTextPrefab, gameObject.transform.position, gameObject.transform.rotation);

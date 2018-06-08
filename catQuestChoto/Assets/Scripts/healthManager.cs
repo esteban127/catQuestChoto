@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class healthManager : MonoBehaviour {
     
-    [SerializeField] float HealthPoints;
+    [SerializeField] int HealthPoints;
     [SerializeField] GameObject hpBar;
-    float currentHealth;
+    int currentHealth;
     bool alive = true;
-    public float HP {get { return HealthPoints; } }
+    public int HP {get { return HealthPoints; } }
 
 
     private void Start()
@@ -16,13 +16,13 @@ public class healthManager : MonoBehaviour {
         currentHealth = HealthPoints;
     }
 
-    public void Heal(float healAmount)   
+    public void Heal(int healAmount)   
     {
         currentHealth += healAmount;
         if (currentHealth > HealthPoints)
             currentHealth = HealthPoints;
 
-        hpBar.GetComponent<ProgressionBar>().SetProgression(currentHealth / HealthPoints);
+        hpBar.GetComponent<ProgressionBar>().SetProgression((float)currentHealth / (float)HealthPoints);
         hpBar.GetComponent<ProgressionBar>().SetText(currentHealth.ToString() + " / " + HealthPoints.ToString());
     }
     public void Death()    
@@ -31,7 +31,7 @@ public class healthManager : MonoBehaviour {
         alive = false;
     }
 
-    public void getDamage(float damage)
+    public void getDamage(int damage)
     {
         currentHealth -= damage;
         if(currentHealth <= 0)
@@ -41,7 +41,7 @@ public class healthManager : MonoBehaviour {
         }
         else
         {
-            hpBar.GetComponent<ProgressionBar>().SetProgression(currentHealth / HealthPoints);
+            hpBar.GetComponent<ProgressionBar>().SetProgression((float)currentHealth / (float)HealthPoints);
             hpBar.GetComponent<ProgressionBar>().SetText(currentHealth.ToString() + " / " + HealthPoints.ToString());
         }
     }
@@ -52,7 +52,7 @@ public class healthManager : MonoBehaviour {
         alive = true;
     }
 
-    public void UpdateMaxHP(float newMaxHP)
+    public void UpdateMaxHP(int newMaxHP)
     {
         if (newMaxHP > 0)
             HealthPoints = newMaxHP;

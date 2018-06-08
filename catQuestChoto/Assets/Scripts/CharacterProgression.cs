@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterProgression : MonoBehaviour {
-    [SerializeField] int currentLvl = 0;
+    int currentLvl = 0;
     [SerializeField] GameObject xpBar;
-    [SerializeField] private int experiencie = 0;
-    [SerializeField] private int nextLevelXp = 100;
+    [SerializeField] GameObject lvlDisplay;
+    private int experiencie = 0;
+    private int nextLevelXp = 100;
     private healthManager myHealthManager;
     private Weapon myWeapon;
 
@@ -35,11 +37,12 @@ public class CharacterProgression : MonoBehaviour {
     private void LvlUp()
     {
         currentLvl++;
-        experiencie -= nextLevelXp;
-        nextLevelXp = (int)(nextLevelXp *1.2f);
-        myHealthManager.UpdateMaxHP(myHealthManager.HP * 1.10f);
-        myHealthManager.Heal(myHealthManager.HP * 0.5f);
-        myWeapon.SetDamage(myWeapon.Damage + (1.3f * currentLvl));
+        experiencie -= nextLevelXp;        
+        nextLevelXp = (int)(nextLevelXp *1.85f);
+        myHealthManager.UpdateMaxHP(myHealthManager.HP + (int)(10* currentLvl*1.5));
+        myHealthManager.Heal((int)Mathf.Round(myHealthManager.HP * 0.5f));
+        myWeapon.SetDamage(myWeapon.Damage + (1.8f * currentLvl));
+        lvlDisplay.GetComponentInChildren<Text>().text = (currentLvl + 1).ToString();
 
     }
 }
