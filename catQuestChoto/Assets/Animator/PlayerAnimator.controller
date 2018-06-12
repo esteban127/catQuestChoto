@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   atackTipe: 3
+  slashSound: 5
 --- !u!114 &114524216875567614
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -75,6 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   atackTipe: 2
+  slashSound: 5
 --- !u!114 &114798613474564126
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -98,6 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   atackTipe: 1
+  slashSound: 4
 --- !u!114 &114869042275731612
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -110,6 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   atackTipe: 4
+  slashSound: 6
 --- !u!206 &206232810131563810
 BlendTree:
   m_ObjectHideFlags: 1

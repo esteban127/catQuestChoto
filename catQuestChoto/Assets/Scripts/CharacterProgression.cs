@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CharacterProgression : MonoBehaviour {
-    int currentLvl = 18;
+    int currentLvl = 0;
     [SerializeField] GameObject xpBar;
     [SerializeField] GameObject lvlDisplay;
     private int experiencie = 0;
@@ -36,11 +36,12 @@ public class CharacterProgression : MonoBehaviour {
 
     private void LvlUp()
     {
+        gameObject.GetComponent<soundPlayer>().playSoud(Sounds.LvlUp);
         currentLvl++;
         experiencie -= nextLevelXp;        
-        nextLevelXp = (int)(nextLevelXp *1.6f);
+        nextLevelXp = (int)(nextLevelXp *1.3f);
         myHealthManager.UpdateMaxHP(myHealthManager.HP + (int)(10* currentLvl*1.5));
-        myHealthManager.Heal((int)Mathf.Round(myHealthManager.HP * 0.5f));
+        myHealthManager.Heal((int)Mathf.Round(myHealthManager.HP * 0.25f));
         myWeapon.SetDamage(myWeapon.Damage + (1.8f * currentLvl));
         lvlDisplay.GetComponentInChildren<Text>().text = (currentLvl + 1).ToString();
 

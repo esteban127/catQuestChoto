@@ -20,7 +20,9 @@ public class StartGame : MonoBehaviour {
             myPoolManager.DeleteAll();
             SceneManager.LoadScene("Game", LoadSceneMode.Single);
         }
-            
+        if (Input.GetKey("escape"))
+            Application.Quit();
+
 
     }
 }

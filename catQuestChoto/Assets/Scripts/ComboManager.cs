@@ -5,9 +5,11 @@ using UnityEngine;
 public class ComboManager : StateMachineBehaviour {
     GameObject playerReference;
     [SerializeField] int atackTipe;
+    [SerializeField] Sounds slashSound;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
     
         playerReference.GetComponentInChildren<Weapon>().SetState(atackTipe);
+        playerReference.GetComponentInChildren<soundPlayer>().playSoud(slashSound);
     }
     private void Awake()
     {

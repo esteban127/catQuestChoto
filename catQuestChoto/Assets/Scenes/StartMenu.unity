@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -611,13 +611,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolArray:
   - poolName: Lvl1EnemyPool0
-    poolSize: 10
+    poolSize: 8
     objectToPool: {fileID: 1765754226039234, guid: 9eaf30c116374bc45becdf15323c63eb,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
     forceExpand: 0
   - poolName: Lvl1EnemyPool1
-    poolSize: 10
+    poolSize: 8
     objectToPool: {fileID: 1765754226039234, guid: 9eaf30c116374bc45becdf15323c63eb,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
@@ -647,49 +647,49 @@ MonoBehaviour:
     deletedPos: {x: -100, y: -100, z: -100}
     forceExpand: 0
   - poolName: Lvl10EnemyPool0
-    poolSize: 10
+    poolSize: 8
     objectToPool: {fileID: 1574824820615354, guid: 14523c0954a05324d8fd1cfb9a530542,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
     forceExpand: 0
   - poolName: Lvl10EnemyPool1
-    poolSize: 10
+    poolSize: 8
     objectToPool: {fileID: 1574824820615354, guid: 14523c0954a05324d8fd1cfb9a530542,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
     forceExpand: 0
   - poolName: Lvl10EnemyPool2
-    poolSize: 10
+    poolSize: 8
     objectToPool: {fileID: 1574824820615354, guid: 14523c0954a05324d8fd1cfb9a530542,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
     forceExpand: 0
   - poolName: Lvl10EnemyPool3
-    poolSize: 10
+    poolSize: 8
     objectToPool: {fileID: 1574824820615354, guid: 14523c0954a05324d8fd1cfb9a530542,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
     forceExpand: 0
   - poolName: Lvl15EnemyPool0
-    poolSize: 10
+    poolSize: 5
     objectToPool: {fileID: 1654527843199608, guid: 2d07d9e13167ed246a5c0489fa0acddd,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
     forceExpand: 0
   - poolName: Lvl15EnemyPool1
-    poolSize: 10
+    poolSize: 5
     objectToPool: {fileID: 1654527843199608, guid: 2d07d9e13167ed246a5c0489fa0acddd,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
     forceExpand: 0
   - poolName: Lvl15EnemyPool2
-    poolSize: 10
+    poolSize: 5
     objectToPool: {fileID: 1654527843199608, guid: 2d07d9e13167ed246a5c0489fa0acddd,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
     forceExpand: 0
   - poolName: Lvl15EnemyPool3
-    poolSize: 10
+    poolSize: 5
     objectToPool: {fileID: 1654527843199608, guid: 2d07d9e13167ed246a5c0489fa0acddd,
       type: 2}
     deletedPos: {x: -100, y: -100, z: -100}
@@ -701,7 +701,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2037723458}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.6664433, y: -0.02, z: 7.71}
+  m_LocalPosition: {x: -1.6664433, y: 2.23, z: 7.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

@@ -343,6 +343,7 @@ public class AtackingState : FSMState
         if (atackCooldown <= 0)
         {
             atackCooldown = 3 / npc.GetComponent<MeleEnemyBehaviour>().AtackSpeed;
+            npc.GetComponent<soundPlayer>().playSoud(Sounds.Atk);
             npc.GetComponent<MeleEnemyBehaviour>().TriggerAnim("Atack");
             npc.GetComponentInChildren<Weapon>().SetState(1);            
         }

@@ -21,16 +21,8 @@ public class PlayerHitDetection : MonoBehaviour {
         {
             if (collide.tag == "EnemyWeapon")
             {
-               
-                
-
-                Debug.Log("Auch!");
                 weapon = collide.GetComponent<Weapon>();
-
                 Hit();
-
-
-               
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+/*using UnityEditor;
 
 [CustomEditor(typeof(PoolManager))]
 public class PoolManagerInspector : Editor {
@@ -16,4 +16,4 @@ public class PoolManagerInspector : Editor {
         GUILayout.Label(myScript.ArrayVerify());
     }
     
-}
+}*/

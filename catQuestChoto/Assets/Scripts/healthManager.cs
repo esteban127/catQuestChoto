@@ -28,6 +28,7 @@ public class healthManager : MonoBehaviour {
     }
     public void Death()    
     {
+        gameObject.GetComponent<soundPlayer>().playSoud(Sounds.Die);
         if (isPlayer)
             gameObject.GetComponent<GameEnding>().DeadEnd();
         
@@ -37,13 +38,14 @@ public class healthManager : MonoBehaviour {
     public void getDamage(int damage)
     {
         currentHealth -= damage;
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             hpBar.SetActive(false);
             Death();
         }
         else
         {
+            gameObject.GetComponent<soundPlayer>().playSoud(Sounds.Dmg);
             hpBar.GetComponent<ProgressionBar>().SetProgression((float)currentHealth / (float)HealthPoints);
             hpBar.GetComponent<ProgressionBar>().SetText(currentHealth.ToString() + " / " + HealthPoints.ToString());
         }

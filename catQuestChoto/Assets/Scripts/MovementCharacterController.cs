@@ -16,6 +16,8 @@ public class MovementCharacterController : MonoBehaviour {
     private float gravity = 20.0f;
     [SerializeField]
     private int maxJumpCap = 1;
+    [SerializeField]
+    GameObject pauseDialog;
 
     private int currentJumpCount = 0;
 
@@ -143,6 +145,12 @@ public class MovementCharacterController : MonoBehaviour {
         {
             Atack();
         }
+        if (Input.GetButtonDown("Submit"))
+        {
+            pauseDialog.GetComponent<PopUpPause>().Pause("Que queres? No jodas");
+        }
+        if (Input.GetKey("escape"))
+            Application.Quit();
 
     }
 

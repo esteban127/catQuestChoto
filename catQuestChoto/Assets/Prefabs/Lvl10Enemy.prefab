@@ -712,6 +712,8 @@ GameObject:
   - component: {fileID: 114712926343245090}
   - component: {fileID: 114615327500116044}
   - component: {fileID: 114210290303141354}
+  - component: {fileID: 82540221083760206}
+  - component: {fileID: 114600528846054372}
   m_Layer: 0
   m_Name: Lvl10Enemy
   m_TagString: Enemy
@@ -2328,6 +2330,86 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!82 &82540221083760206
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1574824820615354}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95632356121849768
 Animator:
   serializedVersion: 3
@@ -2398,7 +2480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1ef51c1efe5c7a40aff64bda656c912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 0.65314376, g: 0.21139705, b: 0.8455882, a: 0}
+  color: {r: 0.6323528, g: 0, b: 1, a: 1}
 --- !u!114 &114137074001949028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2485,7 +2567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 809f177813aaf2c4596824389f6beaab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRadius: 5
+  detectionRadius: 10
 --- !u!114 &114471050093588146
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2559,6 +2641,27 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114600528846054372
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1574824820615354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a635d2d5c2aff1419e43a031b52476f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spotSfx: {fileID: 8300000, guid: a30f69da87337814c8d892a0d45634dc, type: 3}
+  dieSfx: {fileID: 8300000, guid: 718356d737ea5364595d1099e9cd699e, type: 3}
+  atackSfx: {fileID: 8300000, guid: d8d0d015f89fce945b3cdda606847906, type: 3}
+  getDmgSfx: {fileID: 8300000, guid: 2f337475b672b3e448c6b51788c2e4fd, type: 3}
+  slash0: {fileID: 0}
+  slash1: {fileID: 0}
+  slash2: {fileID: 0}
+  lvlUp: {fileID: 0}
+  vol: 0.5
+  atkVol: 1
 --- !u!114 &114615327500116044
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2571,10 +2674,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
-  killXp: 3500
+  killXp: 800
   patrollDistance: 8
   atackSpeed: 2.5
-  damage: 45
+  damage: 60
 --- !u!114 &114701239357740012
 MonoBehaviour:
   m_ObjectHideFlags: 1
