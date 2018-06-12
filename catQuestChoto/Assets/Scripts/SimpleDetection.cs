@@ -9,6 +9,7 @@ public class SimpleDetection : MonoBehaviour {
     private bool detect = false;   
     public bool Detect { get { return detect; } }
     public GameObject Player { get { return player; } }
+    public void ResetDetect() { detect=false; }
 
     private void Start()
     {

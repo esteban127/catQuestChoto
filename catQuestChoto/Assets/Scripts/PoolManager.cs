@@ -44,7 +44,9 @@ public class PoolManager : MonoBehaviour {
 
         private GameObject poolContainer;
         private GameObject[] myArray;
+        private bool poolIsFull = false;
 
+        public bool PoolIsFull { get { return poolIsFull; } }
         public string PoolName { get { return poolName; } }
         public int PoolSize { get{ return poolSize; } }
         public GameObject ObjectToPool { get{ return objectToPool; } }
@@ -75,14 +77,14 @@ public class PoolManager : MonoBehaviour {
             }
 
         }
-
+       
         public GameObject PoolRequest(Vector3 pos, Vector3 rotation, Vector3 scale)
         {
             GameObject objectToReturn = null;            
             for (int i = 0; i < myArray.Length; i++)
             {
                 if (!myArray[i].activeInHierarchy)
-                {
+                {      
                     objectToReturn = myArray[i];
                     InitializeObject(objectToReturn, pos, rotation, scale);
                     return objectToReturn;
@@ -90,8 +92,9 @@ public class PoolManager : MonoBehaviour {
                 
                 if(i==myArray.Length-1)
                 {
-                    if (!forceExpand)
-                        Debug.LogError("Pool is full");
+                    poolIsFull = true;
+                    if (!forceExpand)                    
+                        Debug.LogError("Pool is full");    
                     else
                     {
                         ExpandPool();
@@ -142,8 +145,19 @@ public class PoolManager : MonoBehaviour {
         }
         public void PoolObjectDelete(GameObject objectToDelete)
         {
+            if (PoolIsFull)
+                poolIsFull = false;
+
             objectToDelete.transform.position = deletedPos;
             objectToDelete.SetActive(false);
+        }
+
+        public void DeleteAll()
+        {
+            foreach(GameObject g in myArray)
+            {
+                PoolObjectDelete(g);
+            }
         }
 
         public void DeleteObject(GameObject objectToDelete)
@@ -211,7 +225,13 @@ public class PoolManager : MonoBehaviour {
         return poolToRequest.PoolRequest(pos, rotation, scale);
         
     }       
-
+    public void DeleteAll()
+    {
+        foreach(pool p in poolArray)
+        {
+            p.DeleteAll();
+        }
+    }
     public void DeleteFirstFromPool(string poolName) {
 
         SearchPoolForName(poolName).DeleteFirstObject();
@@ -229,7 +249,10 @@ public class PoolManager : MonoBehaviour {
         SearchPoolForName(poolName).DeleteLastObject();
 
     }
-
+    public bool PoolIsFull(string poolName)
+    {
+        return SearchPoolForName(poolName).PoolIsFull;
+    }
     public string ArrayVerify()
     {
         string mensage;

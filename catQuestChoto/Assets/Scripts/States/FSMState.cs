@@ -30,6 +30,7 @@ public enum TransitionsID
     StopPatrolling,
     StartPatrolling,
     NoLongerHurt,
+    Reset,
     Respawn,
 
 

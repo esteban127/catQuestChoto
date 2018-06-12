@@ -65,7 +65,7 @@ public class HitDetection : MonoBehaviour{
                     damage = weapon.Damage * 2.5f;
                     gameObject.GetComponent<MeleEnemyBehaviour>().Stun(true);
                     break;
-
+                    
             }
             damage += Mathf.Round(damage * Random.Range(-0.2f, 0.2f));
             healtM.getDamage((int)damage);

@@ -54,7 +54,7 @@ public class MovementCharacterController : MonoBehaviour {
         {
             Move();
             Rotate();
-        }            
+        }        
         MovementAnimation();
         ResetJumpCount();
         

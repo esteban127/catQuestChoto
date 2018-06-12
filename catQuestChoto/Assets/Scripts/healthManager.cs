@@ -6,6 +6,7 @@ public class healthManager : MonoBehaviour {
     
     [SerializeField] int HealthPoints;
     [SerializeField] GameObject hpBar;
+    [SerializeField] bool isPlayer;
     int currentHealth;
     bool alive = true;
     public int HP {get { return HealthPoints; } }
@@ -27,7 +28,9 @@ public class healthManager : MonoBehaviour {
     }
     public void Death()    
     {
-        Debug.Log(gameObject.name + ": Estoy murido");
+        if (isPlayer)
+            gameObject.GetComponent<GameEnding>().DeadEnd();
+        
         alive = false;
     }
 
@@ -37,7 +40,7 @@ public class healthManager : MonoBehaviour {
         if(currentHealth <= 0)
         {
             hpBar.SetActive(false);
-            alive = false;
+            Death();
         }
         else
         {
