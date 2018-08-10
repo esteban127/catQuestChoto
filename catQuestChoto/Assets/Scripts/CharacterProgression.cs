@@ -40,8 +40,8 @@ public class CharacterProgression : MonoBehaviour {
         currentLvl++;
         experiencie -= nextLevelXp;        
         nextLevelXp = (int)(nextLevelXp *1.3f);
-        myHealthManager.UpdateMaxHP(myHealthManager.HP + (int)(10* currentLvl*1.5));
-        myHealthManager.Heal((int)Mathf.Round(myHealthManager.HP * 0.25f));
+        myHealthManager.UpdateMaxHP(myHealthManager.MaxHealth + (int)(10* currentLvl*1.5));
+        myHealthManager.Heal((int)Mathf.Round(myHealthManager.MaxHealth * 0.25f));
         myWeapon.SetDamage(myWeapon.Damage + (1.8f * currentLvl));
         lvlDisplay.GetComponentInChildren<Text>().text = (currentLvl + 1).ToString();
 

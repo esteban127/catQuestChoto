@@ -4,27 +4,28 @@ using UnityEngine;
 
 public class healthManager : MonoBehaviour {
     
-    [SerializeField] int HealthPoints;
+    [SerializeField] int maxHealth;
     [SerializeField] GameObject hpBar;
     [SerializeField] bool isPlayer;
     int currentHealth;
     bool alive = true;
-    public int HP {get { return HealthPoints; } }
+    public int MaxHealth { get { return maxHealth; } }
+    public int CurrentHealth { get { return currentHealth; } }
 
 
     private void Start()
     {
-        currentHealth = HealthPoints;
+        currentHealth = maxHealth;
     }
 
     public void Heal(int healAmount)   
     {
         currentHealth += healAmount;
-        if (currentHealth > HealthPoints)
-            currentHealth = HealthPoints;
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
 
-        hpBar.GetComponent<ProgressionBar>().SetProgression((float)currentHealth / (float)HealthPoints);
-        hpBar.GetComponent<ProgressionBar>().SetText(currentHealth.ToString() + " / " + HealthPoints.ToString());
+        hpBar.GetComponent<ProgressionBar>().SetProgression((float)currentHealth / (float)maxHealth);
+        hpBar.GetComponent<ProgressionBar>().SetText(currentHealth.ToString() + " / " + maxHealth.ToString());
     }
     public void Death()    
     {
@@ -46,21 +47,21 @@ public class healthManager : MonoBehaviour {
         else
         {
             gameObject.GetComponent<soundPlayer>().playSoud(Sounds.Dmg);
-            hpBar.GetComponent<ProgressionBar>().SetProgression((float)currentHealth / (float)HealthPoints);
-            hpBar.GetComponent<ProgressionBar>().SetText(currentHealth.ToString() + " / " + HealthPoints.ToString());
+            hpBar.GetComponent<ProgressionBar>().SetProgression((float)currentHealth / (float)maxHealth);
+            hpBar.GetComponent<ProgressionBar>().SetText(currentHealth.ToString() + " / " + maxHealth.ToString());
         }
     }
 	public void Revive()
     {
         
-        currentHealth = HealthPoints;
+        currentHealth = maxHealth;
         alive = true;
     }
 
     public void UpdateMaxHP(int newMaxHP)
     {
         if (newMaxHP > 0)
-            HealthPoints = newMaxHP;
+            maxHealth = newMaxHP;
     }
 
     public bool isAlive()

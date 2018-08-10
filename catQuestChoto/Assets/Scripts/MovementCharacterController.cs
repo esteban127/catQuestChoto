@@ -140,11 +140,6 @@ public class MovementCharacterController : MonoBehaviour {
         {            
             Jump(ref inputY);
         }
-
-        if (Input.GetButtonUp("Fire1") && controller.isGrounded)
-        {
-            Atack();
-        }
         if (Input.GetButtonDown("Submit"))
         {
             pauseDialog.GetComponent<PopUpPause>().Pause("Que queres? No jodas");
@@ -152,13 +147,7 @@ public class MovementCharacterController : MonoBehaviour {
         if (Input.GetKey("escape"))
             Application.Quit();
 
-    }
-
-    private void Atack()
-    {
-        playerAnimator.SetTrigger("Atack");
-        isAtacking = true;
-    }
+    }   
 
     private void Jump(ref float inputY)
     {
