@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract class FriendlyActor : IACTOR {
+public abstract class FriendlyActor : IACTOR {
 
 	
 }

@@ -10,10 +10,7 @@ public class TargetDispaly : MonoBehaviour {
     public void NewTarget(GameObject newTarget)
     {
         this.gameObject.SetActive(true);
-        if (target != null)
-            target.transform.GetChild(target.transform.childCount-1).gameObject.SetActive(false);
-        this.target = newTarget;
-        target.transform.GetChild(target.transform.childCount-1).gameObject.SetActive(true);
+        this.target = newTarget;        
         transform.GetChild(0).GetComponentInChildren<Image>().sprite = target.GetComponent<CharacterImage>().ImageToDisplay;
         this.Actualizate();
     }

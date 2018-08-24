@@ -11,7 +11,6 @@ public class CharacterProgression : MonoBehaviour {
     private int experiencie = 0;
     private int nextLevelXp = 100;
     private healthManager myHealthManager;
-    private Weapon myWeapon;
 
     public int Lvl {get { return currentLvl;  } }
 
@@ -19,7 +18,7 @@ public class CharacterProgression : MonoBehaviour {
     private void Start()
     {
         myHealthManager= gameObject.GetComponent<healthManager>();
-        myWeapon = gameObject.GetComponentInChildren<Weapon>();
+       
     }
 
   
@@ -41,8 +40,7 @@ public class CharacterProgression : MonoBehaviour {
         experiencie -= nextLevelXp;        
         nextLevelXp = (int)(nextLevelXp *1.3f);
         myHealthManager.UpdateMaxHP(myHealthManager.MaxHealth + (int)(10* currentLvl*1.5));
-        myHealthManager.Heal((int)Mathf.Round(myHealthManager.MaxHealth * 0.25f));
-        myWeapon.SetDamage(myWeapon.Damage + (1.8f * currentLvl));
+        myHealthManager.Heal((int)Mathf.Round(myHealthManager.MaxHealth * 0.25f));       
         lvlDisplay.GetComponentInChildren<Text>().text = (currentLvl + 1).ToString();
 
         if (currentLvl >= 19)

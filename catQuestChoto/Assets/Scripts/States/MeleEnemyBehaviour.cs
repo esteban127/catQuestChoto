@@ -33,7 +33,6 @@ public class MeleEnemyBehaviour : MonoBehaviour {
     {
         myPoolManager = PoolManager.Instance;
         enemyAnimator.SetFloat("AtackSpeed", atackSpeed);
-        gameObject.GetComponentInChildren<Weapon>().SetDamage(damage);
     }
     
     private void Update()
@@ -247,14 +246,14 @@ public class ChasePlayerState : FSMState
         if (!npc.GetComponent<healthManager>().isAlive())
         {
             player.GetComponent<CharacterProgression>().GainXp(npc.GetComponent<MeleEnemyBehaviour>().KillXP);
-            npc.GetComponentInChildren<Weapon>().SetState(0);
+           
             npc.GetComponent<MeleEnemyBehaviour>().TriggerAnim("Dead");
             npc.GetComponent<MeleEnemyBehaviour>().SetTransition(TransitionsID.Dying);
         }
         else
         if (npc.GetComponent<MeleEnemyBehaviour>().Stunned)
         {
-            npc.GetComponentInChildren<Weapon>().SetState(0);
+           
             npc.GetComponent<MeleEnemyBehaviour>().TriggerAnim("Stunned");
             npc.GetComponent<MeleEnemyBehaviour>().SetTransition(TransitionsID.Stun);
         }
@@ -314,21 +313,21 @@ public class AtackingState : FSMState
         if (!npc.GetComponent<healthManager>().isAlive())
         {
             player.GetComponent<CharacterProgression>().GainXp(npc.GetComponent<MeleEnemyBehaviour>().KillXP);
-            npc.GetComponentInChildren<Weapon>().SetState(0);
+
             npc.GetComponent<MeleEnemyBehaviour>().TriggerAnim("Dead");
             npc.GetComponent<MeleEnemyBehaviour>().SetTransition(TransitionsID.Dying);
         }
         else
         if(npc.GetComponent<MeleEnemyBehaviour>().Stunned)
         {
-            npc.GetComponentInChildren<Weapon>().SetState(0);
+          
             npc.GetComponent<MeleEnemyBehaviour>().TriggerAnim("Stunned");
             npc.GetComponent<MeleEnemyBehaviour>().SetTransition(TransitionsID.Stun);
         }
         else
         if ((new Vector2(player.transform.position.x, player.transform.position.z) - new Vector2(npc.transform.position.x, npc.transform.position.z)).magnitude > 1.4)
         {
-            npc.GetComponentInChildren<Weapon>().SetState(0);
+           
             npc.GetComponent<MeleEnemyBehaviour>().Run();
             npc.GetComponent<MeleEnemyBehaviour>().SetTransition(TransitionsID.OutOfRange);
         }
@@ -345,7 +344,7 @@ public class AtackingState : FSMState
             atackCooldown = 3 / npc.GetComponent<MeleEnemyBehaviour>().AtackSpeed;
             npc.GetComponent<soundPlayer>().playSoud(Sounds.Atk);
             npc.GetComponent<MeleEnemyBehaviour>().TriggerAnim("Atack");
-            npc.GetComponentInChildren<Weapon>().SetState(1);            
+                   
         }
         atackCooldown -= Time.deltaTime;
 

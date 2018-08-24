@@ -7,6 +7,7 @@ enum baseAttribute
     Health,
     Damage,
     Mana,
+    Defense,
     Precision,
     Dodge,
     CritChance
@@ -22,7 +23,7 @@ enum  attribute
     Luck
 }
 
-abstract class IACTOR : MonoBehaviour { 
+public abstract class IACTOR : MonoBehaviour { 
 
 
     //basics
@@ -36,7 +37,7 @@ abstract class IACTOR : MonoBehaviour {
     protected float baseMana;
     protected float baseDodge;
     protected float basePrecision;
-    protected float baseCritChance;
+    protected float baseCritChance;    
     //attributes
     protected float baseStrength;
     protected float baseConstitution;
@@ -49,36 +50,36 @@ abstract class IACTOR : MonoBehaviour {
     protected float currentHealth;
     protected float currentMana;
     //Buffs
-        //protected Buff activeBuffs;    
+    //protected Buff activeBuffs;    
 
     //Functions
-
+    /*
     //Basics
-    public abstract string getName();
-    public abstract float getLevel();
-    public abstract Sprite getPict();
+    public string getName() { };
+    public float getLevel() { };
+    public Sprite getPict() { };
     //Health related
-    protected abstract float getMaxHealth();
-    public abstract float getCurrentHealth();
-    public abstract float takeDamage();
-    protected abstract float replenishHealth();
+    protected float getMaxHealth() { };
+    public float getCurrentHealth() { };
+    public float takeDamage() { };
+    protected float replenishHealth() { };
     //Mana related
-    protected abstract float getMaxMana();
-    public abstract float getCurrentMana();
-    protected abstract float spendMana();
-    protected abstract float replenishMana();
+    protected float getMaxMana() { };
+    public float getCurrentMana() { };
+    protected float spendMana() { };
+    protected float replenishMana();
     //Damage related
-    public abstract float getDamage();
-    protected abstract float calculateFinalDamage(IACTOR target);
+    public float getDamage() { };
+    protected float calculateFinalDamage(IACTOR target) { };
     //Defense related
-    public abstract float getDefense();
+    public float getDefense() { };
     //Chance related
-    public abstract float getDodge();
-    public abstract float getPrecision();
-    public abstract float getCritChance();
-    protected abstract bool calculateHitSuccess(IACTOR target);
+    public float getDodge() { };
+    public float getPrecision() { };
+    public float getCritChance() { };
+    protected bool calculateHitSuccess(IACTOR target) { };
     //attribute related
-    protected abstract float getAttribute(attribute attribute);
-
+    protected float getAttribute(attribute attribute) { };
+    */
     
 }
