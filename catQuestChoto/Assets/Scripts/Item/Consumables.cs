@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class Consumables : Iitem
 {
-    float duration;
+    [SerializeField]float duration;
+    [SerializeField] bool restoration;
 
-    public override void Use()
+    public void setStats(string name, string c_description, int lvl,bool is_restoration, float c_duration, itemstats aditionalStats)
     {
-        throw new System.NotImplementedException();
+        itemName = name;      
+        itemLvl = lvl;
+        restoration = is_restoration;
+        description = c_description;
+        duration = c_duration;
+        stats = aditionalStats;
     }
 
 }

@@ -14,7 +14,7 @@ public abstract class AtackAbility : IAbility {
         {
             if ((target.transform.position - this.gameObject.transform.position).magnitude < range && remainCooldown <= 0)
             {
-                CastAbility(target.GetComponent<IACTOR>())
+                CastAbility(target.GetComponent<IACTOR>());
                 return true;
             }
         }
