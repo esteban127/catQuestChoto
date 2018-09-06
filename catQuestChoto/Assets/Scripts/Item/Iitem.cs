@@ -6,8 +6,6 @@ using UnityEngine;
 public struct itemstats
 {
     [SerializeField] float Health;
-    [SerializeField] float Damage;
-    [SerializeField] float Defense;
     [SerializeField] float Mana;
     [SerializeField] float Precision;
     [SerializeField] float Dodge;
@@ -29,7 +27,6 @@ public abstract class Iitem {
     [SerializeField] protected itemstats stats;
     [SerializeField] protected string ItemID;
     [SerializeField] protected string itemName;
-    [SerializeField] protected string description;  
     
     //public abstract void Use();
     void loadStats()

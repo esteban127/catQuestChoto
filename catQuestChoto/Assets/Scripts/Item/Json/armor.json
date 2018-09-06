@@ -1,0 +1,27 @@
+{  
+   "size":{  
+      "x":2,
+      "y":2
+   },
+   "itemLvl":1,
+   "stats":{  
+      "Health":0.0,
+      "Mana":0.0,
+      "Precision":0.0,
+      "Dodge":0.0,
+      "CritChance":0.0,
+      "Strength":0.0,
+      "Constitution":0.0,
+      "Dextery":0.0,
+      "Inteligence":0.0,
+      "Luck":0.0,
+      "coldownReduction":0.0,
+      "heathRegen":0.0,
+      "manaRegen":0.0
+   },
+   "ItemID":"0",
+   "itemName":"Shield",
+   "tipe":0,
+   "Defense":8.0,
+   "randomProperty":2
+}

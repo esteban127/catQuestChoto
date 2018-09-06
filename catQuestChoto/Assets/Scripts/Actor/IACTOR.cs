@@ -23,32 +23,32 @@ enum  attribute
     Luck
 }
 
-public abstract class IACTOR : MonoBehaviour { 
+public abstract class IACTOR : MonoBehaviour {
 
 
     //basics
-    protected string Id;
-    protected float level;
+    [SerializeField] protected string Id;
+    [SerializeField] protected int level;
     protected Sprite profilePict;
     //base attributes    
-    protected float baseHealth;
-    protected float baseDamage;
-    protected float baseDefense;
-    protected float baseMana;
-    protected float baseDodge;
-    protected float basePrecision;
-    protected float baseCritChance;    
+    [SerializeField] protected float baseHealth;
+    [SerializeField] protected float baseDamage;
+    [SerializeField] protected float baseDefense;
+    [SerializeField] protected float baseMana;
+    [SerializeField] protected float baseDodge;
+    [SerializeField] protected float basePrecision;
+    [SerializeField] protected float baseCritChance;
     //attributes
-    protected float baseStrength;
-    protected float baseConstitution;
-    protected float baseDextery;
-    protected float baseInteligence;
-    protected float baseLuck;
+    [SerializeField] protected int baseStrength;
+    [SerializeField] protected int baseConstitution;
+    [SerializeField] protected int baseDextery;
+    [SerializeField] protected int baseInteligence;
+    [SerializeField] protected int baseLuck;
     //Equipament
     //protected Equipament equipament 
     //variable attributes
-    protected float currentHealth;
-    protected float currentMana;
+    [SerializeField] protected float currentHealth;
+    [SerializeField] protected float currentMana;
     //Buffs
     //protected Buff activeBuffs;    
 
