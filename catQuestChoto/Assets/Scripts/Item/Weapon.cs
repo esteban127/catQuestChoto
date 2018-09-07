@@ -6,7 +6,6 @@ using UnityEngine;
 public enum weaponTipe
 {
     OneHandedSword,
-    Dager,
     TwoHandedSword,
     Staf,
     Bow

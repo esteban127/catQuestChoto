@@ -22,11 +22,12 @@ public struct itemstats
 [System.Serializable]
 public abstract class Iitem {
 
-    [SerializeField] Vector2Int size;
+    [SerializeField] int[,] size;
     [SerializeField] protected int itemLvl;
     [SerializeField] protected itemstats stats;
     [SerializeField] protected string ItemID;
     [SerializeField] protected string itemName;
+    protected Sprite image;
     
     //public abstract void Use();
     void loadStats()

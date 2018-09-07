@@ -2665,6 +2665,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7010f5243c55a14d91bef33fdce43a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fileTipe: 0
+  ID: 0
+  Name: 
+  Lvl: 0
+  c_class: 0
+  baseStrength: 0
+  baseConstitution: 0
+  baseDextery: 0
+  baseInteligence: 0
+  baseLuck: 0
+  itemTipe: 0
+  generalStats:
+    Health: 0
+    Mana: 0
+    Precision: 0
+    Dodge: 0
+    CritChance: 0
+    Strength: 0
+    Constitution: 0
+    Dextery: 0
+    Inteligence: 0
+    Luck: 0
+    coldownReduction: 0
+    heathRegen: 0
+    manaRegen: 0
+  randomProperty: 0
+  isConsumible: 0
+  duration: 0
+  a_tipe: 0
+  defense: 0
+  w_tipe: 0
+  minDmg: 0
+  maxDmg: 0
+  critDmg: 0
+  baseCritChance: 0
 --- !u!4 &1828018652
 Transform:
   m_ObjectHideFlags: 0
@@ -2738,6 +2773,81 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4904b2722ee06e49821063a81663923, type: 3}
   m_IsPrefabParent: 0
+--- !u!1 &1921839233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1921839235}
+  - component: {fileID: 1921839234}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1921839234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1921839233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7010f5243c55a14d91bef33fdce43a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileTipe: 1
+  ID: 0
+  Name: 
+  Lvl: 0
+  c_class: 0
+  baseStrength: 0
+  baseConstitution: 0
+  baseDextery: 0
+  baseInteligence: 0
+  baseLuck: 0
+  itemTipe: 0
+  generalStats:
+    Health: 0
+    Mana: 0
+    Precision: 0
+    Dodge: 0
+    CritChance: 0
+    Strength: 0
+    Constitution: 0
+    Dextery: 0
+    Inteligence: 0
+    Luck: 0
+    coldownReduction: 0
+    heathRegen: 0
+    manaRegen: 0
+  randomProperty: 0
+  isConsumible: 0
+  duration: 0
+  a_tipe: 0
+  defense: 0
+  w_tipe: 0
+  minDmg: 0
+  maxDmg: 0
+  critDmg: 0
+  baseCritChance: 0
+--- !u!4 &1921839235
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1921839233}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.3357902, y: 3.6985497, z: -0.48953983}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 18
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1951934894
 GameObject:
   m_ObjectHideFlags: 0

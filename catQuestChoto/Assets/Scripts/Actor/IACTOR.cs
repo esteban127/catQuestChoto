@@ -11,7 +11,6 @@ enum baseAttribute
     Precision,
     Dodge,
     CritChance
-
 }
 
 enum  attribute
@@ -27,17 +26,17 @@ public abstract class IACTOR : MonoBehaviour {
 
 
     //basics
-    [SerializeField] protected string Id;
-    [SerializeField] protected int level;
+    [SerializeField] protected string ID;
+    protected int level;
     protected Sprite profilePict;
     //base attributes    
-    [SerializeField] protected float baseHealth;
-    [SerializeField] protected float baseDamage;
-    [SerializeField] protected float baseDefense;
-    [SerializeField] protected float baseMana;
-    [SerializeField] protected float baseDodge;
-    [SerializeField] protected float basePrecision;
-    [SerializeField] protected float baseCritChance;
+    protected float baseHealth;
+    protected float baseDamage;
+    protected float baseDefense;
+    protected float baseMana;
+    protected float baseDodge;
+    protected float basePrecision;
+    protected float baseCritChance;
     //attributes
     [SerializeField] protected int baseStrength;
     [SerializeField] protected int baseConstitution;
@@ -47,8 +46,8 @@ public abstract class IACTOR : MonoBehaviour {
     //Equipament
     //protected Equipament equipament 
     //variable attributes
-    [SerializeField] protected float currentHealth;
-    [SerializeField] protected float currentMana;
+     protected float currentHealth;
+     protected float currentMana;
     //Buffs
     //protected Buff activeBuffs;    
 
