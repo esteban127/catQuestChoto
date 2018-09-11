@@ -2783,7 +2783,7 @@ GameObject:
   - component: {fileID: 1921839235}
   - component: {fileID: 1921839234}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: JsonCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2797,44 +2797,84 @@ MonoBehaviour:
   m_GameObject: {fileID: 1921839233}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7010f5243c55a14d91bef33fdce43a1, type: 3}
+  m_Script: {fileID: 11500000, guid: 28ce87f9c38e1e441864e8156b5596ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileTipe: 1
-  ID: 0
-  Name: 
-  Lvl: 0
-  c_class: 0
-  baseStrength: 0
-  baseConstitution: 0
-  baseDextery: 0
-  baseInteligence: 0
-  baseLuck: 0
-  itemTipe: 0
-  generalStats:
-    Health: 0
-    Mana: 0
-    Precision: 0
-    Dodge: 0
-    CritChance: 0
-    Strength: 0
-    Constitution: 0
-    Dextery: 0
-    Inteligence: 0
-    Luck: 0
-    coldownReduction: 0
-    heathRegen: 0
-    manaRegen: 0
-  randomProperty: 0
-  isConsumible: 0
-  duration: 0
-  a_tipe: 0
-  defense: 0
-  w_tipe: 0
-  minDmg: 0
-  maxDmg: 0
-  critDmg: 0
-  baseCritChance: 0
+  fType: 1
+  jsonWeapon:
+    itemLvl: 0
+    stats:
+      Health: 0
+      Mana: 0
+      Precision: 0
+      Dodge: 0
+      CritChance: 0
+      Strength: 0
+      Constitution: 0
+      Dextery: 0
+      Inteligence: 0
+      Luck: 0
+      coldownReduction: 0
+      heathRegen: 0
+      manaRegen: 0
+    ItemID: I1example
+    itemName: 
+    tipe: 0
+    baseMinDamage: 1
+    baseMaxDamage: 3
+    critDmg: 1.5
+    baseCritChance: 0.05
+    randomProperty: 0
+  jsonArmor:
+    itemLvl: 0
+    stats:
+      Health: 0
+      Mana: 0
+      Precision: 0
+      Dodge: 0
+      CritChance: 0
+      Strength: 0
+      Constitution: 0
+      Dextery: 0
+      Inteligence: 0
+      Luck: 0
+      coldownReduction: 0
+      heathRegen: 0
+      manaRegen: 0
+    ItemID: I1example
+    itemName: 
+    tipe: 0
+    Defense: 0
+    randomProperty: 0
+  jsonConsumable:
+    itemLvl: 1
+    stats:
+      Health: 0
+      Mana: 0
+      Precision: 0
+      Dodge: 0
+      CritChance: 0
+      Strength: 0
+      Constitution: 0
+      Dextery: 1
+      Inteligence: 3
+      Luck: 2
+      coldownReduction: 0
+      heathRegen: 0
+      manaRegen: 0
+    ItemID: 1-0
+    itemName: Uriel Gato
+    duration: 0
+    restoration: 0
+  jsonCharacter:
+    actorID: 0
+    baseStrength: 5
+    baseConstitution: 5
+    baseDextery: 5
+    baseInteligence: 5
+    baseLuck: 5
+    characterClass: 0
+    experience: 0
 --- !u!4 &1921839235
 Transform:
   m_ObjectHideFlags: 0

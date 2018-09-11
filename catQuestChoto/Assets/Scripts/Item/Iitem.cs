@@ -19,13 +19,15 @@ public struct itemstats
     [SerializeField] float heathRegen;
     [SerializeField] float manaRegen;
 }
+
 [System.Serializable]
 public abstract class Iitem {
 
     [SerializeField] int[,] size;
     [SerializeField] protected int itemLvl;
     [SerializeField] protected itemstats stats;
-    [SerializeField] protected string ItemID;
+    [SerializeField] protected string ItemID = "I1example";
+    public string ID { get { return ItemID; } }
     [SerializeField] protected string itemName;
     protected Sprite image;
     

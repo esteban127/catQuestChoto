@@ -10,7 +10,7 @@ public enum c_class
 }
 
 
-
+[System.Serializable]
 public class CharacterActor : FriendlyActor {
     
     [SerializeField] c_class characterClass;

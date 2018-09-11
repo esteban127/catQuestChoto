@@ -22,11 +22,12 @@ enum  attribute
     Luck
 }
 
-public abstract class IACTOR : MonoBehaviour {
+public abstract class IACTOR {
 
 
     //basics
-    [SerializeField] protected string ID;
+    [SerializeField] protected int actorID;
+    public int ID { get { return actorID; } }
     protected int level;
     protected Sprite profilePict;
     //base attributes    
@@ -38,11 +39,11 @@ public abstract class IACTOR : MonoBehaviour {
     protected float basePrecision;
     protected float baseCritChance;
     //attributes
-    [SerializeField] protected int baseStrength;
-    [SerializeField] protected int baseConstitution;
-    [SerializeField] protected int baseDextery;
-    [SerializeField] protected int baseInteligence;
-    [SerializeField] protected int baseLuck;
+    [SerializeField] protected int baseStrength = 5;
+    [SerializeField] protected int baseConstitution = 5;
+    [SerializeField] protected int baseDextery = 5;
+    [SerializeField] protected int baseInteligence = 5;
+    [SerializeField] protected int baseLuck = 5;
     //Equipament
     //protected Equipament equipament 
     //variable attributes
