@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour {
     float currentZoomOut = 0 ;
    
     
-    private void Update()
+   private void Update()
     {
 
         Rotate();

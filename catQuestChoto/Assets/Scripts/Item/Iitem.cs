@@ -23,13 +23,16 @@ public struct itemstats
 [System.Serializable]
 public abstract class Iitem {
 
-    [SerializeField] int[,] size;
+    [SerializeField] int[] size;
+    public int[] Size { get { return size; } }
     [SerializeField] protected int itemLvl;
     [SerializeField] protected itemstats stats;
     [SerializeField] protected string ItemID = "I1example";
     public string ID { get { return ItemID; } }
     [SerializeField] protected string itemName;
-    protected Sprite image;
+    public string Name { get { return itemName; } }
+    [SerializeField] protected Sprite image;
+    public Sprite Image { get { return image; } }
     
     //public abstract void Use();
     void loadStats()

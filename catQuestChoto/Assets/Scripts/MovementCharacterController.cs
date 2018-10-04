@@ -25,8 +25,7 @@ public class MovementCharacterController : MonoBehaviour {
     private CharacterController controller;
     private float mauseInitialPos = 0.0f;
     private float currentRotation = 0.0f;
-    private float inputAxisX;
-    private float inputAxisY;
+    private float inputAxisX;    
     private float inputAxisZ;
     private bool isAtacking = false;
     private Animator playerAnimator;
@@ -51,14 +50,13 @@ public class MovementCharacterController : MonoBehaviour {
         /*if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle1"))
             isAtacking = false;*/
 
-        GetImput(ref inputAxisX,ref inputAxisY,ref inputAxisZ);
+        GetImput(ref inputAxisX,ref inputAxisZ);
         if (!isAtacking)
         {
             Move();
             Rotate();
         }        
-        MovementAnimation();
-        ResetJumpCount();
+        MovementAnimation();        
         
 
 
@@ -118,16 +116,16 @@ public class MovementCharacterController : MonoBehaviour {
 
         if (!controller.isGrounded)
         {
-            inputAxisY -= gravity * Time.deltaTime;            
+            moveDirection.y = -gravity * Time.deltaTime;            
         }
 
-        moveDirection.y = inputAxisY;
+         
 
         controller.Move(moveDirection*Time.deltaTime);             
 
     }
 
-    private void GetImput(ref float inputX,ref float inputY,ref float inputZ)
+    private void GetImput(ref float inputX,ref float inputZ)
     {
 
         inputX = Input.GetAxis("Horizontal");
@@ -135,27 +133,10 @@ public class MovementCharacterController : MonoBehaviour {
 
         inputZ = Input.GetAxis("Vertical");
         
-
-        if (Input.GetButtonDown("Jump"))
-        {            
-            Jump(ref inputY);
-        }
-        if (Input.GetButtonDown("Submit"))
-        {
-            pauseDialog.GetComponent<PopUpPause>().Pause("Que queres? No jodas");
-        }
-        if (Input.GetKey("escape"))
-            Application.Quit();
+                
+       
 
     }   
 
-    private void Jump(ref float inputY)
-    {
-        if (currentJumpCount < maxJumpCap)
-        {
-            inputY = jumpSpeed;
-            playerAnimator.SetTrigger("Jump");
-            currentJumpCount++;
-        }
-    }
+    
 }

@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 
+public enum FileType
+{
+    Character,
+    Consumable,
+    Armor,
+    Weapon
+}
 public class UJsonCreator : MonoBehaviour
 {
     //aca van las clases de los json, como y que queres que muestre, estas mismas usarias para el json utility
@@ -9,13 +16,7 @@ public class UJsonCreator : MonoBehaviour
 
    
     //los enum de cada tipo
-    public enum FileType
-    {
-        Character,
-        Consumable,
-        Armor,
-        Weapon
-    }
+   
 
     public FileType fType;
 
@@ -37,22 +38,22 @@ public class UJsonCreator : MonoBehaviour
         string jsonString;
         switch (fType)
         {
-            case UJsonCreator.FileType.Armor:
+            case FileType.Armor:
                 jsonString=JsonUtility.ToJson(jsonArmor);                
                 p_message = "Armor Creation OK";
                 path += "/Resources/Json/Armor/" + jsonArmor.ID + ".Json";
                 break;
-            case UJsonCreator.FileType.Character:
+            case FileType.Character:
                 jsonString = JsonUtility.ToJson(jsonCharacter);
                 p_message = "Character Creation OK";
                 path += "/Resources/Json/Character/" + jsonCharacter.ID + ".Json";
                 break;
-            case UJsonCreator.FileType.Consumable:
+            case FileType.Consumable:
                 jsonString = JsonUtility.ToJson(jsonConsumable);
                 p_message = "Consumable Creation OK";
                 path += "/Resources/Json/Consumable/" + jsonConsumable.ID + ".Json";
                 break;
-            case UJsonCreator.FileType.Weapon:
+            case FileType.Weapon:
                 jsonString = JsonUtility.ToJson(jsonWeapon);
                 p_message = "Weapon Creation OK";
                 path += "/Resources/Json/Weapon/" + jsonWeapon.ID + ".Json";

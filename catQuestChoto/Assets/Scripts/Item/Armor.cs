@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum armorTipe //pendiente
+public enum armorType //pendiente
 {
     offHand,
     helmet,
@@ -17,7 +17,8 @@ public enum armorTipe //pendiente
 public class Armor : Iitem {
 
 
-    [SerializeField] armorTipe tipe;
+    [SerializeField] armorType type;
+    public armorType ArmorType { get { return type; } }
     [SerializeField] float Defense;
     [SerializeField] int randomProperty;
     

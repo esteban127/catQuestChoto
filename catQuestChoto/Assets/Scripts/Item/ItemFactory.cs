@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
-public enum itemTipe
+public enum ItemTipe
 {
     Weapon,
     Armor,
@@ -10,7 +11,7 @@ public enum itemTipe
 }
 
 
-public class ItemFactory {    
+public class ItemFactory{    
 
 
     static private ItemFactory instance = null;
@@ -23,12 +24,40 @@ public class ItemFactory {
         return instance;
     }
 
-    /*public GameObject generateItem(itemTipe tipe, int itemID)
+    public GameObject Generate(FileType type, string itemID)
     {
-        JsonUtility.
+        GameObject Item = new GameObject();
+        string path = Application.dataPath;
+        switch (type)
+        {
+            case FileType.Armor:
+                Item.AddComponent<ArmorManager>();
+                path += "/Resources/Json/Armor/" + itemID + ".Json";
+                Item.GetComponent<ArmorManager>().SetStats(JsonUtility.FromJson<Armor>(File.ReadAllText(path)));
+                break;
+            case FileType.Character:                
+                /*path += "/Resources/Json/Character/" + itemID + ".Json";
+                JsonUtility.FromJson<Character>(File.ReadAllText(path));*/
+                break;
+            case FileType.Consumable:
+                Item.AddComponent<ConsumableManager>();
+                path += "/Resources/Json/Consumable/" + itemID + ".Json";
+                Item.GetComponent<ConsumableManager>().SetStats(JsonUtility.FromJson<Consumables>(File.ReadAllText(path)));
+                break;
+            case FileType.Weapon:
+                Item.AddComponent<WeaponManager>();
+                path += "/Resources/Json/Weapon/" + itemID + ".Json";
+                Item.GetComponent<WeaponManager>().SetStats(JsonUtility.FromJson<Weapon>(File.ReadAllText(path)));
+                break;
+            default:                
+                path += "/Resources/Json/Corrupted/failure.Json";
+                break;
+        }
 
 
-    }*/
+
+        return Item;
+    }
 
 
 }

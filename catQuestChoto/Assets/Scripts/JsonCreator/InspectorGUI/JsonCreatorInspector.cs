@@ -14,16 +14,16 @@ public class JsonCreatorInspector : Editor
 
         switch (myScript.fType)
         {
-            case UJsonCreator.FileType.Armor:
+            case FileType.Armor:
                 DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon"});
                 break;
-            case UJsonCreator.FileType.Character:
+            case FileType.Character:
                 DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonConsumable", "jsonWeapon"});
                 break;
-            case UJsonCreator.FileType.Consumable:
+            case FileType.Consumable:
                 DrawPropertiesExcluding(serializedObj, new string[]{"jsonArmor", "jsonCharacter", "jsonWeapon"});
                 break;
-            case UJsonCreator.FileType.Weapon:
+            case FileType.Weapon:
                 DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonCharacter", "jsonConsumable" });
                 break;
             default:
