@@ -21,4 +21,9 @@ public class ArmorManager : MonoBehaviour {
     {
         armorStats = stats;
     }
+
+    public Armor GiveStats()
+    {
+        return armorStats;
+    }
 }

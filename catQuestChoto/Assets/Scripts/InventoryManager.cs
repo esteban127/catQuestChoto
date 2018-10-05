@@ -62,6 +62,22 @@ public class InventoryManager : MonoBehaviour {
         }
     }
 
+    public void PickItem(GameObject item, ItemType type)
+    {
+        switch (type)
+        {
+            case ItemType.Weapon:
+                TryToAddItemToTheInventory(item.GetComponent<WeaponManager>().GiveStats());
+            break;
+            case ItemType.Armor:
+                TryToAddItemToTheInventory(item.GetComponent<ArmorManager>().GiveStats());
+                break;
+            case ItemType.Consumable:
+                TryToAddItemToTheInventory(item.GetComponent<ConsumableManager>().GiveStats());
+                break;
+        }
+    }
+    
     private void InitializeRefInv(int col, int row)
     {
         for (int i = 0; i < col; i++)
@@ -75,7 +91,8 @@ public class InventoryManager : MonoBehaviour {
     }
 
     private int[] CheckFit(int[] itemSize)
-    {        
+    {
+        
         int[] checkingPos = new int[2];
         for (int i = itemSize[0]-1; i < inventorySpots.GetLength(0); i++)
         {
@@ -95,9 +112,10 @@ public class InventoryManager : MonoBehaviour {
     public bool CheckFitInPos(int[] size, int[] position) 
     {
 
-        for (int i = position[0] - (size[0]-1); i < position[0]; i++)
+        
+        for (int i = position[0] - (size[0]-1); i < position[0]+1; i++)
         {
-            for (int j = position[1] - (size[1] - 1); j < position[1]; j++)
+            for (int j = position[1] - (size[1] - 1); j < position[1]+1; j++)
             {
                 if (refInventory[i, j][0] >= 0)
                     return false;
@@ -128,6 +146,7 @@ public class InventoryManager : MonoBehaviour {
 
     public bool TryToAddItemToTheInventory (Iitem itemToAdd)
     {
+        Debug.Log(itemToAdd.Size[0] + " " + itemToAdd.Size[1]);
         int[] emptyPos = CheckFit(itemToAdd.Size);
         if (emptyPos[0] >= 0)
         {
@@ -228,8 +247,10 @@ public class InventoryManager : MonoBehaviour {
 
     public void OnButtonClicked(int col, int row)
     {
-
-        Debug.Log("Clikearon al gato de " + col + " , " + row);
+        int[] pos = new int[2];
+        pos[0] = col;
+        pos[1] = row;
+        RemoveFromInventory(pos);
     }
 
     
@@ -280,7 +301,7 @@ public class InventoryManager : MonoBehaviour {
 
         public void DeleteFrame(int col, int row)
         {
-            DestroyObject(GetButton(col, row).transform.GetChild(0));           
+            Destroy(GetButton(col, row).transform.GetChild(0).gameObject);           
         }
 
 

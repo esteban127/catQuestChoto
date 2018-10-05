@@ -19,6 +19,11 @@ public class WeaponManager : MonoBehaviour {
         weaponStats = stats;
     }
 
+    public Weapon GiveStats()
+    {
+        return weaponStats;
+    }
+
     public string GetName()
     {
         return weaponStats.Name;

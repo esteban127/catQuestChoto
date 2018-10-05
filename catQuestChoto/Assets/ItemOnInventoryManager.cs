@@ -22,19 +22,20 @@ public class ItemOnInventoryManager : MonoBehaviour {
     {
         itemRef = item;
         SetImg(item.Image);
-        SetSize(item.Size[0] * cellSize, item.Size[1] * cellSize);
+        SetSize(item.Size, cellSize);
     }
 
     public void SetImg(Sprite img)
     {
         GetComponent<Image>().sprite = img;
     }
-    public void SetSize(float iWidth, float iHeight)
+    public void SetSize(int[]size, float cellSize)
     {
-        width = iWidth;
-        height = iHeight;
-        offset = new Vector3(-width / 2, height / 2, 0);
+        width = size[0]*cellSize;
+        height = size[1]*cellSize;
+        offset = new Vector3(-width + (cellSize/2) , -cellSize/2, 0);
         GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+        GetComponent<RectTransform>().localPosition = offset;
     }
 
     public void Draw()

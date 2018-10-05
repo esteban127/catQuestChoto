@@ -22,4 +22,9 @@ public class ConsumableManager : MonoBehaviour {
     {
         consumableStats = stats;
     }
+
+    public Consumables GiveStats()
+    {
+        return consumableStats;
+    }
 }
