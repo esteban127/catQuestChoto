@@ -20,6 +20,12 @@ public struct itemstats
     [SerializeField] float manaRegen;
 }
 
+public enum ItemImage
+{
+    Sword0,
+    PlaceHolder,    
+}
+
 [System.Serializable]
 public abstract class Iitem {
 
@@ -31,12 +37,26 @@ public abstract class Iitem {
     public string ID { get { return ItemID; } }
     [SerializeField] protected string itemName;
     public string Name { get { return itemName; } }
-    [SerializeField] protected Sprite image;
-    public Sprite Image { get { return image; } }
+    [SerializeField] protected ItemImage image;
+    public ItemImage Image { get { return image; } }
     
     //public abstract void Use();
     void loadStats()
     {
 
+    }
+
+    public Sprite getImage()
+    {
+
+        Sprite itemImage = null;
+        switch (image)
+        {
+            case ItemImage.Sword0:
+                itemImage = Resources.Load<Sprite>("Art/ItemSprite/Sword0");
+                break;
+
+        }
+        return itemImage;
     }
 }

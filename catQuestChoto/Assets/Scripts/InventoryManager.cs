@@ -33,6 +33,7 @@ public class InventoryManager : MonoBehaviour {
     int[,][] refInventory;
     Iitem[] equipedItems;
     InventoryInterface Iinteface;
+    RectTransform ItemHolded;
 
     [SerializeField] Button buttonPrefab;
     [SerializeField] int col;
@@ -41,7 +42,7 @@ public class InventoryManager : MonoBehaviour {
 
     static private InventoryManager instance = null;
     static public InventoryManager Instance { get { return instance; } }
-
+    
     private void Awake()
     {
         if (instance == null)
@@ -61,7 +62,6 @@ public class InventoryManager : MonoBehaviour {
             Destroy(gameObject);
         }
     }
-
     public void PickItem(GameObject item, ItemType type)
     {
         switch (type)
@@ -77,7 +77,6 @@ public class InventoryManager : MonoBehaviour {
                 break;
         }
     }
-    
     private void InitializeRefInv(int col, int row)
     {
         for (int i = 0; i < col; i++)
@@ -89,7 +88,6 @@ public class InventoryManager : MonoBehaviour {
             }
         }
     }
-
     private int[] CheckFit(int[] itemSize)
     {
         
@@ -108,7 +106,6 @@ public class InventoryManager : MonoBehaviour {
         checkingPos[1] = -1;
         return checkingPos;
     }
-
     public bool CheckFitInPos(int[] size, int[] position) 
     {
 
@@ -123,12 +120,10 @@ public class InventoryManager : MonoBehaviour {
         }
         return true;
     }
-
     public Iitem checkEquipment (EquipmentSlot slotToCheck)
     {
         return equipedItems[(int)slotToCheck];
     }
-
     public bool EquipItem(EquipmentSlot slotToEquip, Iitem itemToEquip, int[] itemToEquipSpot)
     {
         Iitem equipedItem = checkEquipment(slotToEquip);
@@ -139,11 +134,10 @@ public class InventoryManager : MonoBehaviour {
                 return false;
             }
         }
-        RemoveFromInventory(itemToEquipSpot);
+        RemoveFromInventory(itemToEquipSpot,true);
         equipedItems[(int)slotToEquip] = itemToEquip;
         return true;
     }
-
     public bool TryToAddItemToTheInventory (Iitem itemToAdd)
     {
         Debug.Log(itemToAdd.Size[0] + " " + itemToAdd.Size[1]);
@@ -176,7 +170,7 @@ public class InventoryManager : MonoBehaviour {
         if (typeof(Consumables) == itemToUse.GetType())
         {
             //ConsumableManager consume();
-            RemoveFromInventory(position);
+            RemoveFromInventory(position,true);
         }
         else
         {
@@ -227,7 +221,7 @@ public class InventoryManager : MonoBehaviour {
 
         
     }
-    public void RemoveFromInventory(int[] position)
+    public void RemoveFromInventory(int[] position, bool deleteFrame)
     {
         Iitem itemToDelete = inventorySpots[position[0], position[1]];
         for (int i = 0; i < itemToDelete.Size[0]; i++)
@@ -238,19 +232,39 @@ public class InventoryManager : MonoBehaviour {
                 refInventory[position[0] - i, position[1] - j][1] = -1;
             }
         }
-        Iinteface.DeleteFrame(position[0], position[1]);
+        if(deleteFrame)
+            Iinteface.DeleteFrame(position[0], position[1]);
     }
     public void LoadInventory()
     {
 
     }
-
+    public bool SaveInventory()
+    {
+        return false;
+    }
     public void OnButtonClicked(int col, int row)
     {
         int[] pos = new int[2];
         pos[0] = col;
         pos[1] = row;
-        RemoveFromInventory(pos);
+        if (ItemHolded == null)
+        {
+            RemoveFromInventory(pos, false);
+            Iinteface.GetButton(col, row).GetComponentInChildren<ItemOnInventoryManager>().Draw();
+            ItemHolded = Iinteface.GetButton(col, row).transform.GetChild(0).GetComponent<RectTransform>();
+            ItemHolded.SetParent(transform.parent);
+        }
+        else
+        {
+            if (CheckFitInPos(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem().Size, pos))
+            {
+                //AddItemToTheInventory(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem(), pos); Funcion maaalaa
+                ItemHolded.GetComponent<ItemOnInventoryManager>().Release(Iinteface.GetButton(col, row).gameObject);
+                ItemHolded = null;
+            }         
+            
+        }
     }
 
     
