@@ -59,6 +59,14 @@ public class ItemOnInventoryManager : MonoBehaviour {
         GetComponent<RectTransform>().localPosition = offset;
         GetComponent<Image>().raycastTarget = true;
     }
+    public void Equip (GameObject parent)
+    {
+        picked = false;
+        transform.SetParent(parent.transform);
+        Vector3 EquipedOffset = new Vector3(-width/2, -height/2, 0);
+        GetComponent<RectTransform>().localPosition = EquipedOffset;
+        GetComponent<Image>().raycastTarget = true;
+    }
    
     
 }

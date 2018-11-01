@@ -5,27 +5,30 @@ using UnityEngine;
 [RequireComponent(typeof(DialogueManager))]
 public class NpcIneraction : MonoBehaviour {
 
-    //questmanager
+    QuestManager qManager;
     DialogueManager dialogue;
 
 
     private void Start()
     {
-        //instanciate el questmanajor
+        qManager = QuestManager.Instance;
         dialogue = GetComponent<DialogueManager>();
     }
+
     public void Interact()
-    {
-        /*
-            string key = "Base";
-            chequeo en el quest manager
-            interface de dialogo
-            for (int i = 0; i < questKey.lengt; i++)
+    {    
+        string key = "Base";
+        for (int i = 0; i < qManager.ActiveQuestKey.Count; i++)
+        {
+            if (dialogue.CheckKey(qManager.ActiveQuestKey[i]))
             {
-                if(dialogue.CheckKey(questKey[i]))
-                    key = questKey[i];
+                Debug.Log("MAATCH");
+                key = qManager.ActiveQuestKey[i];
             }
-            dialogue.getDialogue(key)
-        */
+                
+        }
+        Debug.Log(dialogue.getDialogue(key));
+        qManager.OnInteract(gameObject);
+        //interface de dialogo
     }
 }

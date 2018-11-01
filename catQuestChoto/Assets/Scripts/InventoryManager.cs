@@ -9,6 +9,7 @@ public enum WeaponSet
     SwordAndShield,
     Bow,
     TwoHandedSword,
+    Staff,
     DualBlades
 }
 
@@ -34,6 +35,8 @@ public class InventoryManager : MonoBehaviour {
     Iitem[] equipedItems;
     InventoryInterface Iinteface;
     RectTransform ItemHolded;
+    WeaponSet currentWeaponSet;
+    [SerializeField] Button[] equipSlot;
 
     [SerializeField] Button buttonPrefab;
     [SerializeField] int col;
@@ -112,10 +115,23 @@ public class InventoryManager : MonoBehaviour {
         
         for (int i = position[0] - (size[0]-1); i < position[0]+1; i++)
         {
-            for (int j = position[1] - (size[1] - 1); j < position[1]+1; j++)
+            if(i >= 0 && i < refInventory.GetLength(0))
+            {            
+                for (int j = position[1] - (size[1] - 1); j < position[1]+1; j++)
+                {
+                    if ( j >= 0 &&  j < refInventory.GetLength(1))
+                    {
+                        if (refInventory[i, j][0] >= 0)
+                            return false;
+                    }                      
+                    else                        
+                        return false;
+                }
+                
+            }
+            else
             {
-                if (refInventory[i, j][0] >= 0)
-                    return false;
+            return false;
             }
         }
         return true;
@@ -133,24 +149,178 @@ public class InventoryManager : MonoBehaviour {
             {
                 return false;
             }
+            Destroy(equipSlot[(int)slotToEquip].transform.GetChild(0).gameObject);
         }
         RemoveFromInventory(itemToEquipSpot,true);
         equipedItems[(int)slotToEquip] = itemToEquip;
+        checkWeaponInstance();
         return true;
+    }
+    public void UnEquipeItem(EquipmentSlot slot)
+    {
+        equipedItems[(int)slot] = null;
+        checkWeaponInstance();
+    }
+    public bool EquipItem(EquipmentSlot slotToEquip, Iitem itemToEquip)
+    {
+        Iitem equipedItem = checkEquipment(slotToEquip);
+        if (equipedItem != null)
+        {
+            if (!TryToAddItemToTheInventory(equipedItem))
+            {
+                return false;
+            }
+            Destroy(equipSlot[(int)slotToEquip].transform.GetChild(0).gameObject);
+        }
+        equipedItems[(int)slotToEquip] = itemToEquip;
+        checkWeaponInstance();
+        return true;
+    }
+
+    private void checkWeaponInstance()
+    {
+
+        if (equipedItems[(int)EquipmentSlot.offHand] != null)
+        {
+            if (equipedItems[(int)EquipmentSlot.offHand].GetType() == typeof(Weapon))
+            {
+                currentWeaponSet = WeaponSet.DualBlades;
+            }
+            else
+            {
+                currentWeaponSet = WeaponSet.SwordAndShield;
+            }
+        }
+        else
+        {
+            if (equipedItems[(int)EquipmentSlot.mainHand] != null)
+            {
+                Weapon weapon = (Weapon)equipedItems[(int)EquipmentSlot.mainHand];
+                switch (weapon.WeaponType)
+                {
+                    case weaponType.OneHandedSword:
+                        currentWeaponSet = WeaponSet.SwordAndShield;
+                        break;
+                    case weaponType.Staf:
+                        currentWeaponSet = WeaponSet.Staff;
+                        break;
+                    case weaponType.TwoHandedSword:
+                        currentWeaponSet = WeaponSet.TwoHandedSword;
+                        break;
+                    case weaponType.Bow:
+                        currentWeaponSet = WeaponSet.Bow;
+                        break;
+                }
+            }            
+            else
+            {
+                currentWeaponSet = WeaponSet.Fist;
+            }
+            
+        }
+        Debug.Log(currentWeaponSet);
+        
+    }
+    private bool checkItemTypeForSlot(EquipmentSlot slot, Iitem item)
+    {
+      
+        if (typeof(Weapon) == item.GetType())
+        {
+            Weapon weapon = (Weapon)item;
+            switch (weapon.WeaponType)
+            {
+                case weaponType.OneHandedSword:
+                    if (slot == EquipmentSlot.mainHand)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        if (slot == EquipmentSlot.offHand)
+                        {
+                            if (currentWeaponSet != WeaponSet.TwoHandedSword && currentWeaponSet != WeaponSet.Bow && currentWeaponSet != WeaponSet.Staff)
+                                return true;
+                        }
+                    }
+                    break;
+                case weaponType.Staf:
+                case weaponType.TwoHandedSword:
+                case weaponType.Bow:
+                    if (slot == EquipmentSlot.mainHand)
+                    {
+                        return true;
+                    }
+                    break;
+            }           
+        }
+        else if (typeof(Armor) == item.GetType())
+        {
+            Armor armor = (Armor)item;
+            switch (armor.ArmorType)
+            {
+                case armorType.helmet:
+                    if (slot == EquipmentSlot.helmet)
+                    {
+                        return true;
+                    }
+                    break;
+                case armorType.chest:
+                    if (slot == EquipmentSlot.chest)
+                    {
+                        return true;
+                    }
+                    break;
+                case armorType.pants:
+                    if (slot == EquipmentSlot.pants)
+                    {
+                        return true;
+                    }
+                    break;
+                case armorType.boots:
+                    if (slot == EquipmentSlot.boots)
+                    {
+                        return true;
+                    }
+                    break;
+                case armorType.gloves:
+                    if (slot == EquipmentSlot.gloves)
+                    {
+                        return true;
+                    }
+                    break;
+                case armorType.amulet:
+                    if (slot == EquipmentSlot.amulet)
+                    {
+                        return true;
+                    }
+                    break;
+                case armorType.ring:
+                    if (slot == EquipmentSlot.ring1||slot == EquipmentSlot.ring2)
+                    {
+                        return true;
+                    }
+                    break;
+                case armorType.shield:
+                    if (slot == EquipmentSlot.offHand && currentWeaponSet != WeaponSet.TwoHandedSword && currentWeaponSet != WeaponSet.Bow && currentWeaponSet != WeaponSet.Staff)
+                        return true;
+                    break;
+
+            }
+        }
+        return false;
     }
     public bool TryToAddItemToTheInventory (Iitem itemToAdd)
     {
-        Debug.Log(itemToAdd.Size[0] + " " + itemToAdd.Size[1]);
         int[] emptyPos = CheckFit(itemToAdd.Size);
         if (emptyPos[0] >= 0)
         {
-            AddItemToTheInventory(itemToAdd, emptyPos);
+            AddItemToTheInventory(itemToAdd, emptyPos,true);
             return true;
         }
         Debug.Log("Inventory Full");
         return false;
     }
-    public void AddItemToTheInventory(Iitem itemToAdd, int[] positionToAdd)
+    public void AddItemToTheInventory(Iitem itemToAdd, int[] positionToAdd, bool newItem)
     {
         inventorySpots[positionToAdd[0], positionToAdd[1]] = itemToAdd;
         for (int i = 0; i < itemToAdd.Size[0]; i++)
@@ -161,8 +331,8 @@ public class InventoryManager : MonoBehaviour {
                 refInventory[positionToAdd[0] - i, positionToAdd[1] - j][1] = positionToAdd[1];
             }
         }
-
-        Iinteface.CreateItemFrame(positionToAdd[0], positionToAdd[1], itemToAdd, itemFramePrefab);
+        if(newItem)
+            Iinteface.CreateItemFrame(positionToAdd[0], positionToAdd[1], itemToAdd, itemFramePrefab);
     }
     public void UseFromInventory (int[] position)
     {
@@ -238,36 +408,67 @@ public class InventoryManager : MonoBehaviour {
     public void LoadInventory()
     {
 
-    }
+    } //pendiente
     public bool SaveInventory()
     {
         return false;
-    }
+    } //pendiente
     public void OnButtonClicked(int col, int row)
     {
         int[] pos = new int[2];
         pos[0] = col;
         pos[1] = row;
+       
+        
         if (ItemHolded == null)
         {
-            RemoveFromInventory(pos, false);
+            if (refInventory[col, row][0] >= 0)
+            {
+                RemoveFromInventory(pos, false);
             Iinteface.GetButton(col, row).GetComponentInChildren<ItemOnInventoryManager>().Draw();
             ItemHolded = Iinteface.GetButton(col, row).transform.GetChild(0).GetComponent<RectTransform>();
             ItemHolded.SetParent(transform.parent);
+            }
         }
         else
         {
             if (CheckFitInPos(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem().Size, pos))
             {
-                //AddItemToTheInventory(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem(), pos); Funcion maaalaa
-                ItemHolded.GetComponent<ItemOnInventoryManager>().Release(Iinteface.GetButton(col, row).gameObject);
-                ItemHolded = null;
-            }         
-            
+                    AddItemToTheInventory(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem(), pos, false);
+                    ItemHolded.GetComponent<ItemOnInventoryManager>().Release(Iinteface.GetButton(col, row).gameObject);
+                    ItemHolded = null;
+            }
+               
         }
+              
+    }
+    public void OnButtonClicked(EquipmentSlot slot)
+    {
+        
+        if (ItemHolded == null)
+        {
+            if (equipedItems[(int)slot] != null)
+            {
+                UnEquipeItem(slot);
+                equipSlot[(int)slot].GetComponentInChildren<ItemOnInventoryManager>().Draw();
+                ItemHolded = equipSlot[(int)slot].transform.GetChild(0).GetComponent<RectTransform>();
+                ItemHolded.SetParent(transform.parent);
+            }
+        }
+        else
+        {
+            if(checkItemTypeForSlot(slot, ItemHolded.GetComponent<ItemOnInventoryManager>().getItem()))
+            { 
+                EquipItem(slot, ItemHolded.GetComponent<ItemOnInventoryManager>().getItem());
+                ItemHolded.GetComponent<ItemOnInventoryManager>().Equip(equipSlot[(int)slot].gameObject);
+                ItemHolded = null;
+            }
+        }
+
     }
 
-    
+   
+
     class InventoryInterface
     {
 

@@ -17,7 +17,7 @@ public class MovementCharacterController : MonoBehaviour {
     [SerializeField]
     private int maxJumpCap = 1;
     [SerializeField]
-    GameObject pauseDialog;
+    GameObject inventory;
 
     private int currentJumpCount = 0;
 
@@ -42,13 +42,11 @@ public class MovementCharacterController : MonoBehaviour {
         }
 
 
-    }
-
-
+    }   
+    
     void Update()
     {
-        /*if (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle1"))
-            isAtacking = false;*/
+        
 
         GetImput(ref inputAxisX,ref inputAxisZ);
         if (!isAtacking)
@@ -56,9 +54,11 @@ public class MovementCharacterController : MonoBehaviour {
             Move();
             Rotate();
         }        
-        MovementAnimation();        
-        
-
+        MovementAnimation();
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            TogleInventory();
+        }
 
     }
 
@@ -78,7 +78,10 @@ public class MovementCharacterController : MonoBehaviour {
         }
 
     }
-
+    private void TogleInventory()
+    {        
+        inventory.SetActive(!inventory.activeInHierarchy);         
+    }
     private void Rotate()
     {
         if (Input.GetMouseButtonDown(1))
@@ -127,15 +130,8 @@ public class MovementCharacterController : MonoBehaviour {
 
     private void GetImput(ref float inputX,ref float inputZ)
     {
-
         inputX = Input.GetAxis("Horizontal");
-        
-
         inputZ = Input.GetAxis("Vertical");
-        
-                
-       
-
     }   
 
     

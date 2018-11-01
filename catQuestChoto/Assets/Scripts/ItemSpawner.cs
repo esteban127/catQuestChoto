@@ -7,6 +7,7 @@ public class ItemSpawner : MonoBehaviour {
     int i = 0;
     ItemFactory Ifactory;
     InventoryManager myInventory;
+    public bool spawn = true;
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +19,7 @@ public class ItemSpawner : MonoBehaviour {
 	void Update () {
         if (Input.GetKey(KeyCode.Space))
         {
+            if(spawn)
             myInventory.PickItem( GenerateSwordTest(), ItemType.Weapon);            
         }
 	}

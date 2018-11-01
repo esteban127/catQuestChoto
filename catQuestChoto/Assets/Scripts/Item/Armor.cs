@@ -11,7 +11,8 @@ public enum armorType //pendiente
     ring,
     amulet,
     boots,
-    gloves
+    gloves,
+    shield
 }
 [System.Serializable]
 public class Armor : Iitem {
