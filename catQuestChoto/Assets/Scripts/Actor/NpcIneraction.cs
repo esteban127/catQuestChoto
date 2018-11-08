@@ -22,7 +22,6 @@ public class NpcIneraction : MonoBehaviour {
         {
             if (dialogue.CheckKey(qManager.ActiveQuestKey[i]))
             {
-                Debug.Log("MAATCH");
                 key = qManager.ActiveQuestKey[i];
             }
                 

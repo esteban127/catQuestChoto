@@ -41,7 +41,7 @@ public class UJsonCreator : MonoBehaviour
             case FileType.Armor:
                 jsonString=JsonUtility.ToJson(jsonArmor);                
                 p_message = "Armor Creation OK";
-                path += "/Resources/Json/Armor/" + jsonArmor.ID + ".Json";
+                path += "/Resources/Json/Items/"+ jsonArmor.Tier +"/Armor/" + jsonArmor.ID + ".Json";
                 break;
             case FileType.Character:
                 jsonString = JsonUtility.ToJson(jsonCharacter);
@@ -51,12 +51,12 @@ public class UJsonCreator : MonoBehaviour
             case FileType.Consumable:
                 jsonString = JsonUtility.ToJson(jsonConsumable);
                 p_message = "Consumable Creation OK";
-                path += "/Resources/Json/Consumable/" + jsonConsumable.ID + ".Json";
+                path += "/Resources/Json/Items/" + jsonConsumable.Tier + "/Consumable/" + jsonConsumable.ID + ".Json";
                 break;
             case FileType.Weapon:
                 jsonString = JsonUtility.ToJson(jsonWeapon);
                 p_message = "Weapon Creation OK";
-                path += "/Resources/Json/Weapon/" + jsonWeapon.ID + ".Json";
+                path += "/Resources/Json/Items/" + jsonWeapon.Tier + "/Weapon/" + jsonWeapon.ID + ".Json";
                 break;
             default:
                 p_message = "Se pudrio todo";

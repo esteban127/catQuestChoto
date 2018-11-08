@@ -8,10 +8,15 @@ public class TargetSistem : MonoBehaviour
     private GameObject currentTarget;
     [SerializeField] GameObject targetBase;
     [SerializeField] GameObject targetBar;
+    InventoryManager iManager;
 
     private void Awake()
-    {
+    {       
        terrainLayer = LayerMask.NameToLayer("Terrain");
+    }
+    private void Start()
+    {
+        iManager = InventoryManager.Instance;
     }
     private void Update()
     {
@@ -35,6 +40,14 @@ public class TargetSistem : MonoBehaviour
                         currentTarget.GetComponent<NpcIneraction>().Interact();
                     }
 
+                }
+                if(hit.transform.tag == "Drop")
+                {
+                    Iitem item = hit.transform.GetComponent<ItemComponent>().GiveStats();                    
+                    if (iManager.TryToAddItemToTheInventory(item))
+                    {
+                        Destroy(hit.transform.gameObject);
+                    }
                 }
             }
 

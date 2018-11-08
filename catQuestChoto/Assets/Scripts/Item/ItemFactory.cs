@@ -10,7 +10,6 @@ public enum ItemType
     Consumable,    
 }
 
-
 public class ItemFactory{    
 
 
@@ -24,39 +23,92 @@ public class ItemFactory{
         return instance;
     }
 
-    public GameObject Generate(FileType type, string itemID)
+    public void GenerateLoot(ItemTier tier, Vector3 dropSpot)
     {
-        GameObject Item = new GameObject();
-        string path = Application.dataPath;
+        Iitem item = Generate(tier);
+        UnityEngine.Object Model = Resources.Load("ItemPrefab/" + item.GetType());
+        GameObject drop = (GameObject)GameObject.Instantiate(Model, dropSpot, Quaternion.Euler(0, 0, 0));
+        drop.GetComponent<ItemComponent>().SetStats(item);
+        drop.name = drop.GetComponent<ItemComponent>().GetName();
+    }
+
+    public void DropItem(Iitem item, Vector3 dropSpot)
+    {
+        UnityEngine.Object Model = Resources.Load("ItemPrefab/" + item.GetType());
+        GameObject drop = (GameObject)GameObject.Instantiate(Model, dropSpot, Quaternion.Euler(0,0,0));
+        drop.GetComponent<ItemComponent>().SetStats(item);
+        drop.name = drop.GetComponent<ItemComponent>().GetName();
+    }
+
+    private Iitem Generate(ItemType type, ItemTier tier, string itemID)
+    {
+        
+        string path = Application.dataPath +"/Resources/Json/Items/" + tier;
         switch (type)
         {
-            case FileType.Armor:
-                Item.AddComponent<ArmorManager>();
-                path += "/Resources/Json/Armor/" + itemID + ".Json";
-                Item.GetComponent<ArmorManager>().SetStats(JsonUtility.FromJson<Armor>(File.ReadAllText(path)));
-                break;
-            case FileType.Character:                
-                /*path += "/Resources/Json/Character/" + itemID + ".Json";
-                JsonUtility.FromJson<Character>(File.ReadAllText(path));*/
-                break;
-            case FileType.Consumable:
-                Item.AddComponent<ConsumableManager>();
-                path += "/Resources/Json/Consumable/" + itemID + ".Json";
-                Item.GetComponent<ConsumableManager>().SetStats(JsonUtility.FromJson<Consumables>(File.ReadAllText(path)));
-                break;
-            case FileType.Weapon:
-                Item.AddComponent<WeaponManager>();
-                path += "/Resources/Json/Weapon/" + itemID + ".Json";
-                Item.GetComponent<WeaponManager>().SetStats(JsonUtility.FromJson<Weapon>(File.ReadAllText(path)));
-                break;
-            default:                
-                path += "/Resources/Json/Corrupted/failure.Json";
-                break;
+            case ItemType.Armor:                
+                path += "/Armor/" + itemID + ".Json";
+                Armor aStats = JsonUtility.FromJson<Armor>(File.ReadAllText(path));
+                aStats.SetRandomProperty();
+                return aStats;                
+           
+            case ItemType.Consumable:
+                
+                path += "/Consumable/" + itemID + ".Json";
+                return (JsonUtility.FromJson<Consumables>(File.ReadAllText(path)));
+                
+            case ItemType.Weapon:
+                
+                path += "/Weapon/" + itemID + ".Json";
+                Weapon wStats = JsonUtility.FromJson<Weapon>(File.ReadAllText(path));
+                wStats.SetRandomProperty();
+                return wStats;
+                
+            default:
+                Debug.Log("Missing Type");
+                return null;                
+        }
+
+        
+
+         
+    }
+
+    private Iitem Generate(ItemTier tier)
+    {
+        
+        string path = Application.dataPath + "/Resources/Json/Items/" + tier; 
+        string[] fileArray;
+        int roll = Random.Range(0, 3);
+        switch (roll)
+        {
+            case 0:
+                path += "/Consumable/";
+                fileArray = Directory.GetFiles(path, "*.Json");
+                return (JsonUtility.FromJson<Consumables>(File.ReadAllText(fileArray[Random.Range(0,fileArray.Length)])));
+                
+            case 1:
+                path += "/Armor/";
+                fileArray = Directory.GetFiles(path, "*.Json");                
+                Armor aStats = JsonUtility.FromJson<Armor>(File.ReadAllText(fileArray[Random.Range(0, fileArray.Length)]));
+                aStats.SetRandomProperty();
+                return aStats;
+                
+            case 2:
+                path += "/Weapon/";
+                fileArray = Directory.GetFiles(path, "*.Json");                
+                Weapon wStats = JsonUtility.FromJson<Weapon>(File.ReadAllText(fileArray[Random.Range(0, fileArray.Length)]));
+                wStats.SetRandomProperty();
+                return wStats;
+
+            default:
+                Debug.LogError("Fail with the roll?");
+                return null;
+
         }
 
 
-
-        return Item;
+        
     }
 
 

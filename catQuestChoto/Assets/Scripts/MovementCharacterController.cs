@@ -11,15 +11,11 @@ public class MovementCharacterController : MonoBehaviour {
     [SerializeField]
     private float speed = 6.0f;
     [SerializeField]
-    private float jumpSpeed = 8.0f;
-    [SerializeField]
-    private float gravity = 20.0f;
-    [SerializeField]
-    private int maxJumpCap = 1;
+    private float gravity = 20.0f;    
     [SerializeField]
     GameObject inventory;
 
-    private int currentJumpCount = 0;
+    
 
     private Vector3 moveDirection = new Vector3(0, 0, 0);
     private CharacterController controller;
@@ -102,14 +98,7 @@ public class MovementCharacterController : MonoBehaviour {
         transform.Rotate(0, rotateSpeed * currentRotation * Time.deltaTime, 0);
         currentRotation = 0;
     }
-
-    private void ResetJumpCount()
-    {
-        if (controller.isGrounded)
-        {
-            currentJumpCount = 0;            
-        }
-    }
+    
 
     private void Move()
     {

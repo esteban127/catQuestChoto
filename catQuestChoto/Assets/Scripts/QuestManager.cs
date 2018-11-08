@@ -30,12 +30,7 @@ public class QuestManager : MonoBehaviour {
         {
             Destroy(gameObject);
         }
-    }
-    private void Start()
-    {
-       
-        Debug.Log(ActiveQuestKey.Count);
-    }
+    }  
 
     void AddQuest(IQUEST quest)
     {

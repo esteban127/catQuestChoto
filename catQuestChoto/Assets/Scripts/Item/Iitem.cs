@@ -5,25 +5,61 @@ using UnityEngine;
 [System.Serializable]
 public struct itemstats
 {
-    [SerializeField] float Health;
-    [SerializeField] float Mana;
-    [SerializeField] float Precision;
-    [SerializeField] float Dodge;
-    [SerializeField] float CritChance;
-    [SerializeField] float Strength;
-    [SerializeField] float Constitution;
-    [SerializeField] float Dextery;
-    [SerializeField] float Inteligence;
-    [SerializeField] float Luck;
-    [SerializeField] float coldownReduction;
-    [SerializeField] float heathRegen;
-    [SerializeField] float manaRegen;
+    public int Health;
+    public int Mana;    
+    public int Strength;
+    public int Constitution;
+    public int Dextery;
+    public int Inteligence;
+    public int Luck;
+    public float Precision;
+    public float Dodge;
+    public float CritChance;
+    public float ColdownReduction;
+    public float HealthRegen;
+    public float ManaRegen;
+
+    public static itemstats operator +(itemstats s1, itemstats s2)
+    {
+        itemstats statsToreturn;
+        statsToreturn.Health = s1.Health += s2.Health;
+        statsToreturn.Mana = s1.Mana + s2.Mana;
+        statsToreturn.Strength = s1.Strength + s2.Strength;
+        statsToreturn.Constitution = s1.Constitution + s2.Constitution;
+        statsToreturn.Dextery = s1.Dextery + s2.Dextery;
+        statsToreturn.Inteligence = s1.Inteligence + s2.Inteligence;
+        statsToreturn.Luck = s1.Luck + s2.Luck;
+        statsToreturn.Precision = s1.Precision + s2.Precision;
+        statsToreturn.Dodge = s1.Dodge + s2.Dodge;
+        statsToreturn.CritChance = s1.CritChance + s2.CritChance;
+        statsToreturn.ColdownReduction = s1.ColdownReduction + s2.ColdownReduction;
+        statsToreturn.HealthRegen = s1.HealthRegen + s2.HealthRegen;
+        statsToreturn.ManaRegen = s1.ManaRegen + s2.ManaRegen;
+        return statsToreturn;
+    }    
 }
 
 public enum ItemImage
 {
+    Amulet0,
+    Boots0,
+    Bow0,
+    Chest0,
+    Glove0,
+    Helmet0,
+    Pants0,
+    Ring0,
+    Ring1,
+    Shield0,
     Sword0,
-    PlaceHolder,    
+    Potion0
+}
+public enum ItemTier
+{
+    Tier0,
+    Tier1,
+    Tier2,
+    Tier3
 }
 
 [System.Serializable]
@@ -32,14 +68,18 @@ public abstract class Iitem {
     [SerializeField] int[] size;
     public int[] Size { get { return size; } }
     [SerializeField] protected int itemLvl;
-    [SerializeField] protected itemstats stats;
+    public int Lvl { get { return itemLvl; } }
+    [SerializeField] public itemstats stats;
     [SerializeField] protected string ItemID = "I1example";
     public string ID { get { return ItemID; } }
     [SerializeField] protected string itemName;
     public string Name { get { return itemName; } }
     [SerializeField] protected ItemImage image;
     public ItemImage Image { get { return image; } }
-    
+    [SerializeField] protected ItemTier tier;
+    public ItemTier Tier { get { return tier; } }
+    [SerializeField] string description;
+    public string Description { get { return description; } }
     //public abstract void Use();
     void loadStats()
     {
@@ -50,13 +90,7 @@ public abstract class Iitem {
     {
 
         Sprite itemImage = null;
-        switch (image)
-        {
-            case ItemImage.Sword0:
-                itemImage = Resources.Load<Sprite>("Art/ItemSprite/Sword0");
-                break;
-
-        }
+        itemImage = Resources.Load<Sprite>("Art/ItemSprite/"+ image);
         return itemImage;
     }
 }

@@ -6,17 +6,46 @@ using UnityEngine.UI;
 public class EquipmentFrame : MonoBehaviour {
 
 
-    InventoryManager iManager;
-    int bCol, bRow;
+    InventoryManager iManager;    
     [SerializeField] EquipmentSlot slot;
+    private bool isOver = false;
     private void Start()
     {
         iManager = InventoryManager.Instance;
     }
-
-    public void OnClick()
+    private void Update()
     {
-        iManager.OnButtonClicked(slot);
+        if (isOver)
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                OnRightClick();
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                OnLeftClick();
+            }
+        }
     }
-    
+    public void OnLeftClick()
+    {
+        iManager.OnLeftButtonClicked(slot);
+        isOver = false;
+    }
+    private void OnRightClick()
+    {
+        iManager.OnRightButtonClicked(slot);
+        isOver = false;
+    }
+
+    public void MousueEnter()
+    {
+        iManager.MouseOver(slot);
+        isOver = true;
+    }
+    public void MouseExit()
+    {
+        iManager.HideToolTip();
+        isOver = false;
+    }
 }

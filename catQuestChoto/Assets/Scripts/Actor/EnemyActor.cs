@@ -11,7 +11,7 @@ public enum enemyTipe
 abstract class EnemyActor : IACTOR {
 
     protected FSMState myFsm;
-    //item[] drop;
+    
 
     protected void drop()
     {
