@@ -31,9 +31,7 @@ public class InputController : MonoBehaviour {
     public void setIsAtacking(bool atacking) { isAtacking = atacking; }
 
     void Awake()
-    {
-        controller = this.gameObject.GetComponent<CharacterController>();
-        playerAnimator = GetComponentInChildren<Animator>();
+    {        
         if (!controller)
         {
             Debug.LogError("Failed on get the Player controller");
@@ -43,6 +41,8 @@ public class InputController : MonoBehaviour {
     }
     private void Start()
     {
+        controller = this.gameObject.GetComponent<CharacterController>();
+        playerAnimator = GetComponentInChildren<Animator>();
         StartCoroutine(LaterStart(0.01f));
     }
 

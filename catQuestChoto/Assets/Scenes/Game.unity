@@ -5049,7 +5049,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1030488765}
-  characterName: WarriorTest
+  characterName: MageTest
 --- !u!1 &1824890365
 GameObject:
   m_ObjectHideFlags: 0
@@ -5352,9 +5352,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28ce87f9c38e1e441864e8156b5596ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fType: 0
+  fType: 3
   jsonWeapon:
-    size: 0100000003000000
+    size: 0200000003000000
     itemLvl: 1
     stats:
       Health: 0
@@ -5370,16 +5370,16 @@ MonoBehaviour:
       ColdownReduction: 0
       HealthRegen: 0
       ManaRegen: 0
-    ItemID: 0
-    itemName: Espada chota
-    image: 10
+    ItemID: TwoHandedSword0
+    itemName: Espadon
+    image: 13
     tier: 0
-    description: Es una cagada
-    type: 0
-    baseMinDamage: 2
-    baseMaxDamage: 4
-    critDmg: 1.5
-    baseCritChance: 0.05
+    description: Es re grande, como mi pito
+    type: 1
+    baseMinDamage: 6
+    baseMaxDamage: 12
+    critDmg: 2
+    baseCritChance: 0.03
     randomProperty: 2
   jsonQItem:
     size: 0100000001000000

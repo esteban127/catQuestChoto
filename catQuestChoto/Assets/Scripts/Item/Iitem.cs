@@ -53,7 +53,9 @@ public enum ItemImage
     Shield0,
     Sword0,
     Potion0,
-    Rune0
+    Rune0,
+    DualHandedSword0,
+    Staf0
 }
 public enum ItemTier
 {
