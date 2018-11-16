@@ -149,6 +149,10 @@ public class CharacterStats : MonoBehaviour {
     {
         return currentEquipmentStats.critDmg;
     }
+    public float ColdownReduction()
+    {
+        return currentEquipmentStats.stats.ColdownReduction + ((player.Inteligence + currentEquipmentStats.stats.Inteligence) * coldownReductionPerInt);
+    }
     public float CritChance()
     {
         return currentEquipmentStats.baseCritChance + currentEquipmentStats.stats.CritChance + ((player.Luck + currentEquipmentStats.stats.Luck) * CritPerLuck);
@@ -176,10 +180,11 @@ public class CharacterStats : MonoBehaviour {
         extraStats += "Defense: " + Defense() + "\n";
         extraStats += "Max health: " + (int)MaxHealth() + "\n";
         extraStats += "Max mana: " + (int)MaxMana() + "\n";
-        extraStats += "Crit damage: x" + CritDamage() + "\n";
-        extraStats += "Crit chance: " + (int)CritChance()*100 + "%\n";
-        extraStats += "Precision: " + (int)Precision()*100 + "%\n";
-        extraStats += "Dodge:" + (int)DodgeChance()*100 + "%\n";
+        extraStats += "Crit damage: " + (int)(CritDamage()*100) + "%\n";
+        extraStats += "Crit chance: " + (int)(CritChance()*100) + "%\n";
+        extraStats += "Precision: " + (int)(Precision()*100) + "%\n";
+        extraStats += "Dodge:" + (int)(DodgeChance()*100) + "%\n";
+        extraStats += "Coldown reduction: " + (int)(ColdownReduction() * 100) + "%\n";
         extraStats += "Health regen: " + HealtRegen() + "/s\n";
         extraStats += "Mana regen: " + ManaRegen() + "/s\n";
 
