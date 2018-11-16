@@ -539,10 +539,9 @@ public class InventoryManager : MonoBehaviour {
         {
             pos[0] = col;
             pos[1] = row;
-            Debug.Log("CLICK");
+
             if (CheckFitInPos(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem().Size, pos))
             {
-                Debug.Log("CLoCK");
                 AddItemToTheInventory(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem(), pos, false);
                 ItemHolded.GetComponent<ItemOnInventoryManager>().Release(Iinteface.GetButton(pos[0], pos[1]).gameObject);
                 ItemHolded = null;
