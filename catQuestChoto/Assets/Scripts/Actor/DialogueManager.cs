@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DialogueManager : MonoBehaviour {
 
-    [SerializeField] string[] dialogueTree;
+    [SerializeField] dialogue[] dialogueTree;
     Dictionary<string, int> dictionary;
     [SerializeField] string[] dKey;
     private void Start()
@@ -16,13 +16,18 @@ public class DialogueManager : MonoBehaviour {
         }
     }
 
-    public string getDialogue(string key)
+    public string[] getDialogue(string key)
     {
-        return dialogueTree[dictionary[key]];        
+        return dialogueTree[dictionary[key]].dialog;        
     }
 
     public bool CheckKey(string key)
     {
         return (dictionary.ContainsKey(key));
+    }
+    [System.Serializable]
+    public class dialogue
+    {
+        public string[] dialog;
     }
 }

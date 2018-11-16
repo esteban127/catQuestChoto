@@ -14,17 +14,20 @@ public class JsonCreatorInspector : Editor
 
         switch (myScript.fType)
         {
+            case FileType.QItem:
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon", "jsonArmor" });
+                break;
             case FileType.Armor:
-                DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon"});
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon", "jsonQItem" });
                 break;
             case FileType.Character:
-                DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonConsumable", "jsonWeapon"});
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonConsumable", "jsonWeapon", "jsonQItem" });
                 break;
             case FileType.Consumable:
-                DrawPropertiesExcluding(serializedObj, new string[]{"jsonArmor", "jsonCharacter", "jsonWeapon"});
+                DrawPropertiesExcluding(serializedObj, new string[]{"jsonArmor", "jsonCharacter", "jsonWeapon", "jsonQItem" });
                 break;
             case FileType.Weapon:
-                DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonCharacter", "jsonConsumable" });
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonCharacter", "jsonConsumable", "jsonQItem" });
                 break;
             default:
                 break;

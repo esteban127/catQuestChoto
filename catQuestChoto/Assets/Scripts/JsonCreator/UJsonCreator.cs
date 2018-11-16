@@ -7,7 +7,8 @@ public enum FileType
     Character,
     Consumable,
     Armor,
-    Weapon
+    Weapon,
+    QItem
 }
 public class UJsonCreator : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class UJsonCreator : MonoBehaviour
 
     //tenes un objeto de cada tipo, para que se muestre
     public Weapon jsonWeapon;
+    public QuestItem jsonQItem;
     public Armor jsonArmor;
     public Consumables jsonConsumable;
     public CharacterActor jsonCharacter;
@@ -38,6 +40,11 @@ public class UJsonCreator : MonoBehaviour
         string jsonString;
         switch (fType)
         {
+            case FileType.QItem:
+                jsonString = JsonUtility.ToJson(jsonQItem);
+                p_message = "Quest Item creation Ok";
+                path += "/Resources/Json/Items/" + jsonQItem.Tier + "/QuestItem/" + jsonQItem.ID + ".Json";
+                break;
             case FileType.Armor:
                 jsonString=JsonUtility.ToJson(jsonArmor);                
                 p_message = "Armor Creation OK";
@@ -46,7 +53,7 @@ public class UJsonCreator : MonoBehaviour
             case FileType.Character:
                 jsonString = JsonUtility.ToJson(jsonCharacter);
                 p_message = "Character Creation OK";
-                path += "/Resources/Json/Character/" + jsonCharacter.ID + ".Json";
+                path += "/Resources/Json/Character/" + jsonCharacter.Name + ".Json";
                 break;
             case FileType.Consumable:
                 jsonString = JsonUtility.ToJson(jsonConsumable);

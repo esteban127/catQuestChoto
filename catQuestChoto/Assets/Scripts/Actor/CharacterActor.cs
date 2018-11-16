@@ -13,9 +13,11 @@ public enum c_class
 [System.Serializable]
 public class CharacterActor : FriendlyActor {
     
+
     [SerializeField] c_class characterClass;
+    public c_class Class { get { return characterClass; } }
     [SerializeField] float experience;
+    public float Experience { get { return experience; } set { experience = value; } }
     //[SerializeField] skilltree skilltree?
-    //[SerializeField] inventory ?
-    //[SerializeField] questLog
+    
 }

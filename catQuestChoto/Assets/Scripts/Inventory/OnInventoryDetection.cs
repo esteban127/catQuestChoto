@@ -9,6 +9,7 @@ public class OnInventoryDetection : MonoBehaviour {
     private void Start()
     {
         iManager = InventoryManager.Instance;
+        
     }
 
     private void Update()
@@ -23,7 +24,7 @@ public class OnInventoryDetection : MonoBehaviour {
     }
     public void OnLeftClick()
     {
-        Debug.Log("Bai");
+
         iManager.ClickedOutOfInventory();        
     }
     

@@ -45,7 +45,7 @@ public class Weapon : Iitem
             } while (alreadyRolled.Contains(roll));
             alreadyRolled.Add(roll);
 
-            mainStat = (Random.Range(1, 50) + ((int)tier * 25));
+            mainStat = (Random.Range(1, 10) + ((int)tier * 5));
             percStat = ((float)Random.Range(1, 5) * 0.01f) + (float)tier * 0.025f;
             regenStat = (float)Random.Range(1, 5)*0.5f  + (float)tier * 1.5f + 1f;
             switch (type)

@@ -7,7 +7,8 @@ public enum ItemType
 {
     Weapon,
     Armor,
-    Consumable,    
+    Consumable,
+    QuestItem
 }
 
 public class ItemFactory{    
@@ -15,27 +16,38 @@ public class ItemFactory{
 
     static private ItemFactory instance = null;
     private ItemFactory() { }
-    static public ItemFactory Instance()
-    {
-        if (instance == null)
-            instance = new ItemFactory();
+    static public ItemFactory Instance
+    {get
+        {
+            if (instance == null)
+                instance = new ItemFactory();
 
-        return instance;
+            return instance;
+        }        
     }
 
     public void GenerateLoot(ItemTier tier, Vector3 dropSpot)
     {
         Iitem item = Generate(tier);
-        UnityEngine.Object Model = Resources.Load("ItemPrefab/" + item.GetType());
-        GameObject drop = (GameObject)GameObject.Instantiate(Model, dropSpot, Quaternion.Euler(0, 0, 0));
+        Object model = Resources.Load("ItemPrefab/" + item.GetType());
+        GameObject drop = (GameObject)GameObject.Instantiate(model, dropSpot, Quaternion.Euler(0, 0, 0));
+        drop.GetComponent<ItemComponent>().SetStats(item);
+        drop.name = drop.GetComponent<ItemComponent>().GetName();
+    }
+
+    public void GenerateItem(ItemTier tier, ItemType type, string ID, Vector3 dropSpot)
+    {
+        Iitem item = Generate(type,tier,ID);
+        Object model = Resources.Load("ItemPrefab/" + item.GetType());
+        GameObject drop = (GameObject)GameObject.Instantiate(model, dropSpot, Quaternion.Euler(0, 0, 0));
         drop.GetComponent<ItemComponent>().SetStats(item);
         drop.name = drop.GetComponent<ItemComponent>().GetName();
     }
 
     public void DropItem(Iitem item, Vector3 dropSpot)
     {
-        UnityEngine.Object Model = Resources.Load("ItemPrefab/" + item.GetType());
-        GameObject drop = (GameObject)GameObject.Instantiate(Model, dropSpot, Quaternion.Euler(0,0,0));
+        Object model = Resources.Load("ItemPrefab/" + item.GetType());
+        GameObject drop = (GameObject)GameObject.Instantiate(model, dropSpot, Quaternion.Euler(0,0,0));
         drop.GetComponent<ItemComponent>().SetStats(item);
         drop.name = drop.GetComponent<ItemComponent>().GetName();
     }
@@ -63,7 +75,11 @@ public class ItemFactory{
                 Weapon wStats = JsonUtility.FromJson<Weapon>(File.ReadAllText(path));
                 wStats.SetRandomProperty();
                 return wStats;
-                
+            case ItemType.QuestItem:
+
+                path += "/QuestItem/" + itemID + ".Json";
+                return (JsonUtility.FromJson<QuestItem>(File.ReadAllText(path)));
+
             default:
                 Debug.Log("Missing Type");
                 return null;                

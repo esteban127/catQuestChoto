@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-enum baseAttribute
+
+public enum ActorImage
 {
-    Health,
-    Damage,
-    Mana,
-    Defense,
-    Precision,
-    Dodge,
-    CritChance
+    Roberta,
+    Warrior,
+    Archer,
+    Mage
 }
 
-enum  attribute
+public enum  attribute
 {
     Strength,
     Constitution,
@@ -26,60 +24,40 @@ public abstract class IACTOR {
 
 
     //basics
-    [SerializeField] protected int actorID;
-    public int ID { get { return actorID; } }
-    protected int level;
-    protected Sprite profilePict;
+    [SerializeField] protected string name;
+    public string Name { get { return name; } }
+    [SerializeField] protected int level;
+    public int Level { get { return level; } set { level = value; } }
+    [SerializeField] protected ActorImage image;
+
     //base attributes    
-    protected float baseHealth;
-    protected float baseDamage;
-    protected float baseDefense;
-    protected float baseMana;
-    protected float baseDodge;
-    protected float basePrecision;
-    protected float baseCritChance;
+    [SerializeField] protected int baseHealth;
+    public int Health { get { return baseHealth; } }
+    [SerializeField] protected float baseDamage;
+    public float minDamage { get { return baseDamage*0.7f; } }
+    public float maxDamage { get { return baseDamage*1.3f; } }
+    [SerializeField] protected int baseDefense;
+    public float Defense { get { return baseDefense; } }
+    [SerializeField] protected int baseMana;
+    public int Mana { get { return baseMana; } }
     //attributes
     [SerializeField] protected int baseStrength = 5;
     [SerializeField] protected int baseConstitution = 5;
     [SerializeField] protected int baseDextery = 5;
     [SerializeField] protected int baseInteligence = 5;
     [SerializeField] protected int baseLuck = 5;
-    //Equipament
-    //protected Equipament equipament 
-    //variable attributes
-     protected float currentHealth;
-     protected float currentMana;
-    //Buffs
-    //protected Buff activeBuffs;    
+    public int Strength { get { return baseStrength; } set { baseStrength = value; } }
+    public int Constitution { get { return baseConstitution; } set { baseConstitution = value; } }
+    public int Dextery { get { return baseDextery; } set { baseDextery = value; } }
+    public int Inteligence { get { return baseInteligence; } set { baseInteligence = value; } }
+    public int Luck { get { return baseLuck; } set { baseLuck = value; } }
 
-    //Functions
-    /*
-    //Basics
-    public string getName() { };
-    public float getLevel() { };
-    public Sprite getPict() { };
-    //Health related
-    protected float getMaxHealth() { };
-    public float getCurrentHealth() { };
-    public float takeDamage() { };
-    protected float replenishHealth() { };
-    //Mana related
-    protected float getMaxMana() { };
-    public float getCurrentMana() { };
-    protected float spendMana() { };
-    protected float replenishMana();
-    //Damage related
-    public float getDamage() { };
-    protected float calculateFinalDamage(IACTOR target) { };
-    //Defense related
-    public float getDefense() { };
-    //Chance related
-    public float getDodge() { };
-    public float getPrecision() { };
-    public float getCritChance() { };
-    protected bool calculateHitSuccess(IACTOR target) { };
-    //attribute related
-    protected float getAttribute(attribute attribute) { };
-    */
-    
+
+    public Sprite getImage()
+    {
+        Sprite itemImage = null;
+        itemImage = Resources.Load<Sprite>("Art/ActorSprite/" + image);
+        return itemImage;
+    }
+
 }

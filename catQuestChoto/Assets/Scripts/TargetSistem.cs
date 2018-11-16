@@ -42,9 +42,8 @@ public class TargetSistem : MonoBehaviour
 
                 }
                 if(hit.transform.tag == "Drop")
-                {
-                    Iitem item = hit.transform.GetComponent<ItemComponent>().GiveStats();                    
-                    if (iManager.TryToAddItemToTheInventory(item))
+                {                   
+                    if (iManager.PickItem(hit.transform.gameObject))
                     {
                         Destroy(hit.transform.gameObject);
                     }

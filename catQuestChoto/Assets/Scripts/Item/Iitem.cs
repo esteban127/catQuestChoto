@@ -52,7 +52,8 @@ public enum ItemImage
     Ring1,
     Shield0,
     Sword0,
-    Potion0
+    Potion0,
+    Rune0
 }
 public enum ItemTier
 {
@@ -65,7 +66,7 @@ public enum ItemTier
 [System.Serializable]
 public abstract class Iitem {
 
-    [SerializeField] int[] size;
+    [SerializeField] int[] size = {1,1};
     public int[] Size { get { return size; } }
     [SerializeField] protected int itemLvl;
     public int Lvl { get { return itemLvl; } }

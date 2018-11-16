@@ -8,11 +8,14 @@ public class ItemSpawner : MonoBehaviour {
     ItemFactory Ifactory;
     InventoryManager myInventory;
     public bool spawn = true;
-  
-
+    QuestManager qManager;
+    [SerializeField] string questNameForSpecialSpawn;
+    [SerializeField] Transform[] PiedrasSpawns;
     void Start () {
-        Ifactory = ItemFactory.Instance();
+        qManager = QuestManager.Instance;
+        Ifactory = ItemFactory.Instance;
         myInventory = InventoryManager.Instance;
+        qManager.OnNewQuestStart += SpecialQuestItemSpawn;
     }
 	
 	// Update is called once per frame
@@ -21,10 +24,28 @@ public class ItemSpawner : MonoBehaviour {
         {
             if (spawn)
             {
-                Ifactory.GenerateLoot(ItemTier.Tier0, transform.position); //Debug
+                Ifactory.GenerateLoot(ItemTier.Tier0, transform.position); //Debug                
             }           
         }
 	}
 
-    
+    private void SpecialQuestItemSpawn()
+    {
+        for (int i = 0; i < qManager.ActiveQuestKey.Count; i++)
+        {
+            if (qManager.ActiveQuestKey[i] == questNameForSpecialSpawn)
+            {
+                SpawnPiedras();
+            }
+        }
+    }
+
+    private void SpawnPiedras()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            Ifactory.GenerateItem(ItemTier.Tier0, ItemType.QuestItem, "Piedrita magica", PiedrasSpawns[i].position);
+        }
+        
+    }
 }

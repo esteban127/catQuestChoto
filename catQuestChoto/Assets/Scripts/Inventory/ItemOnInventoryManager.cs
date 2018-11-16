@@ -10,7 +10,7 @@ public class ItemOnInventoryManager : MonoBehaviour {
     float height;
     Vector3 offset;
     Iitem itemRef;
-    float cellSize;
+    Vector2 cellSize;
     private void Update()
     {
         if (picked)
@@ -19,7 +19,7 @@ public class ItemOnInventoryManager : MonoBehaviour {
         }
     }
 
-    public void Initialize(Iitem item, float cell)
+    public void Initialize(Iitem item, Vector2 cell)
     {
         itemRef = item;
         cellSize = cell;
@@ -38,9 +38,9 @@ public class ItemOnInventoryManager : MonoBehaviour {
     }
     public void SetSize(int[]size)
     {
-        width = size[0]*cellSize;
-        height = size[1]*cellSize;
-        offset = new Vector3(-width + (cellSize/2) , -cellSize/2, 0);
+        width = size[0]*cellSize.x;
+        height = size[1]*cellSize.y;
+        offset = new Vector3(-width + (cellSize.x/2) , -cellSize.y/2, 0);
         GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
         GetComponent<RectTransform>().localPosition = offset;
     }
@@ -55,7 +55,7 @@ public class ItemOnInventoryManager : MonoBehaviour {
     {
         picked = false;
         transform.SetParent(parent.transform);
-        offset = new Vector3(-width + (cellSize / 2), -cellSize / 2, 0);
+        offset = new Vector3(-width + (cellSize.x / 2), -cellSize.y / 2, 0);
         GetComponent<RectTransform>().localPosition = offset;
         GetComponent<Image>().raycastTarget = true;
     }

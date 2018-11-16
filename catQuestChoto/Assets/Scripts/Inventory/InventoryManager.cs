@@ -31,12 +31,14 @@ public enum EquipmentSlot
 public struct equipmentStats
 {
     public itemstats stats;
-    public float defense;
+    public int defense;
     public float baseMinDamage;
     public float baseMaxDamage;
     public float critDmg;
     public float baseCritChance;
 }
+
+
 
 [RequireComponent(typeof(GridLayoutGroup))]
 public class InventoryManager : MonoBehaviour {
@@ -58,7 +60,13 @@ public class InventoryManager : MonoBehaviour {
     [SerializeField] int row;
     [SerializeField] GameObject itemFramePrefab;
     ItemFactory iFactory;
-
+    QuestManager qManager;
+    public WeaponSet CurrentWeaponSet{get{return currentWeaponSet; } }
+    public equipmentStats CurrentEquipmentBonus { get { return currentEquipmentBonus; } }
+    //Delegate
+    public delegate void InventoryDelegate();
+    public InventoryDelegate OnWeaponChange;
+    public InventoryDelegate OnStatChange;
 
     static private InventoryManager instance = null;
     static public InventoryManager Instance { get { return instance; } }
@@ -70,30 +78,38 @@ public class InventoryManager : MonoBehaviour {
             instance = this;
             DontDestroyOnLoad(gameObject);
             Iinteface = new InventoryInterface(gameObject);
+            Iinteface.CreateInventory(col, row, buttonPrefab);
             currentEquipmentBonus.stats = new itemstats();
             inventorySpots = new Iitem[col, row];
             refInventory = new int[col,row][];
             equipedItems = new Iitem[10];
-            InitializeRefInv(col,row);            
-            //LoadInventory()
-            Iinteface.CreateInventory(col, row, buttonPrefab);
-            calculateEquipmentBonus();
+            InitializeRefInv(col,row);
+            //LoadInventory()  
+            OnStatChange+= calculateEquipmentBonus;
+            OnStatChange();
+            OnWeaponChange += checkWeaponInstance;
         }
         else if (instance != this)
         {
             Destroy(gameObject);
         }
     }
-
+    
     private void Start()
     {
-        iFactory = ItemFactory.Instance();
+        iFactory = ItemFactory.Instance;
+        qManager = QuestManager.Instance;
     }
-
-    public void PickItem(GameObject item)
+    
+    public bool PickItem(GameObject item)
     {
-        Debug.Log("EHhh");
-        TryToAddItemToTheInventory(item.GetComponent<ItemComponent>().GiveStats());           
+        
+        if (TryToAddItemToTheInventory(item.GetComponent<ItemComponent>().GiveStats()))
+        {
+            qManager.OnPick(item.GetComponent<ItemComponent>().GiveStats());
+            return true;
+        }
+        return false;
     }
     private void InitializeRefInv(int col, int row)
     {
@@ -144,10 +160,8 @@ public class InventoryManager : MonoBehaviour {
                 }
                 
             }
-            else
-            {
-            return false;
-            }
+            else            
+                return false;            
         }
         return true;
     }
@@ -159,8 +173,8 @@ public class InventoryManager : MonoBehaviour {
     {
         equipedItems[(int)slot] = null;
         if (slot == EquipmentSlot.mainHand || slot == EquipmentSlot.offHand)
-            checkWeaponInstance();
-        calculateEquipmentBonus();
+            OnWeaponChange();
+        OnStatChange();
     }
     public bool EquipItem(EquipmentSlot slotToEquip, Iitem itemToEquip)
     {
@@ -171,15 +185,51 @@ public class InventoryManager : MonoBehaviour {
             {
                 return false;
             }
-            Debug.Log("destroy");
             Destroy(equipSlot[(int)slotToEquip].transform.GetChild(0).gameObject);
         }
         equipedItems[(int)slotToEquip] = itemToEquip;        
         if (slotToEquip == EquipmentSlot.mainHand || slotToEquip == EquipmentSlot.offHand)
-            checkWeaponInstance();
+            OnWeaponChange();
 
-        calculateEquipmentBonus();
+        OnStatChange();
         return true;
+    }
+    public int CheckAmountInInventory(Iitem item)
+    {
+        int count = 0;
+        for (int i = 0; i < inventorySpots.GetLength(0); i++)
+        {
+            for (int j = 0; j < inventorySpots.GetLength(1); j++)
+            {
+                if(inventorySpots[i, j]!= null)
+                    if (inventorySpots[i, j].Name == item.Name)
+                        count++;
+            }
+        }
+        return count;
+    }
+    public void RemoveAmountFromInventory(Iitem item, int amount)
+    {
+        int currentAmount = 0;
+        int[] pos = new int[2];
+        for (int i = 0; i < inventorySpots.GetLength(0); i++)
+        {
+            for (int j = 0; j < inventorySpots.GetLength(1); j++)
+            {
+                if (inventorySpots[i, j] != null)
+                {
+                    if (inventorySpots[i, j].Name == item.Name)
+                    {
+                        pos[0] = i;
+                        pos[1] = j;
+                        RemoveFromInventory(pos, true);
+                        currentAmount++;
+                        if (currentAmount >= amount)
+                            return;
+                    }
+                }   
+            }
+        }
     }
 
     private void checkWeaponInstance()
@@ -187,13 +237,20 @@ public class InventoryManager : MonoBehaviour {
 
         if (equipedItems[(int)EquipmentSlot.offHand] != null)
         {
-            if (equipedItems[(int)EquipmentSlot.offHand].GetType() == typeof(Weapon))
+            if (equipedItems[(int)EquipmentSlot.offHand].GetType() == typeof(Armor))
             {
-                currentWeaponSet = WeaponSet.DualBlades;
+                currentWeaponSet = WeaponSet.SwordAndShield;                
             }
             else
             {
-                currentWeaponSet = WeaponSet.SwordAndShield;
+                if(equipedItems[(int)EquipmentSlot.mainHand] != null)
+                {
+                    currentWeaponSet = WeaponSet.DualBlades;
+                }
+                else
+                {
+                    currentWeaponSet = WeaponSet.OneHanded;
+                }
             }
         }
         else
@@ -228,7 +285,7 @@ public class InventoryManager : MonoBehaviour {
 
     private void calculateEquipmentBonus()
     {
-        float defense = 0.0f;
+        int defense = 0;
         float critDmg = 1.0f;
         float baseMinDmg = 0.0f;
         float baseMaxDamage = 0.0f;
@@ -304,7 +361,7 @@ public class InventoryManager : MonoBehaviour {
                 case weaponType.Bow:
                     if (slot == EquipmentSlot.mainHand)
                     {
-                        if (currentWeaponSet != WeaponSet.SwordAndShield && currentWeaponSet != WeaponSet.DualBlades)
+                        if (equipedItems[(int)EquipmentSlot.offHand] == null)                            
                             return true;
                         
                     }
@@ -369,12 +426,11 @@ public class InventoryManager : MonoBehaviour {
     }
     public bool TryToAddItemToTheInventory (Iitem itemToAdd)
     {
-        Debug.Log("Ahhh");
-
         int[] emptyPos = CheckFit(itemToAdd.Size);
         if (emptyPos[0] >= 0)
         {
             AddItemToTheInventory(itemToAdd, emptyPos,true);
+
             return true;
         }
         Debug.Log("Inventory Full");
@@ -540,7 +596,6 @@ public class InventoryManager : MonoBehaviour {
     {
         if (ItemHolded != null)
         {
-            Debug.Log("Adios");
             DropItem(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem());
             Destroy(ItemHolded.gameObject);
             ItemHolded = null;
@@ -695,7 +750,7 @@ public class InventoryManager : MonoBehaviour {
         GameObject[,] inventorySlot;
         GridLayoutGroup grid;
         GameObject parent;
-        float cellSize;
+        Vector2 cellSize;
         
         public InventoryInterface(GameObject reference)
         {
@@ -705,8 +760,8 @@ public class InventoryManager : MonoBehaviour {
         public void CreateInventory(int col, int row, GameObject prefab)
         {
 
-            cellSize = parent.GetComponent<RectTransform>().rect.width / col;
-            grid.cellSize = new Vector2(cellSize,cellSize);            
+            cellSize = new Vector2(parent.GetComponent<RectTransform>().rect.width / col, parent.GetComponent<RectTransform>().rect.height / row);
+            grid.cellSize = cellSize;            
             inventorySlot = new GameObject[col, row];
 
             for (int i = 0; i < col; i++)
