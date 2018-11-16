@@ -48,7 +48,6 @@ public class ItemOnInventoryManager : MonoBehaviour {
     public void Draw()
     {
         picked = true;
-        GetComponent<Image>().raycastTarget = false;
     }
 
     public void Release(GameObject parent)
@@ -56,8 +55,7 @@ public class ItemOnInventoryManager : MonoBehaviour {
         picked = false;
         transform.SetParent(parent.transform);
         offset = new Vector3(-width + (cellSize.x / 2), -cellSize.y / 2, 0);
-        GetComponent<RectTransform>().localPosition = offset;
-        GetComponent<Image>().raycastTarget = true;
+        GetComponent<RectTransform>().localPosition = offset;        
     }
     public void Equip (GameObject parent)
     {
@@ -65,7 +63,6 @@ public class ItemOnInventoryManager : MonoBehaviour {
         transform.SetParent(parent.transform);
         Vector3 EquipedOffset = new Vector3(-width/2, -height/2, 0);
         GetComponent<RectTransform>().localPosition = EquipedOffset;
-        GetComponent<Image>().raycastTarget = true;
     }
    
     

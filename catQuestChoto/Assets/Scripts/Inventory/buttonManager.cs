@@ -32,13 +32,11 @@ public class buttonManager:MonoBehaviour {
 
     private void OnLeftClick()
     {
-        iManager.OnLeftButtonClicked(bCol, bRow);
-        isOver = false;
+        iManager.OnLeftButtonClicked(bCol, bRow);        
     }
     private void OnRightClick()
     {        
-        iManager.OnRightButtonClicked(bCol, bRow);
-        isOver = false;
+        iManager.OnRightButtonClicked(bCol, bRow);        
     }
 
 

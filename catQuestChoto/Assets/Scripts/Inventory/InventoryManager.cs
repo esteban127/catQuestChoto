@@ -452,13 +452,13 @@ public class InventoryManager : MonoBehaviour {
     }
    
     public void RemoveFromInventory(int[] position, bool deleteFrame)
-    {
+    {        
         Iitem itemToDelete = inventorySpots[position[0], position[1]];
         for (int i = 0; i < itemToDelete.Size[0]; i++)
         {
             for (int j = 0; j < itemToDelete.Size[1]; j++)
             {
-                refInventory[position[0] - i, position[1] - j][0] = -1;
+                refInventory[position[0] - i, position[1] - j][0] = -1;            
                 refInventory[position[0] - i, position[1] - j][1] = -1;
             }
         }
@@ -520,28 +520,32 @@ public class InventoryManager : MonoBehaviour {
 
     public void OnLeftButtonClicked(int col, int row)
     {
-        int[] pos = new int[2];
-        pos[0] = col;
-        pos[1] = row;
-       
         
+        int[] pos = new int[2];
+        pos[0] = refInventory[col, row][0];
+        pos[1] = refInventory[col, row][1];
+
         if (ItemHolded == null)
         {
-            if (refInventory[col, row][0] >= 0)
+            if (pos[0] >= 0)
             {
                 RemoveFromInventory(pos, false);
-                Iinteface.GetButton(col, row).GetComponentInChildren<ItemOnInventoryManager>().Draw();
-                ItemHolded = Iinteface.GetButton(col, row).transform.GetChild(0).GetComponent<RectTransform>();
+                Iinteface.GetButton(pos[0], pos[1]).GetComponentInChildren<ItemOnInventoryManager>().Draw();
+                ItemHolded = Iinteface.GetButton(pos[0], pos[1]).transform.GetChild(0).GetComponent<RectTransform>();
                 ItemHolded.SetParent(transform.parent);
             }
         }
         else
         {
+            pos[0] = col;
+            pos[1] = row;
+            Debug.Log("CLICK");
             if (CheckFitInPos(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem().Size, pos))
             {
-                    AddItemToTheInventory(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem(), pos, false);
-                    ItemHolded.GetComponent<ItemOnInventoryManager>().Release(Iinteface.GetButton(col, row).gameObject);
-                    ItemHolded = null;
+                Debug.Log("CLoCK");
+                AddItemToTheInventory(ItemHolded.GetComponent<ItemOnInventoryManager>().getItem(), pos, false);
+                ItemHolded.GetComponent<ItemOnInventoryManager>().Release(Iinteface.GetButton(pos[0], pos[1]).gameObject);
+                ItemHolded = null;
             }
                
         }
@@ -577,10 +581,9 @@ public class InventoryManager : MonoBehaviour {
     public void OnRightButtonClicked(int col, int row)
     {
         int[] pos = new int[2];
-        pos[0] = col;
-        pos[1] = row;
-       
-        if (refInventory[col, row][0] >= 0)
+        pos[0] = refInventory[col, row][0];
+        pos[1] = refInventory[col, row][1];
+        if (pos[0] >= 0)
         {        
             UseFromInventory(pos);
         }
@@ -609,10 +612,10 @@ public class InventoryManager : MonoBehaviour {
     }
 
     public void MouseOver(int col, int row)
-    {
+    {        
         if (refInventory[col, row][0] >= 0)
         {
-            ShowToolTip(Iinteface.GetButton(col, row).GetComponentInChildren<ItemOnInventoryManager>().getItem());
+            ShowToolTip(Iinteface.GetButton(refInventory[col, row][0], refInventory[col, row][1]).GetComponentInChildren<ItemOnInventoryManager>().getItem());
         }
     }
     public void MouseOver(EquipmentSlot slot)
