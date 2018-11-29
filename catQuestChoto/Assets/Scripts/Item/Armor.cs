@@ -20,7 +20,7 @@ public class Armor : Iitem {
     [SerializeField] armorType type;
     [SerializeField] int defense;
     [SerializeField] int randomProperty;
-    itemstats aditionalStats;
+    [SerializeField] itemstats aditionalStats;
 
 
     public armorType ArmorType { get { return type; } }

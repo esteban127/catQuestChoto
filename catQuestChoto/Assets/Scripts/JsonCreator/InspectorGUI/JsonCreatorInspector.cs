@@ -14,20 +14,26 @@ public class JsonCreatorInspector : Editor
 
         switch (myScript.fType)
         {
+            case FileType.HealAbility:
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon", "jsonArmor", "jsonQItem", "jsonAtAbility" });
+                break;
+            case FileType.AtackAbility:
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon", "jsonArmor", "jsonHeAbility", "jsonQItem" });
+                break;
             case FileType.QItem:
-                DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon", "jsonArmor" });
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon", "jsonArmor", "jsonHeAbility", "jsonAtAbility" });
                 break;
             case FileType.Armor:
-                DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon", "jsonQItem" });
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonCharacter", "jsonConsumable", "jsonWeapon", "jsonQItem", "jsonHeAbility", "jsonAtAbility" });
                 break;
             case FileType.Character:
-                DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonConsumable", "jsonWeapon", "jsonQItem" });
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonConsumable", "jsonWeapon", "jsonQItem", "jsonHeAbility", "jsonAtAbility" });
                 break;
             case FileType.Consumable:
-                DrawPropertiesExcluding(serializedObj, new string[]{"jsonArmor", "jsonCharacter", "jsonWeapon", "jsonQItem" });
+                DrawPropertiesExcluding(serializedObj, new string[]{"jsonArmor", "jsonCharacter", "jsonWeapon", "jsonQItem", "jsonHeAbility", "jsonAtAbility" });
                 break;
             case FileType.Weapon:
-                DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonCharacter", "jsonConsumable", "jsonQItem" });
+                DrawPropertiesExcluding(serializedObj, new string[] { "jsonArmor", "jsonCharacter", "jsonConsumable", "jsonQItem", "jsonHeAbility", "jsonAtAbility" });
                 break;
             default:
                 break;

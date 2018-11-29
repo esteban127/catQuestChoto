@@ -8,8 +8,11 @@ public enum FileType
     Consumable,
     Armor,
     Weapon,
-    QItem
+    QItem,
+    AtackAbility,
+    HealAbility
 }
+
 public class UJsonCreator : MonoBehaviour
 {
     //aca van las clases de los json, como y que queres que muestre, estas mismas usarias para el json utility
@@ -18,11 +21,12 @@ public class UJsonCreator : MonoBehaviour
    
     //los enum de cada tipo
    
-
     public FileType fType;
 
     //tenes un objeto de cada tipo, para que se muestre
     public Weapon jsonWeapon;
+    public AtackAbility jsonAtAbility;
+    public HealAbility jsonHeAbility;
     public QuestItem jsonQItem;
     public Armor jsonArmor;
     public Consumables jsonConsumable;
@@ -40,10 +44,21 @@ public class UJsonCreator : MonoBehaviour
         string jsonString;
         switch (fType)
         {
+            case FileType.HealAbility:
+                jsonString = JsonUtility.ToJson(jsonHeAbility);
+                p_message = "Heal ability creation Ok";
+                path += "/Resources/Json/Ability/" + jsonHeAbility.AbilityClass + "/HealAbility/" + jsonHeAbility.Name + ".Json";
+
+                break;
+            case FileType.AtackAbility:
+                jsonString = JsonUtility.ToJson(jsonAtAbility);
+                p_message = "Atack ability creation Ok";
+                path += "/Resources/Json/Ability/"+jsonAtAbility.AbilityClass+"/AtackAbility/" + jsonAtAbility.Name + ".Json";
+                break;
             case FileType.QItem:
                 jsonString = JsonUtility.ToJson(jsonQItem);
                 p_message = "Quest Item creation Ok";
-                path += "/Resources/Json/Items/" + jsonQItem.Tier + "/QuestItem/" + jsonQItem.ID + ".Json";
+                path += "/Resources/Json/Items" + jsonQItem.Tier + "/QuestItem/" + jsonQItem.ID + ".Json";
                 break;
             case FileType.Armor:
                 jsonString=JsonUtility.ToJson(jsonArmor);                

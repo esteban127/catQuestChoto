@@ -88,9 +88,27 @@ public class QuestManager : MonoBehaviour {
         }
         return false;
     }
-    public void OnKill(IACTOR actor)
+    public bool OnKill(IACTOR actor)
     {
-
+        for (int i = 0; i < activeQuest.Count; i++)
+        {
+            for (int j = 0; j < activeQuest[i].Flags.Length; j++)
+            {
+                if (CheckFlag(activeQuest[i].Flags[j], QuestObjetive.kill))
+                {
+                    if (activeQuest[i].Flags[j].Target == actor.Name)
+                    {
+                        if (!activeQuest[i].Flags[j].Completed)
+                        {
+                            activeQuest[i].Flags[j].Progress();
+                            CheckQuestStatus(activeQuest[i]);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
     public bool OnPick(Iitem item)
     {

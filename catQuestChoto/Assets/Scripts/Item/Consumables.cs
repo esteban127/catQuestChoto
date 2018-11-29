@@ -5,9 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class Consumables : Iitem
 {
-    [SerializeField]float duration = 5.0f;
-    [SerializeField] bool restoration = true;
-    public float Duration { get { return duration; } }
-    public bool Restoration { get { return restoration; } }
+    [SerializeField] BuffDebuffSystem.Buff[] buff;
+    [SerializeField] BuffDebuffSystem.Debuff[] debuff;
+    public BuffDebuffSystem.Buff[] Buff { get { return buff; } }
+    public BuffDebuffSystem.Debuff[] Debuff { get { return debuff; } }
 
 }

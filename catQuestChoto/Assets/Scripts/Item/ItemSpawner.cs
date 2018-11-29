@@ -6,7 +6,6 @@ using UnityEngine;
 public class ItemSpawner : MonoBehaviour {
    
     ItemFactory Ifactory;
-    InventoryManager myInventory;
     public bool spawn = true;
     QuestManager qManager;
     [SerializeField] string questNameForSpecialSpawn;
@@ -14,7 +13,6 @@ public class ItemSpawner : MonoBehaviour {
     void Start () {
         qManager = QuestManager.Instance;
         Ifactory = ItemFactory.Instance;
-        myInventory = InventoryManager.Instance;
         qManager.OnNewQuestStart += SpecialQuestItemSpawn;
     }
 	

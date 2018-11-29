@@ -11,16 +11,30 @@ public enum ItemType
     QuestItem
 }
 
-public class ItemFactory{    
+public class ItemFactory{
 
-
+    PoolManager myPoolManager;
     static private ItemFactory instance = null;
-    private ItemFactory() { }
+    private ItemFactory()
+    {
+        myPoolManager = PoolManager.Instance;
+        GameObject model = (GameObject)Resources.Load("ItemPrefab/Armor");
+        myPoolManager.AddPool(model, 10, "Armor", true);
+        model = (GameObject)Resources.Load("ItemPrefab/Weapon");
+        myPoolManager.AddPool(model, 5, "Weapon", true);
+        model = (GameObject)Resources.Load("ItemPrefab/QuestItem");
+        myPoolManager.AddPool(model, 5, "QuestItem", true);
+        model = (GameObject)Resources.Load("ItemPrefab/Consumables");
+        myPoolManager.AddPool(model, 5, "Consumables", true);
+    }
     static public ItemFactory Instance
-    {get
+    {
+        get
         {
             if (instance == null)
-                instance = new ItemFactory();
+            {
+                instance = new ItemFactory();               
+            }
 
             return instance;
         }        
@@ -28,27 +42,27 @@ public class ItemFactory{
 
     public void GenerateLoot(ItemTier tier, Vector3 dropSpot)
     {
-        Iitem item = Generate(tier);
-        Object model = Resources.Load("ItemPrefab/" + item.GetType());
-        GameObject drop = (GameObject)GameObject.Instantiate(model, dropSpot, Quaternion.Euler(0, 0, 0));
+        Iitem item = Generate(tier);  
+        GameObject drop = myPoolManager.RequestToPool(item.GetType().ToString(), dropSpot, Quaternion.Euler(0, 0, 0));
         drop.GetComponent<ItemComponent>().SetStats(item);
+        drop.GetComponent<dropPhysics>().Spawn();
         drop.name = drop.GetComponent<ItemComponent>().GetName();
     }
 
     public void GenerateItem(ItemTier tier, ItemType type, string ID, Vector3 dropSpot)
     {
         Iitem item = Generate(type,tier,ID);
-        Object model = Resources.Load("ItemPrefab/" + item.GetType());
-        GameObject drop = (GameObject)GameObject.Instantiate(model, dropSpot, Quaternion.Euler(0, 0, 0));
+        GameObject drop = myPoolManager.RequestToPool(item.GetType().ToString(), dropSpot, Quaternion.Euler(0, 0, 0));
         drop.GetComponent<ItemComponent>().SetStats(item);
+        drop.GetComponent<dropPhysics>().Spawn();
         drop.name = drop.GetComponent<ItemComponent>().GetName();
     }
 
     public void DropItem(Iitem item, Vector3 dropSpot)
     {
-        Object model = Resources.Load("ItemPrefab/" + item.GetType());
-        GameObject drop = (GameObject)GameObject.Instantiate(model, dropSpot, Quaternion.Euler(0,0,0));
+        GameObject drop = myPoolManager.RequestToPool(item.GetType().ToString(), dropSpot, Quaternion.Euler(0, 0, 0));
         drop.GetComponent<ItemComponent>().SetStats(item);
+        drop.GetComponent<dropPhysics>().Spawn();
         drop.name = drop.GetComponent<ItemComponent>().GetName();
     }
 

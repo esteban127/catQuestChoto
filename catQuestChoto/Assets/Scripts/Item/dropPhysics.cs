@@ -5,7 +5,7 @@ using UnityEngine;
 public class dropPhysics : MonoBehaviour {
     int terrainLayer;
     [SerializeField] float fallSpeed = 0.5f;
-    private void Start()
+    public void Spawn()
     {
         terrainLayer = LayerMask.NameToLayer("Terrain");
         StartCoroutine(fall());

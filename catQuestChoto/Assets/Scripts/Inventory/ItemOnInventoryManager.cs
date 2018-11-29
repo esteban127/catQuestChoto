@@ -19,12 +19,17 @@ public class ItemOnInventoryManager : MonoBehaviour {
         }
     }
 
-    public void Initialize(Iitem item, Vector2 cell)
+    public void Initialize(Iitem item, Vector2 cell, bool isForEquip)
     {
         itemRef = item;
         cellSize = cell;
         SetImg(item.getImage());
         SetSize(item.Size);
+        if (isForEquip)
+        {
+            Vector3 EquipedOffset = new Vector3(-width / 2, -height / 2, 0);
+            GetComponent<RectTransform>().localPosition = EquipedOffset;
+        }        
     }
 
     public Iitem getItem()
@@ -40,7 +45,7 @@ public class ItemOnInventoryManager : MonoBehaviour {
     {
         width = size[0]*cellSize.x;
         height = size[1]*cellSize.y;
-        offset = new Vector3(-width + (cellSize.x/2) , -cellSize.y/2, 0);
+        offset = new Vector3(-width + (cellSize.x / 2), -cellSize.y / 2, 0);
         GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
         GetComponent<RectTransform>().localPosition = offset;
     }

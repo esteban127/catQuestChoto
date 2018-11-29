@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 public enum WeaponSet
 {
     Fist,
     OneHanded,
+    ShieldAlone,
     SwordAndShield,
     Bow,
     TwoHandedSword,
@@ -59,6 +61,8 @@ public class InventoryManager : MonoBehaviour {
     [SerializeField] int col;
     [SerializeField] int row;
     [SerializeField] GameObject itemFramePrefab;
+    InventorySave inventorySave;
+    SaveLoad sLManager;
     ItemFactory iFactory;
     QuestManager qManager;
     public WeaponSet CurrentWeaponSet{get{return currentWeaponSet; } }
@@ -67,6 +71,8 @@ public class InventoryManager : MonoBehaviour {
     public delegate void InventoryDelegate();
     public InventoryDelegate OnWeaponChange;
     public InventoryDelegate OnStatChange;
+    public delegate void ConsumableDelegate(Consumables itemToUse);
+    public ConsumableDelegate OnConsume;
 
     static private InventoryManager instance = null;
     static public InventoryManager Instance { get { return instance; } }
@@ -77,15 +83,15 @@ public class InventoryManager : MonoBehaviour {
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            sLManager = SaveLoad.Instance;
             Iinteface = new InventoryInterface(gameObject);
             Iinteface.CreateInventory(col, row, buttonPrefab);
             currentEquipmentBonus.stats = new itemstats();
             inventorySpots = new Iitem[col, row];
             refInventory = new int[col,row][];
-            equipedItems = new Iitem[10];
-            InitializeRefInv(col,row);
-            //LoadInventory()  
-            OnStatChange+= calculateEquipmentBonus;
+            equipedItems = new Iitem[10];            
+            InitializeRefInv(col, row);            
+            OnStatChange += calculateEquipmentBonus;
             OnStatChange();
             OnWeaponChange += checkWeaponInstance;
         }
@@ -99,8 +105,17 @@ public class InventoryManager : MonoBehaviour {
     {
         iFactory = ItemFactory.Instance;
         qManager = QuestManager.Instance;
+        Load();//tenes que llamarlo despues de un delay, porque? NO SE, ES UNA PIJA(seguro es la bosta del grid layout)
     }
-    
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.P))
+        {
+            Save();
+        }
+    }
+
     public bool PickItem(GameObject item)
     {
         
@@ -176,7 +191,7 @@ public class InventoryManager : MonoBehaviour {
             OnWeaponChange();
         OnStatChange();
     }
-    public bool EquipItem(EquipmentSlot slotToEquip, Iitem itemToEquip)
+    public bool EquipItem(EquipmentSlot slotToEquip, Iitem itemToEquip, bool createFrame)
     {
         Iitem equipedItem = checkEquipment(slotToEquip);
         if (equipedItem != null)
@@ -190,6 +205,9 @@ public class InventoryManager : MonoBehaviour {
         equipedItems[(int)slotToEquip] = itemToEquip;        
         if (slotToEquip == EquipmentSlot.mainHand || slotToEquip == EquipmentSlot.offHand)
             OnWeaponChange();
+
+        if(createFrame)
+            Iinteface.CreateItemFrame(equipSlot[(int)slotToEquip], itemToEquip, itemFramePrefab);
 
         OnStatChange();
         return true;
@@ -239,7 +257,14 @@ public class InventoryManager : MonoBehaviour {
         {
             if (equipedItems[(int)EquipmentSlot.offHand].GetType() == typeof(Armor))
             {
-                currentWeaponSet = WeaponSet.SwordAndShield;                
+                if (equipedItems[(int)EquipmentSlot.mainHand] != null)
+                {
+                    currentWeaponSet = WeaponSet.SwordAndShield;
+                }
+                else
+                {
+                    currentWeaponSet = WeaponSet.ShieldAlone;
+                }
             }
             else
             {
@@ -454,6 +479,7 @@ public class InventoryManager : MonoBehaviour {
     public void RemoveFromInventory(int[] position, bool deleteFrame)
     {        
         Iitem itemToDelete = inventorySpots[position[0], position[1]];
+        
         for (int i = 0; i < itemToDelete.Size[0]; i++)
         {
             for (int j = 0; j < itemToDelete.Size[1]; j++)
@@ -462,17 +488,10 @@ public class InventoryManager : MonoBehaviour {
                 refInventory[position[0] - i, position[1] - j][1] = -1;
             }
         }
-        if(deleteFrame)
+        inventorySpots[position[0], position[1]] = null;
+        if (deleteFrame)
             Iinteface.DeleteFrame(position[0], position[1]);
     }
-    public void LoadInventory()
-    {
-
-    } //pendiente
-    public bool SaveInventory()
-    {
-        return false;
-    } //pendiente
 
     private bool UseFromInventory(int[] pos)
     {
@@ -480,7 +499,7 @@ public class InventoryManager : MonoBehaviour {
         Iitem itemToUse = item.GetComponent<ItemOnInventoryManager>().getItem();
         if (typeof(Consumables) == itemToUse.GetType())
         {
-            //ConsumableManager consume();
+            OnConsume((Consumables)itemToUse);
             RemoveFromInventory(pos, true);
             return true;
         }
@@ -492,7 +511,7 @@ public class InventoryManager : MonoBehaviour {
                 {
                     if (checkItemTypeForSlot((EquipmentSlot)i, itemToUse))
                     {
-                        if(EquipItem((EquipmentSlot)i, itemToUse))
+                        if(EquipItem((EquipmentSlot)i, itemToUse,false))
                         {
                             RemoveFromInventory(pos, false);
                             item.GetComponent<ItemOnInventoryManager>().Equip(equipSlot[i]);
@@ -507,6 +526,8 @@ public class InventoryManager : MonoBehaviour {
         return false;
 
     }
+    
+
     private bool UseFromInventory(EquipmentSlot slot)
     {        
         if (!TryToAddItemToTheInventory(equipedItems[(int)slot]))
@@ -567,7 +588,7 @@ public class InventoryManager : MonoBehaviour {
         {
             if(checkItemTypeForSlot(slot, ItemHolded.GetComponent<ItemOnInventoryManager>().getItem()))
             { 
-                if(EquipItem(slot, ItemHolded.GetComponent<ItemOnInventoryManager>().getItem()))
+                if(EquipItem(slot, ItemHolded.GetComponent<ItemOnInventoryManager>().getItem(),false))
                 {
                     ItemHolded.GetComponent<ItemOnInventoryManager>().Equip(equipSlot[(int)slot].gameObject);
                     ItemHolded = null;
@@ -642,7 +663,15 @@ public class InventoryManager : MonoBehaviour {
         else
         {
             yPos = yPos - tooltipHeight / 2 - 5;
-        }     
+        }
+        if (xPos + tooltipWidth + 10 < Screen.width)
+        {
+            xPos = xPos + tooltipWidth / 2 + 10;
+        }
+        else
+        {
+            xPos = xPos - tooltipWidth / 2 - 5;
+        }
         toolTipSizeText.text = GenerateToolTipText(item);
         toolTipVisualText.text = toolTipSizeText.text;
         toolTip.transform.position = new Vector2(xPos, yPos);
@@ -682,9 +711,15 @@ public class InventoryManager : MonoBehaviour {
         }
         if (typeof(Consumables) == item.GetType())
         {
-            text += "Consumable \n"; 
-            text += ((Consumables)item).Restoration? "Restoration   " : "Effect   ";
-            text += (((Consumables)item).Duration > 0 ? ((Consumables)item).Duration + " s \n" : "Instant\n");
+            text += "Consumable \n";
+            for (int i = 0; i < ((Consumables)item).Buff.Length; i++)
+            {
+                text += "Aplica el efecto de " + ((Consumables)item).Buff[i].type + " de potencia " + ((Consumables)item).Buff[i].potency + " durante " + ((Consumables)item).Buff[i].remainTime + " segundos \n";
+            }
+            for (int i = 0; i < ((Consumables)item).Debuff.Length; i++)
+            {
+                text += "Aplica el efecto de " + ((Consumables)item).Debuff[i].type + " de potencia " + ((Consumables)item).Debuff[i].potency + " durante " + ((Consumables)item).Debuff[i].remainTime + " segundos \n";
+            }
         }
         string effects = StatsTooltipText(item.stats);
 
@@ -744,7 +779,55 @@ public class InventoryManager : MonoBehaviour {
     {
         toolTip.SetActive(false);
     }
-   
+    public void Save()
+    {
+        Debug.Log("Save");
+        string path = sLManager.SaveDirectory + "/Inventory.json";
+        inventorySave.Save(equipedItems, inventorySpots);
+        string save = JsonUtility.ToJson(inventorySave);
+        
+        File.WriteAllText(path,save);
+    }
+    private void Load()
+    {
+        string path = sLManager.SaveDirectory + "/Inventory.json";
+        if (File.Exists(path))
+        {
+            inventorySave = JsonUtility.FromJson<InventorySave>(File.ReadAllText(path));
+        }
+        else
+        {
+            inventorySave = new InventorySave();
+        }
+        loadInvetory();
+        loadEquipedItems();
+    }
+    
+    public void loadInvetory()
+    {
+        Iitem[,] savedInv = inventorySave.LoadInventory(new int[2]{ inventorySpots.GetLength(0), inventorySpots.GetLength(1)});
+        for (int i = 0; i < savedInv.GetLength(0); i++)
+        {
+            for (int j = 0; j < savedInv.GetLength(1); j++)
+            {
+                if (savedInv[i, j] != null)
+                {
+                    AddItemToTheInventory(savedInv[i, j], new int[2]{i,j}, true);
+                }
+            }
+        }
+    }
+    public void loadEquipedItems()
+    {
+        Iitem[] savedEquip = inventorySave.LoadEquipedItems();
+        for (int i = 0; i < savedEquip.Length; i++)
+        {
+            if (savedEquip[i] != null)
+            {
+                EquipItem((EquipmentSlot)i, savedEquip[i],true);
+            }
+        }
+    }
 
     class InventoryInterface
     {
@@ -787,8 +870,15 @@ public class InventoryManager : MonoBehaviour {
         {
             GameObject frame = Instantiate(framePrefab);
             frame.transform.SetParent(GetButton(col, row).transform);
-            frame.GetComponent<ItemOnInventoryManager>().Initialize(item,cellSize);
+            frame.GetComponent<ItemOnInventoryManager>().Initialize(item,cellSize,false);
         }
+        public void CreateItemFrame(GameObject parent, Iitem item, GameObject framePrefab)
+        {
+            GameObject frame = Instantiate(framePrefab);
+            frame.transform.SetParent(parent.transform);
+            frame.GetComponent<ItemOnInventoryManager>().Initialize(item, cellSize,true);
+        }
+
 
         public void DeleteFrame(int col, int row)
         {
@@ -796,6 +886,122 @@ public class InventoryManager : MonoBehaviour {
         }
 
 
+    }
+    [System.Serializable]
+    public class InventorySave
+    {
+        [System.Serializable]
+        public struct itemData{
+            [SerializeField] public string item;
+            [SerializeField] public FileType type;
+        }
+        [SerializeField] itemData[] equiped;
+        [SerializeField] itemData[] inventory;        
+
+        public InventorySave()
+        {
+            equiped = new itemData[0];
+            inventory = new itemData[0];
+        }
+
+        public void Save(Iitem[] equipedItems, Iitem[,] itemsInInventory)
+        {
+            equiped = new itemData[equipedItems.Length];
+            for (int i = 0; i < equipedItems.Length; i++)
+            {
+                if (equipedItems[i] != null)
+                {
+                    equiped[i] = ExtractData(equipedItems[i]);                    
+                }
+            }
+            inventory = new itemData[itemsInInventory.GetLength(0)*itemsInInventory.GetLength(1)];
+            for (int i = 0; i < itemsInInventory.GetLength(0); i++)
+            {
+                for (int j = 0; j < itemsInInventory.GetLength(1); j++)
+                {
+                    if(itemsInInventory[i, j]!= null)
+                    {
+                        inventory[j+(i* itemsInInventory.GetLength(1))] = ExtractData(itemsInInventory[i, j]);
+                    }
+                    
+                }
+            }           
+        }
+
+        private itemData ExtractData(Iitem item)
+        {
+            itemData data = new itemData();
+            if (item.GetType() == typeof(Weapon))
+            {
+                data.type = FileType.Weapon;
+            }
+            else
+                if (item.GetType() == typeof(Armor))
+            {
+                data.type = FileType.Armor;
+            }
+            else
+                if (item.GetType() == typeof(Consumables))
+            {
+                data.type = FileType.Consumable;
+            }
+            else
+                if (item.GetType() == typeof(QuestItem))
+            {
+                data.type = FileType.QItem;
+            } 
+
+            data.item = JsonUtility.ToJson(item);
+            return data;
+        }
+
+        private Iitem CompileData(itemData itemData)
+        {
+            Iitem item;
+            switch (itemData.type)
+            {
+                case FileType.Weapon:
+                    item = JsonUtility.FromJson<Weapon>(itemData.item);
+                    break;
+                case FileType.Armor:
+                    item = JsonUtility.FromJson<Armor>(itemData.item);
+                    break;
+                case FileType.Consumable:
+                    item = JsonUtility.FromJson<Consumables>(itemData.item);
+                    break;
+                case FileType.QItem:
+                    item = JsonUtility.FromJson<QuestItem>(itemData.item);
+                    break;
+                default:
+                    item = null;
+                    break;
+            }
+            return item;
+        }
+
+        public Iitem[] LoadEquipedItems()
+        {
+            Iitem[] equipedItems = new Iitem[equiped.Length];
+            for (int i = 0; i < equiped.Length; i++)
+            {                
+                equipedItems[i] = CompileData(equiped[i]);                
+            }
+            return equipedItems;
+        }
+
+        
+
+        public Iitem[,] LoadInventory (int[] invSize)
+        {
+            Iitem[,] invItems = new Iitem[invSize[0], invSize[1]];
+
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                invItems[i / invSize[1], i % invSize[1]] = CompileData(inventory[i]);
+            }
+            
+            return invItems;
+        }        
     }
 }
 

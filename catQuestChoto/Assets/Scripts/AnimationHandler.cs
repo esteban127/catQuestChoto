@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum animTrigger
+{
+    SelfCast,
+    MagicAbility,
+    AtackAbility,
+    BasicAtack
+}
+
+
 public class AnimationHandler : MonoBehaviour {
 
     InventoryManager iManager;
@@ -40,10 +49,14 @@ public class AnimationHandler : MonoBehaviour {
             switch (iManager.CurrentWeaponSet)
             {
                 case WeaponSet.Fist:
-                    break;
+                    break;                
                 case WeaponSet.OneHanded:
                     RSword.SetActive(true);
                     activeWeapons.Add(RSword);
+                    break;
+                case WeaponSet.ShieldAlone:
+                    Shield.SetActive(true);
+                    activeWeapons.Add(Shield);
                     break;
                 case WeaponSet.SwordAndShield:
                     RSword.SetActive(true);

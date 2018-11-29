@@ -2,26 +2,86 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
-
+using UnityEngine.UI;
 
 public class LoadCharacter : MonoBehaviour {
 
-    [SerializeField] GameObject player;
-    [SerializeField] string characterName;
+    [SerializeField] ConfirmPanel confirm;
+    [SerializeField] Text[] slotsText;
+    [SerializeField] ErroPanel errorWindow;
+    CharacterActor[] existentCharacters;
+    SaveLoad sLManager;
+    int slot;
+    bool slotSelected = false;
+    // Use this for initialization
+    void Start () {
+        sLManager = SaveLoad.Instance;               
+        AsignSlots();
+	}
 
-    private void Awake()
+    private void AsignSlots()
     {
-        Load();
+        existentCharacters = sLManager.getAllCharacters();
+        for (int i = 0; i < existentCharacters.Length; i++)
+        {
+            slotsText[i].text = existentCharacters[i].Name + "\n" + existentCharacters[i].Class + "  Lvl: " + existentCharacters[i].Level;
+        }
     }
 
-    private void Load()
+    public void selectSlot(int slotNum)
     {
-        
-        string path = Application.dataPath + "/Resources/Json/Character/" + characterName + ".Json";
-        CharacterActor stats = JsonUtility.FromJson<CharacterActor>(File.ReadAllText(path));
-        UnityEngine.Object model = Resources.Load("CharacterPrefab/" + stats.Class);
-        Instantiate(model, player.transform);
-        player.GetComponent<CharacterStats>().loadCharacter(stats);
+        slot = slotNum;
+        slotSelected = true;
+    }
+
+    public void TryToDelet()
+    {
+        if (slotSelected)
+        {
+            if (slot < existentCharacters.Length)
+            {
+                StartCoroutine(WaitForConfirmDelet(existentCharacters[slot].Name));
+            }
+            else
+            {
+                errorWindow.Error("Save slot is empty");
+            }
+        }
+        else
+        {
+            errorWindow.Error("Save slot not selected");
+        }
+    }
+
+    IEnumerator WaitForConfirmDelet(string nameToDelete)
+    {
+        confirm.Ask();
+        while(confirm.ConfirmResult == "Null")
+        {
+            yield return null;
+        }
+        if(confirm.ConfirmResult == "Yes")
+        {
+            sLManager.DeleteSave(nameToDelete);
+        }
+    }
+
+    public void TryToConfirm()
+    {
+        if (slotSelected)
+        {
+            if (slot < existentCharacters.Length)
+            {
+
+            }
+            else
+            {
+                errorWindow.Error("Save slot is empty");
+            }
+        }
+        else
+        {
+            errorWindow.Error("Save slot not selected");
+        }
     }
 }

@@ -21,7 +21,7 @@ public class Weapon : Iitem
     [SerializeField] float critDmg = 1.5f;
     [SerializeField] float baseCritChance = 0.05f;
     [SerializeField] int randomProperty;
-    itemstats aditionalStats;
+    [SerializeField] itemstats aditionalStats;
 
     public weaponType WeaponType { get { return type; } }
     public float BaseMinDamage { get { return baseMinDamage; } }

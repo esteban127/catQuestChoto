@@ -18,7 +18,8 @@ public class InputController : MonoBehaviour {
     GameObject questFrame;
     [SerializeField]
     GameObject statsFrame;
-
+    [SerializeField]
+    GameObject skillTree;
     private Vector3 moveDirection = new Vector3(0, 0, 0);
     private CharacterController controller;
     private float mauseInitialPos = 0.0f;
@@ -51,6 +52,7 @@ public class InputController : MonoBehaviour {
         yield return new WaitForSeconds(time);
         inventory.SetActive(false);
         questFrame.SetActive(false);
+        skillTree.SetActive(false);
     }    
 
     void Update()
@@ -75,6 +77,10 @@ public class InputController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.C))
         {
             TogleWindow(statsFrame);
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            TogleWindow(skillTree);
         }
 
     }

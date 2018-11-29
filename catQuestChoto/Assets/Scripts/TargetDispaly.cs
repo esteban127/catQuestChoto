@@ -5,19 +5,31 @@ using UnityEngine.UI;
 
 public class TargetDispaly : MonoBehaviour {
 
-    private GameObject target;
-
+    [SerializeField] Image targetSprite;
+    [SerializeField] Text targetName;
+    [SerializeField] Image targetHealtBar;
+    [SerializeField] Text targetHealtText;
+    [SerializeField] Text targetLevel;
+    Clock timer;
+    ActorStats targetStats;
+    private void Start()
+    {
+        timer = Clock.Instance;
+        timer.OnTick += actualziateLife;
+    }
     public void NewTarget(GameObject newTarget)
     {
-        this.gameObject.SetActive(true);
-        this.target = newTarget;        
-        transform.GetChild(0).GetComponentInChildren<Image>().sprite = target.GetComponent<CharacterImage>().ImageToDisplay;
-        this.Actualizate();
+        gameObject.SetActive(true);
+        targetStats = newTarget.GetComponent<ActorStats>();        
+        targetSprite.sprite = targetStats.getActor().getImage();
+        targetName.text = targetStats.getActor().Name;
+        targetLevel.text = targetStats.getActor().Level.ToString();
     }
 
-    public void Actualizate()
+    private void actualziateLife(float time)
     {
-        this.GetComponentInChildren<ProgressionBar>().SetProgression((float)target.GetComponent<healthManager>().CurrentHealth / (float)target.GetComponent<healthManager>().MaxHealth);
-        this.GetComponentInChildren<ProgressionBar>().SetText(target.GetComponent<healthManager>().CurrentHealth.ToString() + " / " + target.GetComponent<healthManager>().MaxHealth.ToString());
+        targetHealtBar.fillAmount = (targetStats.CurrentHealth / targetStats.MaxHealth());
+        targetHealtText.text = (int)targetStats.CurrentHealth + " / " + (int)targetStats.MaxHealth();
     }
+    
 }

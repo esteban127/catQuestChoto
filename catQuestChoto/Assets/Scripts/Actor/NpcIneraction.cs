@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(DialogueManager))]
-[RequireComponent(typeof(NPCComponent))]
+[RequireComponent(typeof(NPCStats))]
 public class NpcIneraction : MonoBehaviour {
 
     QuestManager qManager;
@@ -15,7 +15,7 @@ public class NpcIneraction : MonoBehaviour {
     private void Start()
     {
         dBoxComp = dialogBox.GetComponent<DialogBoxComponent>();
-        npc = GetComponent<NPCComponent>().getActor();
+        npc = GetComponent<NPCStats>().getActor();
         qManager = QuestManager.Instance;
         dialogue = GetComponent<DialogueManager>();
         qManager.OnNewQuestStart += checkQuest;
