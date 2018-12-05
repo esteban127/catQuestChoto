@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 
 
@@ -14,8 +15,10 @@ public class QuestManager : MonoBehaviour {
     [SerializeField] int rowInActiveQuestDisplay;
     [SerializeField] GameObject QuestButtonPrefab;
     [SerializeField] CharacterStats playerStats;
+    SaveLoad sLManager;
     List<IQUEST> activeQuest;
     List<string> activeQuestKey;
+    QuestSave saveState;
     int[] flagsTrack;
     public List<string> ActiveQuestKey { get { return activeQuestKey; } }
     QuestInterface qInterface;
@@ -32,12 +35,9 @@ public class QuestManager : MonoBehaviour {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
             activeQuest = new List<IQUEST>();
             activeQuestKey = new List<string>();            
-            qInterface = new QuestInterface(activeQuestDisplay, questDescriptionText, rowInActiveQuestDisplay, QuestButtonPrefab);
-            AddQuest(questList[0]);
-            //loadQuestStatus
+            qInterface = new QuestInterface(activeQuestDisplay, questDescriptionText, rowInActiveQuestDisplay, QuestButtonPrefab);                     
         }
         else if (instance != this)
         {
@@ -47,7 +47,20 @@ public class QuestManager : MonoBehaviour {
 
     private void Start()
     {
+        sLManager = SaveLoad.Instance;
         iManager = InventoryManager.Instance;
+        LoadSystem.OnEndLoading += EndLoad;
+        SaveLoad.BeforeClosing += Save;
+    }
+    private void OnDisable()
+    {
+        LoadSystem.OnEndLoading -= EndLoad;
+    }
+
+    private void EndLoad()
+    {
+        Load();
+        gameObject.SetActive(false);
     }
 
     void AddQuest(IQUEST quest)
@@ -160,8 +173,7 @@ public class QuestManager : MonoBehaviour {
                 OnNewQuestStart();
             }
         }
-        playerStats.addXp(quest.XpReward);
-        //rewards and other not implemented stuff       
+        playerStats.addXp(quest.XpReward);   
     }
 
 
@@ -178,6 +190,38 @@ public class QuestManager : MonoBehaviour {
     {
         questSelected = quest;
         qInterface.SetDesription(quest);
+    }
+
+    public void Save()
+    {
+        string path = sLManager.SaveDirectory + "Quest.json";
+        saveState.Save(activeQuest);
+        string save = JsonUtility.ToJson(saveState);
+        File.WriteAllText(path, save);
+    }
+
+    private void Load()
+    {
+        string path = sLManager.SaveDirectory + "Quest.json";
+        if (File.Exists(path))
+        {
+            saveState = JsonUtility.FromJson<QuestSave>(File.ReadAllText(path));
+        }
+        else
+        {
+            AddQuest(questList[0]);
+            saveState = new QuestSave();
+        }
+        LoadQuest();
+    }
+
+    private void LoadQuest()
+    {
+        IQUEST[] questArray = saveState.Load();
+        for (int i = 0; i < questArray.Length; i++)
+        {
+            AddQuest(questArray[i]);
+        }
     }
 
     class QuestInterface
@@ -246,6 +290,37 @@ public class QuestManager : MonoBehaviour {
             }
             Debug.LogError("QuestButton " + iD + " not found");
             return false;
+        }
+
+    }
+
+    [System.Serializable]
+    class QuestSave
+    {
+
+        [SerializeField]string[] quests;
+        
+        public QuestSave()
+        {
+            quests = new string[0];
+        }
+
+        public void Save(List<IQUEST> activeQuest)
+        {
+            quests = new string[activeQuest.Count];
+            for (int i = 0; i < activeQuest.Count; i++)
+            {
+                quests[i] = JsonUtility.ToJson(activeQuest[i]);
+            }
+        }
+        public IQUEST[] Load()
+        {
+            IQUEST[] questArray = new IQUEST[quests.Length];
+            for (int i = 0; i < quests.Length; i++)
+            {
+                questArray[i] = JsonUtility.FromJson<IQUEST>(quests[i]);
+            }
+            return questArray;
         }
 
     }

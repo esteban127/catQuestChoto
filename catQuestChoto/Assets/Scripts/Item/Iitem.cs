@@ -41,21 +41,25 @@ public struct itemstats
 
 public enum ItemImage
 {
-    Amulet0,
-    Boots0,
-    Bow0,
-    Chest0,
-    Glove0,
-    Helmet0,
-    Pants0,
-    Ring0,
-    Ring1,
-    Shield0,
-    Sword0,
-    Potion0,
-    Rune0,
-    DualHandedSword0,
-    Staf0
+    Amulet,
+    Boots,
+    Bow,
+    Chest,
+    Glove,
+    Helmet,
+    Pants,
+    RedRing,
+    BlueRing,
+    Shield,
+    Sword,
+    HealPotion,
+    Rune,
+    DualHandedSword,
+    Staf,
+    ManaPotion,
+    GreenPotion,
+    YelowPotion,
+    TownPortal
 }
 public enum ItemTier
 {
@@ -93,7 +97,7 @@ public abstract class Iitem {
     {
 
         Sprite itemImage = null;
-        itemImage = Resources.Load<Sprite>("Art/ItemSprite/"+ image);
+        itemImage = Resources.Load<Sprite>("Art/ItemSprite/"+ image + (int)tier);
         return itemImage;
     }
 }

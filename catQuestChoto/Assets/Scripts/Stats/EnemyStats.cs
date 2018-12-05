@@ -7,15 +7,13 @@ public class EnemyStats : ActorStats
 
     [SerializeField] EnemyActor enemy;
     ItemFactory iFactory;    
-    QuestManager qManager;
-    bool isAlive = false;
-    public bool IsAlive { get { return isAlive; } }
+    QuestManager qManager;    
     Clock timer;
    
 
     public void Initialize(int level)
     {
-        isAlive = true;
+        alive = true;
         timer = Clock.Instance;
         qManager = QuestManager.Instance;
         status = new BuffDebuffSystem();
@@ -36,23 +34,19 @@ public class EnemyStats : ActorStats
 
     void ActualizateLife(float time)
     {
-        if (currentHealth < MaxHealth())
+        if (alive)
         {
-            ReplenishHealt(status.getBuffPotency(BuffType.hpRegen) * time);
-        }
-        else
-        {
-            currentHealth = MaxHealth();
-        }       
-        reciveDamage(status.getDebuffPotency(DebuffType.damageOverTime) * time);
-    }
-
-    public void ReplenishHealt(float amount)
-    {
-        currentHealth += amount;
-        if (currentHealth > MaxHealth())
-            currentHealth = MaxHealth();
-    }
+            if (currentHealth < MaxHealth())
+            {
+                ReplenishHealt(status.getBuffPotency(BuffType.hpRegen) * 50 * time);
+            }
+            else
+            {
+                currentHealth = MaxHealth();
+            }
+            reciveDamage(status.getDebuffPotency(DebuffType.damageOverTime) * 50 * time);
+        }        
+    }   
 
     public override float MaxHealth()
     {
@@ -61,9 +55,9 @@ public class EnemyStats : ActorStats
     public override float MinDamage()
     {
         float minDamage = enemy.minDamage + enemy.minDamage * damagePerLevel * enemy.Level;
-        if (status.getBuffPotency(BuffType.damageMultpy) > 0)
+        if (status.getBuffPotency(BuffType.damageBuff) > 0)
         {
-            minDamage += (minDamage * status.getBuffPotency(BuffType.damageMultpy));
+            minDamage += (minDamage * status.getBuffPotency(BuffType.damageBuff));
         }
         if (status.getDebuffPotency(DebuffType.damageReduction) < 0)
         {
@@ -74,9 +68,9 @@ public class EnemyStats : ActorStats
     public override float MaxDamage()
     {
         float maxDamage = enemy.maxDamage + enemy.minDamage * damagePerLevel * enemy.Level;
-        if (status.getBuffPotency(BuffType.damageMultpy) > 0)
+        if (status.getBuffPotency(BuffType.damageBuff) > 0)
         {
-            maxDamage += (maxDamage * status.getBuffPotency(BuffType.damageMultpy));
+            maxDamage += (maxDamage * status.getBuffPotency(BuffType.damageBuff));
         }
         if (status.getDebuffPotency(DebuffType.damageReduction) < 0)
         {
@@ -86,7 +80,8 @@ public class EnemyStats : ActorStats
     }
     public override int Defense()
     {
-        return enemy.Defense + (int)(enemy.Defense * defensePerLevel * enemy.Level) + (int)status.getBuffPotency(BuffType.defenseBuff);    
+        int def = enemy.Defense + (int)(enemy.Defense * defensePerLevel * enemy.Level);
+        return def + (int)(def * status.getBuffPotency(BuffType.defenseBuff) - def * status.getDebuffPotency(DebuffType.defenseReduction));
     }
     public override float CritDamage()
     {
@@ -111,12 +106,12 @@ public class EnemyStats : ActorStats
     public override void reciveDamage(float damage)
     {
         if (damage > 0)
-        {
+        {            
             if (status.getBuffPotency(BuffType.shield) > 0)
-                status.ReduceBuffPotency((damage - (damage * (Defense() / (Defense() + 100)))), BuffType.shield);
+                status.ReduceBuffPotency((damage - (damage * (Defense() / (Defense() + 100))))/100, BuffType.shield);
             else
                 currentHealth -= (damage -(damage * (Defense() / (Defense() + 100))));
-            if (currentHealth <= 0)
+            if (currentHealth <= 0 && alive)
             {
                 currentHealth = 0;
                 OnDie();//puta que sad                
@@ -127,7 +122,8 @@ public class EnemyStats : ActorStats
 
     private void OnDie()
     {
-        isAlive = false;
+        alive = false;
+        status.RemoveAllBuffAndDebuff();
         qManager.OnKill(enemy);      
         GenerateDrop();
     }

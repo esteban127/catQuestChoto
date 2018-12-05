@@ -11,7 +11,8 @@ public class SimpleEnemyIA : MonoBehaviour {
     private PoolManager myPoolManager;
     private FSM fsm;
     private Animator enemyAnimator;
-    [SerializeField] float speed = 3.0f;
+    [SerializeField] float baseSpeed = 3.0f;
+    float speed;
     public float Speed { get { return speed; } }
     [SerializeField] int patrollDistance;
     public int PatrollDistance { get { return patrollDistance; } }
@@ -23,6 +24,7 @@ public class SimpleEnemyIA : MonoBehaviour {
     
     public void Initialize(Vector3 spawn, GameObject playerRef, int level)
     {
+        
         myPoolManager = PoolManager.Instance;
         BuildFSM();
         GetComponent<EnemyAbilitySystem>().Initialize();
@@ -33,7 +35,8 @@ public class SimpleEnemyIA : MonoBehaviour {
     }
     private void Update()
     {
-        speed = speed - (speed * GetComponent<EnemyStats>().status.getDebuffPotency(DebuffType.slow));
+        
+        speed = baseSpeed - (baseSpeed * (GetComponent<EnemyStats>().status.getDebuffPotency(DebuffType.slow)));
         fsm.CurrentState.Rason(player, gameObject);
         fsm.CurrentState.Behavior(player, gameObject);
     }
@@ -114,9 +117,10 @@ public class SimpleEnemyIA : MonoBehaviour {
     public void Die()
     {
         enemyAnimator.ResetTrigger("Stunned");
-        enemyAnimator.ResetTrigger("Atack");
+        enemyAnimator.ResetTrigger("BasicAtack");
         enemyAnimator.ResetTrigger("Dead");
         StopRunning();
+        SetTransition(TransitionsID.Respawn);
         myPoolManager.DeleteThisFromPool(transform.parent.name, gameObject);
     }
 }
@@ -150,13 +154,16 @@ public class EnemyIdleState : FSMState
     }
     public override void Behavior(GameObject player, GameObject enemy)
     {
-        if (!controller)
+        if (enemy.gameObject.activeInHierarchy)
         {
-            controller = enemy.gameObject.GetComponent<CharacterController>();
-        }
-        if (!controller.isGrounded)
-            controller.Move((enemy.transform.up * -1) * enemy.GetComponent<SimpleEnemyIA>().Speed * Time.deltaTime);
-        idleTime -= Time.deltaTime;
+            if (!controller)
+            {
+                controller = enemy.gameObject.GetComponent<CharacterController>();
+            }
+            if (!controller.isGrounded)
+                controller.Move((enemy.transform.up * -1) * enemy.GetComponent<SimpleEnemyIA>().Speed * Time.deltaTime);
+            idleTime -= Time.deltaTime;
+        }        
     }
 }
 
@@ -230,7 +237,7 @@ public class EnemyChasePlayerState : FSMState
     public override void Rason(GameObject player, GameObject enemy)
     {
                 
-        if (!enemy.GetComponent<EnemyStats>().IsAlive)
+        if (!enemy.GetComponent<EnemyStats>().Alive)
         {
             player.GetComponent<CharacterStats>().addXp(enemy.GetComponent<EnemyStats>().XpReward());
             enemy.GetComponent<SimpleEnemyIA>().TriggerAnim("Dead");
@@ -287,7 +294,7 @@ public class EnemyResetPosition : FSMState
 
     public override void Rason(GameObject player, GameObject enemy)
     {
-        if (!enemy.GetComponent<EnemyStats>().IsAlive)
+        if (!enemy.GetComponent<EnemyStats>().Alive)
         {
             player.GetComponent<CharacterStats>().addXp(enemy.GetComponent<EnemyStats>().XpReward());
             enemy.GetComponent<SimpleEnemyIA>().TriggerAnim("Dead");
@@ -327,7 +334,7 @@ public class EnemyResetPosition : FSMState
 
 public class EnemyAtackingState : FSMState
 {
-
+    private CharacterController controller;
     public EnemyAtackingState()
     {
         stateID = StatesID.AttackingPlayer;
@@ -336,7 +343,7 @@ public class EnemyAtackingState : FSMState
     public override void Rason(GameObject player, GameObject enemy)
     {
 
-        if (!enemy.GetComponent<EnemyStats>().IsAlive)
+        if (!enemy.GetComponent<EnemyStats>().Alive)
         {
             player.GetComponent<CharacterStats>().addXp(enemy.GetComponent<EnemyStats>().XpReward());
             enemy.GetComponent<SimpleEnemyIA>().TriggerAnim("Dead");
@@ -360,7 +367,16 @@ public class EnemyAtackingState : FSMState
     }
 
     public override void Behavior(GameObject player, GameObject enemy)
-    {        
+    {
+        if (!controller)
+        {
+            controller = enemy.gameObject.GetComponent<CharacterController>();
+        }
+
+        if (!controller.isGrounded)
+            controller.Move((enemy.transform.up * -1) * enemy.GetComponent<SimpleEnemyIA>().Speed * Time.deltaTime);
+       
+
         enemy.transform.LookAt(new Vector3(player.transform.position.x, enemy.transform.position.y, player.transform.position.z));
         enemy.GetComponent<SimpleEnemyIA>().TryCast(enemy.GetComponent<EnemyAbilitySystem>().Ability);
     }
@@ -374,7 +390,7 @@ public class EnemyStunnedState : FSMState
     }
     public override void Rason(GameObject player, GameObject enemy)
     {
-        if (!enemy.GetComponent<EnemyStats>().IsAlive)
+        if (!enemy.GetComponent<EnemyStats>().Alive)
         {
             player.GetComponent<CharacterStats>().addXp(enemy.GetComponent<EnemyStats>().XpReward());
             enemy.GetComponent<SimpleEnemyIA>().TriggerAnim("Dead");
@@ -407,7 +423,7 @@ public class EnemyDyingState : FSMState
         float despawnTime;
         public EnemyDyingState()
         {
-            despawnTime = 5;
+            despawnTime = 2;
             stateID = StatesID.Die;
         }
 
@@ -415,8 +431,7 @@ public class EnemyDyingState : FSMState
         {
             if (despawnTime <= 0)
             {
-                despawnTime = 5;
-                enemy.GetComponent<SimpleEnemyIA>().SetTransition(TransitionsID.Respawn);                
+                despawnTime = 5;               
                 enemy.GetComponent<SimpleEnemyIA>().Die();
             }
         }

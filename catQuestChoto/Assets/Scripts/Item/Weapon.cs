@@ -47,17 +47,17 @@ public class Weapon : Iitem
 
             mainStat = (Random.Range(1, 10) + ((int)tier * 5));
             percStat = ((float)Random.Range(1, 5) * 0.01f) + (float)tier * 0.025f;
-            regenStat = (float)Random.Range(1, 5)*0.5f  + (float)tier * 1.5f + 1f;
+            regenStat = (float)Random.Range(1, 5) * 0.1f + (float)tier * 0.5f;
             switch (type)
             {
                 case weaponType.TwoHanded:
-                    mainStat *= 4;
+                    mainStat *= 2;
                     break;
                 case weaponType.Bow:
-                    percStat *= 4;
+                    percStat *= 2.5f;
                     break;
                 case weaponType.MagicStaf:
-                    regenStat *= 4;
+                    regenStat *= 3;
                     break;
             }
             switch (roll)

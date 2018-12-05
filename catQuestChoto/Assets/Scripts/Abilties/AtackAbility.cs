@@ -20,8 +20,8 @@ public class AtackAbility : IAbility{
                 {
                     if ((target.transform.position - caster.transform.position).magnitude < range)
                     {
-                        CastAbility(target.GetComponent<ActorStats>(), caster.GetComponent<ActorStats>());
-                        return true;
+                        return CastAbility(target.GetComponent<ActorStats>(), caster.GetComponent<ActorStats>());
+                         
                     }
                 }
             }
@@ -29,7 +29,7 @@ public class AtackAbility : IAbility{
         return false;
     }
 
-    private void CastAbility(ActorStats target, ActorStats caster)
+    private bool CastAbility(ActorStats target, ActorStats caster)
     {
         if(caster.GetType() == typeof(CharacterStats))
         {
@@ -37,17 +37,39 @@ public class AtackAbility : IAbility{
             {
                 ResetCooldown();
                 if (calculateIfHits(caster, target))
-                {                   
+                {
+                    ApplyBuffAndDebuff(target, caster);
                     target.reciveDamage((int)(calculateDamage(caster) * (abilityDamageMultiplier + damagePerLevel*level)));
                 }
+                return true;
             }
-        }  else
+            return false;
+        }
+        else
         {
             ResetCooldown();
             if (calculateIfHits(caster, target))
-            {    
+            {
+                ApplyBuffAndDebuff(target, caster);
                 target.reciveDamage((int)(calculateDamage(caster) * (abilityDamageMultiplier + +damagePerLevel * level)));
             }
+            return true;
+        }
+    }
+
+    private void ApplyBuffAndDebuff(ActorStats target, ActorStats caster)
+    {
+        BuffDebuffSystem.Debuff debuff;
+        BuffDebuffSystem.Buff buff;
+        for (int i = 0; i < debuffToAply.Length; i++)
+        {
+            debuff = new BuffDebuffSystem.Debuff(debuffToAply[i].type, debuffToAply[i].potency + (debuffPotencyPerLevel[i] * level), debuffToAply[i].remainTime);
+            target.reciveDebuff(debuff);
+        }
+        for (int i = 0; i < buffToAply.Length; i++)
+        {
+            buff = new BuffDebuffSystem.Buff(buffToAply[i].type, buffToAply[i].potency + (buffPotencyPerLevel[i]*level), buffToAply[i].remainTime);
+            caster.reciveBuff(buff);
         }
     }
 

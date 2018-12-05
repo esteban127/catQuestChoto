@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,30 +52,38 @@ public class spawn : MonoBehaviour {
 
     void Update ()
     {
+        
         if (active)
-        {
-            for (int i = 0; i < spawns.Length; i++)
-            {
-
-                if (spawns[i].prefabToSpawn != null && spawns[i].numberOfSpawns > 0)
-                {
-                    if (!myPoolManager.PoolIsFull(spawnerID + i))
-                    {
-                        if (currentRespawnTime <= 0)
-                        {
-                            currentRespawnTime = respawnTime;
-                            Vector3 spawnPosition = new Vector3(transform.position.x + Random.Range(-spawnRange, spawnRange), transform.position.y, transform.position.z + Random.Range(-spawnRange, spawnRange));
-                            GameObject enemy = myPoolManager.RequestToPool(spawnerID + i, spawnPosition, new Vector3(0, Random.Range(0, 360), 0), transform.localScale);
-                            if (enemy != null)
-                            {
-                                enemy.GetComponent<SimpleEnemyIA>().Initialize(spawnPosition, player, spawns[i].enemyLvl);
-                            }
-                        }
-                    }
-                }
-            }
-            currentRespawnTime -= Time.deltaTime;
+        {            
+            if(TryToSpawn())
+                currentRespawnTime -= Time.deltaTime;
         }
         
+    }
+    
+
+    private bool TryToSpawn()
+    {
+        for (int i = 0; i < spawns.Length; i++)
+        {
+            if (spawns[i].prefabToSpawn != null && spawns[i].numberOfSpawns > 0)
+            {
+                if (!myPoolManager.PoolIsFull(spawnerID + i))
+                {
+                    if (currentRespawnTime <= 0)
+                    {
+                        currentRespawnTime = respawnTime;                        
+                        Vector3 spawnPosition = new Vector3(transform.position.x + Random.Range(-spawnRange, spawnRange), transform.position.y, transform.position.z + Random.Range(-spawnRange, spawnRange));
+                        GameObject enemy = myPoolManager.RequestToPool(spawnerID + i, spawnPosition, new Vector3(0, Random.Range(0, 360), 0), transform.localScale);
+                        if (enemy != null)
+                        {
+                            enemy.GetComponent<SimpleEnemyIA>().Initialize(spawnPosition, player, spawns[i].enemyLvl);
+                        }                        
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

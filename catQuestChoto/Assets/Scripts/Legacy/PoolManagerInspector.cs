@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if UNITY_EDITOR
 using UnityEditor;
+
 
 [CustomEditor(typeof(PoolManager))]
 public class PoolManagerInspector : Editor {
@@ -17,3 +20,4 @@ public class PoolManagerInspector : Editor {
     }
     
 }
+#endif

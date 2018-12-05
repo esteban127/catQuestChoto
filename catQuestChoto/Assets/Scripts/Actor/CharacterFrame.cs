@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,51 +9,56 @@ public class CharacterFrame : MonoBehaviour {
     [SerializeField] GameObject playerRef;
     CharacterStats playerStats;
     Clock timer;
-    [SerializeField]HealtManaBars healtBar;
+    [SerializeField] HealtManaBars healtBar;
     [SerializeField] HealtManaBars manaBar;
-    [SerializeField] Text toolTipSizeText;
-    [SerializeField] Text toolTipVisualText;
-    [SerializeField] GameObject toolTip;
-
+    [SerializeField] Transform healtBarTransform;
+    [SerializeField] Tooltip toolTip;
+    [SerializeField] ActiveBuffDebuff activeBnD;
+    [SerializeField] GameObject damageTextPrefab;
+    float lastHealt;
     private void Start()
     {
-        playerStats = playerRef.GetComponent<CharacterStats>();
         timer = Clock.Instance;
-        timer.OnTick += actualizeHealthAndMana;
+        LoadSystem.OnEndLoading += EndLoad;
     }
-    public void actualizeHealthAndMana(float time)
+
+    private void EndLoad()
     {
-        healtBar.UpdateFillBar(playerStats.CurrentHealth / playerStats.MaxHealth());
-        manaBar.UpdateFillBar(playerStats.CurrentMana / playerStats.MaxMana());
+        playerStats = playerRef.GetComponent<CharacterStats>();
+        lastHealt = playerStats.CurrentHealth;
+        timer.OnTick += Actualize;
+        activeBnD.setStatus(playerStats.status);
     }
-    
+    private void OnDisable()
+    {
+        LoadSystem.OnEndLoading -= EndLoad;
+    }
+    public void Actualize(float time)
+    {
+        if (playerStats.CurrentHealth - lastHealt > 1)
+            GenerateDamageText((int)(playerStats.CurrentHealth - lastHealt), Color.green);
+        else
+            if (playerStats.CurrentHealth - lastHealt < -1)
+            GenerateDamageText((int)(playerStats.CurrentHealth - lastHealt), Color.red);  
+        lastHealt = playerStats.CurrentHealth;
+        healtBar.UpdateFillBar(playerStats.CurrentHealth / playerStats.MaxHealth());        
+        manaBar.UpdateFillBar(playerStats.CurrentMana / playerStats.MaxMana());        
+    }
+
+    private void GenerateDamageText(int amount, Color color)
+    {
+        string text = "";
+        if (amount > 0)
+            text += "+";
+        text += amount;        
+        DamageText dmgText = Instantiate(damageTextPrefab, healtBarTransform).GetComponent<DamageText>();
+        dmgText.Create(text, true, color);
+    }    
+
     public void ShowToolTip(barType bar)
     {
         string text = "<b>";
-        toolTip.SetActive(true);
-        float xPos = Input.mousePosition.x - 3;
-        float yPos = Input.mousePosition.y;
-
-        float tooltipWidth = toolTipSizeText.GetComponent<RectTransform>().rect.width;
-        float tooltipHeight = toolTipSizeText.GetComponent<RectTransform>().rect.height;
-
-        xPos -= (tooltipWidth / 2 + 5);
-        if (yPos + tooltipHeight + 10 < Screen.height)
-        {
-            yPos = yPos + tooltipHeight / 2 + 10;
-        }
-        else
-        {
-            yPos = yPos - tooltipHeight / 2 - 5;
-        }
-        if (xPos + tooltipWidth + 10 < Screen.width)
-        {
-            xPos = xPos + tooltipWidth / 2 + 10;
-        }
-        else
-        {
-            xPos = xPos - tooltipWidth / 2 - 5;
-        }
+        
 
         switch (bar)
         {
@@ -64,15 +70,13 @@ public class CharacterFrame : MonoBehaviour {
                 break;
         }
         text += "</b>";
-        toolTipSizeText.text = text;      
-        toolTipVisualText.text = toolTipSizeText.text;
-        toolTip.transform.position = new Vector2(xPos, yPos);
+        toolTip.ShowToolTip(text);      
     }
 
 
     public void HideToolTip()
     {
-        toolTip.SetActive(false);
+        toolTip.Hide();
     }
 
 }

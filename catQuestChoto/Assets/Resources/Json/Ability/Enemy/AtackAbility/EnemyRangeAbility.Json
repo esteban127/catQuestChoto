@@ -1,0 +1,1 @@
+{"abilityName":"EnemyRangeAbility","abilityClass":3,"posInTree":0,"abilityAniamtion":3,"level":1,"abilitySprite":1,"range":5.0,"description":"EnemyAbility","baseCooldown":3.0,"maxCharges":0,"manaCost":0,"weaponSetReq":[],"buffToAply":[],"buffPotencyPerLevel":[],"debuffToAply":[],"debuffPotencyPerLevel":[],"abilityDamageMultiplier":1.0,"damagePerLevel":0.0}

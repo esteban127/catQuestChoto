@@ -14,9 +14,7 @@ public class TargetSistem : MonoBehaviour
     InventoryManager iManager;
     PoolManager myPoolManager;
 
-    [SerializeField] GameObject toolTip;
-    [SerializeField] Text toolTipSizeText;
-    [SerializeField] Text toolTipVisualText;
+    [SerializeField] Tooltip toolTip;
 
     private void Awake()
     {       
@@ -30,8 +28,7 @@ public class TargetSistem : MonoBehaviour
     private void Update()
     {
         if (!EventSystem.current.IsPointerOverGameObject())
-        {
-                       
+        {                       
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray,out hit))
@@ -39,7 +36,7 @@ public class TargetSistem : MonoBehaviour
                 
                 if (hit.transform.tag == "Enemy"|| hit.transform.tag == "Player" || hit.transform.tag == "NPC")
                 {
-                    toolTip.SetActive(false);
+                    toolTip.Hide();
                     if (Input.GetMouseButtonDown(0))
                     {
                         currentTarget = hit.transform.gameObject;
@@ -63,7 +60,7 @@ public class TargetSistem : MonoBehaviour
                         {
                             if (iManager.PickItem(hit.transform.gameObject))
                             {
-                                toolTip.SetActive(false);
+                                toolTip.Hide();
                                 myPoolManager.DeleteThisFromPool(hit.transform.parent.name,hit.transform.gameObject);
                             }
                         }
@@ -74,7 +71,7 @@ public class TargetSistem : MonoBehaviour
                     }
                     else
                     {
-                        toolTip.SetActive(false);
+                        toolTip.Hide();
                         if (Input.GetMouseButtonDown(1))
                         {
 
@@ -91,31 +88,24 @@ public class TargetSistem : MonoBehaviour
             }
             else
             {
-                toolTip.SetActive(false);
+                toolTip.Hide();
             }
-        }        
+        }
+        if (currentTarget != null)
+        {
+            if (!currentTarget.GetComponent<ActorStats>().Alive)
+            {
+                targetBase.SetActive(false);
+                currentTarget = null;
+                targetBar.SetActive(false);
+            }
+        }
     }
 
     private void ShowLootName(Iitem item)
     {
         string text = "";
-        toolTip.SetActive(true);
-        float xPos = Input.mousePosition.x - 3;
-        float yPos = Input.mousePosition.y;
-
-        float tooltipWidth = toolTipSizeText.GetComponent<RectTransform>().rect.width;
-        float tooltipHeight = toolTipSizeText.GetComponent<RectTransform>().rect.height;
-
-        xPos -= (tooltipWidth / 2 + 5);
-        if (yPos + tooltipHeight + 10 < Screen.height)
-        {
-            yPos = yPos + tooltipHeight / 2 + 10;
-        }
-        else
-        {
-            yPos = yPos - tooltipHeight / 2 - 5;
-        }
-
+        
         switch (item.Tier)
         {
             case ItemTier.Tier0:
@@ -132,9 +122,7 @@ public class TargetSistem : MonoBehaviour
                 break;
         }
         text += ("<b>" + "<size=18>" + item.Name + "</size>" + "</b>" + "</color>");
-        toolTipSizeText.text = text;
-        toolTipVisualText.text = toolTipSizeText.text;
-        toolTip.transform.position = new Vector2(xPos, yPos);        
+        toolTip.ShowToolTip(text);     
     }
 
     public GameObject GetTarget()

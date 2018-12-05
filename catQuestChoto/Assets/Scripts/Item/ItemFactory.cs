@@ -13,7 +13,7 @@ public enum ItemType
 
 public class ItemFactory{
 
-    PoolManager myPoolManager;
+    static private PoolManager myPoolManager;
     static private ItemFactory instance = null;
     private ItemFactory()
     {
@@ -31,7 +31,7 @@ public class ItemFactory{
     {
         get
         {
-            if (instance == null)
+            if (instance == null|| myPoolManager ==null)
             {
                 instance = new ItemFactory();               
             }
@@ -110,6 +110,11 @@ public class ItemFactory{
         string path = Application.dataPath + "/Resources/Json/Items/" + tier; 
         string[] fileArray;
         int roll = Random.Range(0, 3);
+        if(tier == ItemTier.Tier3)
+        {
+            roll = 2; // there are only weapons tier3
+        }
+
         switch (roll)
         {
             case 0:

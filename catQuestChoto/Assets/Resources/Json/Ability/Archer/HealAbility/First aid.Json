@@ -1,0 +1,1 @@
+{"abilityName":"First aid","abilityClass":1,"posInTree":3,"abilityAniamtion":0,"level":0,"abilitySprite":22,"range":0.0,"description":"Instantly recover some health","baseCooldown":30.0,"maxCharges":0,"manaCost":10,"weaponSetReq":[],"buffToAply":[],"buffPotencyPerLevel":[],"debuffToAply":[],"debuffPotencyPerLevel":[],"healAmount":30.0,"healPerLevel":10.0}

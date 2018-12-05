@@ -26,7 +26,7 @@ public class DialogueManager : MonoBehaviour {
         return (dictionary.ContainsKey(key));
     }
     [System.Serializable]
-    public class dialogue
+    public struct dialogue
     {
         public string[] dialog;
     }

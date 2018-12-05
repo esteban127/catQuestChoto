@@ -14,12 +14,11 @@ public class AbilitySystem : MonoBehaviour {
     public int NumOfSpells { get { return numberOfSpellsInBar; } }
     [SerializeField] float separationBetweenButtons;
     AbilityInterface aInterface;
-    [SerializeField] Text toolTipSizeText;
-    [SerializeField] Text toolTipVisualText;
-    [SerializeField] GameObject toolTip;
+    [SerializeField] Tooltip toolTip;
     Animator playerAnimator;
-    
-
+    Clock timer;    
+    [SerializeField] float castTime = 0.6f;
+    float currentCast = 0;
     static private AbilitySystem instance = null;
     static public AbilitySystem Instance { get { return instance; } }
 
@@ -30,7 +29,7 @@ public class AbilitySystem : MonoBehaviour {
         {
             instance = this;
             aInterface = new AbilityInterface(gameObject);
-            aInterface.CreateAbilities(numberOfSpellsInBar, buttonPrefab, separationBetweenButtons);       
+            aInterface.CreateAbilities(numberOfSpellsInBar, buttonPrefab, separationBetweenButtons);
         }
         else if (instance != this)
         {
@@ -40,53 +39,77 @@ public class AbilitySystem : MonoBehaviour {
 
     private void Start()
     {
+        LoadSystem.OnEndLoading += EndOfLoad;
+        timer = Clock.Instance;
+        timer.OnTick += CastingTime;
+    }
+    private void OnDisable()
+    {
+        LoadSystem.OnEndLoading -= EndOfLoad;
+    }
+    private void EndOfLoad()
+    {
         playerAnimator = playerRef.GetComponentInChildren<Animator>();
+    }
+    private void CastingTime(float time)
+    {
+        if (currentCast>0)
+        {
+            currentCast -= time;
+            if (currentCast <= 0)
+                playerRef.GetComponent<InputController>().Casting = false;
+        }
     }
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.Alpha1))
+        if (playerRef.GetComponent<CharacterStats>().Alive)
         {
-            TryCast(0);
-        }
-        if (Input.GetKey(KeyCode.Alpha2))
-        {
-            TryCast(1);
-        }
-        if (Input.GetKey(KeyCode.Alpha3))
-        {
-            TryCast(2);
-        }
-        if (Input.GetKey(KeyCode.Alpha4))
-        {
-            TryCast(3);
-        }
-        if (Input.GetKey(KeyCode.Alpha5))
-        {
-            TryCast(4);
-        }
-        if (Input.GetKey(KeyCode.Alpha6))
-        {
-            TryCast(5);
-        }
-        if (Input.GetKey(KeyCode.Alpha7))
-        {
-            TryCast(6);
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                TryCast(0);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                TryCast(1);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                TryCast(2);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                TryCast(3);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                TryCast(4);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                TryCast(5);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                TryCast(6);
+            }
+        }        
     }
 
     public bool TryCast(int pos)
     {
         if (aInterface.GetSlot(pos).GetComponent<AbilityButtonManager>().Ability != null)
-        {            
-            if( (aInterface.GetSlot(pos).GetComponent<AbilityButtonManager>().Ability.TryCastAbility(playerRef.GetComponent<TargetSistem>().GetTarget(), playerRef, "Enemy")))
+        {
+            if ((aInterface.GetSlot(pos).GetComponent<AbilityButtonManager>().Ability.TryCastAbility(playerRef.GetComponent<TargetSistem>().GetTarget(), playerRef, "Enemy")))
             {
                 playerAnimator.SetTrigger(aInterface.GetSlot(pos).GetComponent<AbilityButtonManager>().Ability.AbilityAnimation.ToString());
                 TriggerGlobalColdown();
+                currentCast = castTime;
+                playerRef.GetComponent<InputController>().Casting = true;
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -94,7 +117,10 @@ public class AbilitySystem : MonoBehaviour {
     {
         for (int i = 0; i < numberOfSpellsInBar; i++)
         {
-            aInterface.GetSlot(i).GetComponent<AbilityButtonManager>().Ability.PutInGlobarColdown();
+            if (aInterface.GetSlot(i).GetComponent<AbilityButtonManager>().Ability != null)
+            {
+                aInterface.GetSlot(i).GetComponent<AbilityButtonManager>().Ability.PutInGlobarColdown();
+            }
         }
     }
     public void SetAbilityCDR(IAbility ability)
@@ -102,43 +128,16 @@ public class AbilitySystem : MonoBehaviour {
         ability.SetCDR(playerRef.GetComponent<CharacterStats>().ColdownReduction());
     }
     public void SetAbility(int slot, IAbility ability)
-    {        
+    {
         aInterface.GetSlot(slot).GetComponent<AbilityButtonManager>().SetAbility(ability);
     }
 
     public void ShowToolTip(IAbility ability)
     {
-        if (ability != null&& ability.Name != "Empty")
-        {
-            toolTip.SetActive(true);
-            float xPos = Input.mousePosition.x - 3;
-            float yPos = Input.mousePosition.y;
-
-            float tooltipWidth = toolTipSizeText.GetComponent<RectTransform>().rect.width;
-            float tooltipHeight = toolTipSizeText.GetComponent<RectTransform>().rect.height;
-
-            xPos -= (tooltipWidth / 2 + 5);
-            if (yPos + tooltipHeight + 10 < Screen.height)
-            {
-                yPos = yPos + tooltipHeight / 2 + 10;
-            }
-            else
-            {
-                yPos = yPos - tooltipHeight / 2 - 10;
-            }
-            if (xPos + tooltipWidth + 10 < Screen.width)
-            {
-                xPos = xPos + tooltipWidth / 2 + 10;
-            }
-            else
-            {
-                xPos = xPos - tooltipWidth / 2 - 10;
-            }
-
-            toolTipSizeText.text = GenerateAbilityText(ability);
-            toolTipVisualText.text = toolTipSizeText.text;
-            toolTip.transform.position = new Vector2(xPos, yPos);
-        }        
+        if (ability != null && ability.Name != "Empty")
+        {       
+            toolTip.ShowToolTip(GenerateAbilityText(ability));
+        }
     }
 
     private string GenerateAbilityText(IAbility ability)
@@ -146,16 +145,31 @@ public class AbilitySystem : MonoBehaviour {
         string text = "";
         text += "<b>" + ability.Name + "</b>      lvl: " + ability.Level + "\n";
         text += ability.Description + "\n";
-        if(ability.GetType() == typeof(AtackAbility))
+        if (ability.GetType() == typeof(AtackAbility))
         {
             text += "Damage: " + (playerRef.GetComponent<CharacterStats>().MinDamage() * ((AtackAbility)ability).DamageMultiplier).ToString("F1") + " - " + (playerRef.GetComponent<CharacterStats>().MaxDamage() * ((AtackAbility)ability).DamageMultiplier).ToString("F1") + " \n";
         }
-        if(ability.GetType() == typeof(HealAbility))
+        if (ability.GetType() == typeof(HealAbility))
         {
-            text += "Healing: " + ((HealAbility)ability).Heal + "\n";
+            if(((HealAbility)ability).Heal> 0)
+                text += "Healing: " + ((HealAbility)ability).Heal + "\n";
+            if (((HealAbility)ability).Heal < 0)
+                text += "Self damage: " + ((HealAbility)ability).Heal + "\n";
         }
         text += "Mana cost: " + ability.ManaCost + "\n";
         text += "Cooldown: " + ability.Cooldown.ToString("F1")+ "\n";
+        if (ability.CurrentCharges > 0)
+        {
+            text += "Charges: " + ability.CurrentCharges + "\n";
+        }
+        for (int i = 0; i < ability.Buff.Length; i++)
+        {
+            text += "Apply the effect: " + ability.Buff[i].type + " with a potency of " + ((ability.Buff[i].potency + ability.BuffPotencyPerLevel[i] * ability.Level )).ToString("F1") + " for " + ability.Buff[i].remainTime + " seconds \n";
+        }
+        for (int i = 0; i < ability.Debuff.Length; i++)
+        {
+            text += "Apply the effect: " + ability.Debuff[i].type + " with a potency of " + ((ability.Debuff[i].potency + ability.DebuffPotencyPerLevel[i] * ability.Level)).ToString("F1") + " for " + ability.Debuff[i].remainTime + " seconds \n";
+        }
 
         if (ability.Loked)
             text += "<color=red>";
@@ -174,7 +188,7 @@ public class AbilitySystem : MonoBehaviour {
 
     public void HideToolTip()
     {
-        toolTip.SetActive(false);
+        toolTip.Hide();
     }
 
 

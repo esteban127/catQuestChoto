@@ -53,9 +53,7 @@ public class InventoryManager : MonoBehaviour {
     WeaponSet currentWeaponSet;
     equipmentStats currentEquipmentBonus;
     [SerializeField] GameObject[] equipSlot;
-    [SerializeField] GameObject toolTip;
-    [SerializeField] Text toolTipSizeText;
-    [SerializeField] Text toolTipVisualText;
+    [SerializeField] Tooltip toolTip;    
     [SerializeField] Text equipmentBonusText;
     [SerializeField] GameObject buttonPrefab;
     [SerializeField] int col;
@@ -81,9 +79,7 @@ public class InventoryManager : MonoBehaviour {
     {
         if (instance == null)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            sLManager = SaveLoad.Instance;
+            instance = this;            
             Iinteface = new InventoryInterface(gameObject);
             Iinteface.CreateInventory(col, row, buttonPrefab);
             currentEquipmentBonus.stats = new itemstats();
@@ -103,18 +99,23 @@ public class InventoryManager : MonoBehaviour {
     
     private void Start()
     {
+        sLManager = SaveLoad.Instance;
         iFactory = ItemFactory.Instance;
         qManager = QuestManager.Instance;
-        Load();//tenes que llamarlo despues de un delay, porque? NO SE, ES UNA PIJA(seguro es la bosta del grid layout)
+        LoadSystem.OnEndLoading += EndOfLoad;
+        SaveLoad.BeforeClosing += Save;
     }
-
-    private void Update()
+    private void OnDisable()
     {
-        if (Input.GetKey(KeyCode.P))
-        {
-            Save();
-        }
+        LoadSystem.OnEndLoading -= EndOfLoad;
+
     }
+    private void EndOfLoad()
+    {
+        Load();
+        transform.parent.parent.gameObject.SetActive(false);
+    }
+    
 
     public bool PickItem(GameObject item)
     {
@@ -329,7 +330,8 @@ public class InventoryManager : MonoBehaviour {
                 else
                 {
                     tempStats += ((Weapon)equipedItems[i]).AditionalStats;
-                    critDmg *= ((Weapon)equipedItems[i]).CritDmg;
+                    if(critDmg< ((Weapon)equipedItems[i]).CritDmg)
+                        critDmg = ((Weapon)equipedItems[i]).CritDmg;
                     baseCritChance += ((Weapon)equipedItems[i]).BaseCritChance;
                     baseMinDmg += ((Weapon)equipedItems[i]).BaseMinDamage;
                     baseMaxDamage += ((Weapon)equipedItems[i]).BaseMaxDamage;
@@ -499,8 +501,8 @@ public class InventoryManager : MonoBehaviour {
         Iitem itemToUse = item.GetComponent<ItemOnInventoryManager>().getItem();
         if (typeof(Consumables) == itemToUse.GetType())
         {
-            OnConsume((Consumables)itemToUse);
             RemoveFromInventory(pos, true);
+            OnConsume((Consumables)itemToUse);
             return true;
         }
         else
@@ -647,34 +649,8 @@ public class InventoryManager : MonoBehaviour {
             
     }
     private void ShowToolTip(Iitem item)
-    {
-        toolTip.SetActive(true);
-        float xPos = Input.mousePosition.x - 3;
-        float yPos = Input.mousePosition.y;
-
-        float tooltipWidth = toolTipSizeText.GetComponent<RectTransform>().rect.width;
-        float tooltipHeight = toolTipSizeText.GetComponent<RectTransform>().rect.height;
-
-        xPos -= (tooltipWidth / 2 + 5);
-        if (yPos + tooltipHeight + 10 < Screen.height)
-        {
-            yPos = yPos + tooltipHeight / 2 + 10;
-        }
-        else
-        {
-            yPos = yPos - tooltipHeight / 2 - 5;
-        }
-        if (xPos + tooltipWidth + 10 < Screen.width)
-        {
-            xPos = xPos + tooltipWidth / 2 + 10;
-        }
-        else
-        {
-            xPos = xPos - tooltipWidth / 2 - 5;
-        }
-        toolTipSizeText.text = GenerateToolTipText(item);
-        toolTipVisualText.text = toolTipSizeText.text;
-        toolTip.transform.position = new Vector2(xPos, yPos);
+    {        
+        toolTip.ShowToolTip(GenerateToolTipText(item));        
     }
 
     private string GenerateToolTipText(Iitem item)
@@ -714,11 +690,11 @@ public class InventoryManager : MonoBehaviour {
             text += "Consumable \n";
             for (int i = 0; i < ((Consumables)item).Buff.Length; i++)
             {
-                text += "Aplica el efecto de " + ((Consumables)item).Buff[i].type + " de potencia " + ((Consumables)item).Buff[i].potency + " durante " + ((Consumables)item).Buff[i].remainTime + " segundos \n";
+                text += "Apply the effect: " + ((Consumables)item).Buff[i].type + " with a potency of " + ((Consumables)item).Buff[i].potency + " for " + ((Consumables)item).Buff[i].remainTime + " seconds \n";
             }
             for (int i = 0; i < ((Consumables)item).Debuff.Length; i++)
             {
-                text += "Aplica el efecto de " + ((Consumables)item).Debuff[i].type + " de potencia " + ((Consumables)item).Debuff[i].potency + " durante " + ((Consumables)item).Debuff[i].remainTime + " segundos \n";
+                text += "Apply the effect: " + ((Consumables)item).Debuff[i].type + " with a potency of " + ((Consumables)item).Debuff[i].potency + " for " + ((Consumables)item).Debuff[i].remainTime + " seconds \n";
             }
         }
         string effects = StatsTooltipText(item.stats);
@@ -777,12 +753,12 @@ public class InventoryManager : MonoBehaviour {
 
     public void HideToolTip()
     {
-        toolTip.SetActive(false);
+        toolTip.Hide();
     }
     public void Save()
     {
         Debug.Log("Save");
-        string path = sLManager.SaveDirectory + "/Inventory.json";
+        string path = sLManager.SaveDirectory + "Inventory.json";
         inventorySave.Save(equipedItems, inventorySpots);
         string save = JsonUtility.ToJson(inventorySave);
         
@@ -790,7 +766,7 @@ public class InventoryManager : MonoBehaviour {
     }
     private void Load()
     {
-        string path = sLManager.SaveDirectory + "/Inventory.json";
+        string path = sLManager.SaveDirectory + "Inventory.json";
         if (File.Exists(path))
         {
             inventorySave = JsonUtility.FromJson<InventorySave>(File.ReadAllText(path));
@@ -857,7 +833,7 @@ public class InventoryManager : MonoBehaviour {
                     instance.transform.SetParent(parent.transform);
                     instance.GetComponent<buttonManager>().SetPos(i, j);
                     inventorySlot[i, j] = instance;
-                }
+                }                
             }
         }
 

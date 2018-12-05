@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
+using UnityEngine.SceneManagement;
+
 
 public class SaveLoad : MonoBehaviour {
 
-    string currentDirectory = "C:/Users/Core-i5/Desktop/facu/Practica profecional 2/CatQuestChoto/catQuestChoto/Assets/Resources/Saves/Test/"; //test
+    string currentDirectory;
     public string SaveDirectory { get { return currentDirectory; } }
-
+    CharacterActor currentPlayer;
+    public c_class currentClass { get { return currentPlayer.Class; } }
     static private SaveLoad instance = null;
     static public SaveLoad Instance { get { return instance; } }
-
+    public delegate void SaveDelegate();
+    public static event SaveDelegate BeforeClosing;
     private void Awake()
     {        
         if (instance == null)
@@ -19,14 +24,16 @@ public class SaveLoad : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
         }
         else if (instance != this)
+        {
             Destroy(gameObject);
+        }        
     }
     
-    private bool newDirectory(string name)
+    private bool newDirectory(string directoryName)
     {
         string path = Application.dataPath;
-        path += ("/Resources/Saves/" + name );
-        if (!File.Exists(path))
+        path += ("/Resources/Saves/" + directoryName);
+        if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
             currentDirectory = path + "/";
@@ -38,28 +45,36 @@ public class SaveLoad : MonoBehaviour {
     {
         string path = Application.dataPath;
         path += ("/Resources/Json/Character/" + cClass +".Json");
-        CharacterActor player = JsonUtility.FromJson<CharacterActor>(File.ReadAllText(path));
-        player.Name = characterName;
+        currentPlayer = JsonUtility.FromJson<CharacterActor>(File.ReadAllText(path));
+        currentPlayer.Name = characterName;
         if (newDirectory(characterName))
         {
             path = currentDirectory + "/Stats.Json";
-            string playerSave = JsonUtility.ToJson(player);
+            string playerSave = JsonUtility.ToJson(currentPlayer);            
             File.WriteAllText(path, playerSave);
+            StatGame();
         }
     }
     public void DeleteSave(string characterName)
     {
         string path = Application.dataPath;
-        path += ("/Resources/Saves/" + characterName);
-        File.Delete(path);
-        Directory.Delete(path);
+        path += ("/Resources/Saves/" + characterName);        
+        Directory.Delete(path,true);
     }
-    public bool LoadDirectory(string name)
+    public void LoadPlayer(string characterName)
+    {
+        if (LoadDirectory(characterName))
+        {
+            currentPlayer = JsonUtility.FromJson<CharacterActor>(File.ReadAllText(currentDirectory + "Stats.Json"));
+            StatGame();
+        }
+    }  
+    public bool LoadDirectory(string DirectorynName)
     {
         string path = Application.dataPath;
-        path += ("/Resources/Saves/" + name);
-        if (File.Exists(path))
-        {
+        path+=("/Resources/Saves/" + DirectorynName);
+        if (Directory.Exists(path))
+        {            
             currentDirectory = path + "/";
             return true;
         }
@@ -77,5 +92,29 @@ public class SaveLoad : MonoBehaviour {
         }
         return characters;
     }
+    private void StatGame()
+    {
+        SceneManager.LoadScene("Town", LoadSceneMode.Single);
+    }
+    public void ChangeScene(string sceneName)
+    {
+        BeforeClosing();
+        CleanDelegate();
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+    }
+    public void QuitApplication()
+    {
+        BeforeClosing();
+        CleanDelegate();
+        Application.Quit();
+    }
 
+    private void CleanDelegate()
+    {
+        Delegate[] functions = BeforeClosing.GetInvocationList();
+        for (int i = 0; i < functions.Length; i++)
+        {
+            BeforeClosing -= (SaveDelegate)functions[i];
+        }
+    }
 }

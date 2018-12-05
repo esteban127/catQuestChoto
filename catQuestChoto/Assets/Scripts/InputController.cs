@@ -6,30 +6,26 @@ using UnityEngine;
 public class InputController : MonoBehaviour {
 
 
-    [SerializeField]
-    private float rotateSpeed = 6.0f;
-    [SerializeField]
-    private float speed = 6.0f;
-    [SerializeField]
-    private float gravity = 20.0f;
-    [SerializeField]
-    GameObject inventory;
-    [SerializeField]
-    GameObject questFrame;
-    [SerializeField]
-    GameObject statsFrame;
-    [SerializeField]
-    GameObject skillTree;
+    [SerializeField] private float rotateSpeed = 6.0f;
+    [SerializeField] private float baseSpeed = 6.0f;
+    private float speed;
+    [SerializeField] private float gravity = 20.0f;
+    [SerializeField] GameObject inventory;
+    [SerializeField] GameObject questFrame;
+    [SerializeField] GameObject statsFrame;
+    [SerializeField] GameObject skillTree;
+    [SerializeField] GameObject escMenu;
     private Vector3 moveDirection = new Vector3(0, 0, 0);
     private CharacterController controller;
     private float mauseInitialPos = 0.0f;
     private float currentRotation = 0.0f;
     private float inputAxisX;
     private float inputAxisZ;
-    private bool isAtacking = false;
     private Animator playerAnimator;
-
-    public void setIsAtacking(bool atacking) { isAtacking = atacking; }
+    CharacterStats cStats;
+    bool casting = false;
+    bool killed = false;
+    public bool Casting { set { casting = value; } }
 
     void Awake()
     {
@@ -38,34 +34,49 @@ public class InputController : MonoBehaviour {
         {
             Debug.LogError("Failed on get the Player controller");
         }
-
-
     }
     private void Start()
+    {
+        speed = baseSpeed;
+        cStats = GetComponent<CharacterStats>();
+        LoadSystem.OnEndLoading += EndOfLoad;
+    }
+    private void EndOfLoad()
     {        
-        playerAnimator = GetComponentInChildren<Animator>();
-        StartCoroutine(LaterStart(0.01f));
+        playerAnimator = GetComponentInChildren<Animator>();        
+    }
+    private void OnDisable()
+    {
+        LoadSystem.OnEndLoading -= EndOfLoad;
     }
 
-    IEnumerator LaterStart(float time)
-    {
-        yield return new WaitForSeconds(time);
-        inventory.SetActive(false);
-        questFrame.SetActive(false);
-        skillTree.SetActive(false);
-    }    
+
 
     void Update()
     {
+        
+        speed = baseSpeed - (baseSpeed * (cStats.status.getDebuffPotency(DebuffType.slow)));
 
-
+        
         GetImput(ref inputAxisX, ref inputAxisZ);
-        if (!isAtacking)
+        
+        Move();
+
+        if (cStats.Alive)
         {
-            Move();
             Rotate();
         }
+        else
+        {
+            if (!killed)
+            {
+                playerAnimator.SetTrigger("Die");
+                killed = true;
+            }
+        }              
+
         MovementAnimation();
+
         if (Input.GetKeyDown(KeyCode.I))
         {
             TogleWindow(inventory);
@@ -82,24 +93,30 @@ public class InputController : MonoBehaviour {
         {
             TogleWindow(skillTree);
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogleWindow(escMenu);
+        }
 
     }
 
     private void MovementAnimation()
     {
-        if (inputAxisZ == 0 && inputAxisX == 0)
+        if(playerAnimator!= null)
         {
-            playerAnimator.SetBool("IsMoving", false);
-            playerAnimator.SetFloat("HorizontalMovement", 0);
-            playerAnimator.SetFloat("VerticalMovement", 0);
+            if (inputAxisZ == 0 && inputAxisX == 0)
+            {
+                playerAnimator.SetBool("IsMoving", false);
+                playerAnimator.SetFloat("HorizontalMovement", 0);
+                playerAnimator.SetFloat("VerticalMovement", 0);
+            }
+            else
+            {
+                playerAnimator.SetBool("IsMoving", true);
+                playerAnimator.SetFloat("HorizontalMovement", inputAxisX);
+                playerAnimator.SetFloat("VerticalMovement", inputAxisZ);
+            }
         }
-        else
-        {
-            playerAnimator.SetBool("IsMoving", true);
-            playerAnimator.SetFloat("HorizontalMovement", inputAxisX);
-            playerAnimator.SetFloat("VerticalMovement", inputAxisZ);
-        }
-
     }   
     private void TogleWindow(GameObject window)
     {
@@ -146,8 +163,17 @@ public class InputController : MonoBehaviour {
 
     private void GetImput(ref float inputX, ref float inputZ)
     {
-        inputX = Input.GetAxis("Horizontal");
-        inputZ = Input.GetAxis("Vertical");
+        if (!casting && cStats.Alive)
+        {
+            inputX = Input.GetAxis("Horizontal");
+            inputZ = Input.GetAxis("Vertical");
+        }
+        else
+        {
+            inputX = 0;
+            inputZ = 0;
+            
+        }
     }
 
 

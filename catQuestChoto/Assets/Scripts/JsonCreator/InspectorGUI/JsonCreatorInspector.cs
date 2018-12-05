@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
 
 [CustomEditor(typeof(UJsonCreator))]
 public class JsonCreatorInspector : Editor
@@ -47,4 +48,6 @@ public class JsonCreatorInspector : Editor
         GUILayout.Label(myScript.VerifyJSONCreation());
         serializedObj.ApplyModifiedProperties();
     }
+
 }
+#endif

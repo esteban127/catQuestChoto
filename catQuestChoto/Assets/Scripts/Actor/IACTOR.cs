@@ -8,7 +8,14 @@ public enum ActorImage
     Roberta,
     Warrior,
     Archer,
-    Mage
+    Mage,
+    Roberto,
+    Pepita,
+    MeleGoblin,
+    RangedGoblin,
+    KeyKeeper,
+    Mutant,
+    Zombie
 }
 
 public enum  attribute

@@ -5,7 +5,45 @@ using UnityEngine;
 public enum abilitySprite
 {    
     Empty,
-    Fist
+    Fist,
+    OneHanded,
+    ShieldAlone,
+    SwordAndShield,
+    Bow,
+    TwoHandedSword,
+    Staff,
+    DualBlades,
+    Warrior0,
+    Warrior1,
+    Warrior2,
+    Warrior3,
+    Warrior4,
+    Warrior5,
+    Warrior6,
+    Warrior7,
+    Warrior8,
+    Warrior9,
+    Archer0,
+    Archer1,
+    Archer2,
+    Archer3,
+    Archer4,
+    Archer5,
+    Archer6,
+    Archer7,
+    Archer8,
+    Archer9,
+    Mage0,
+    Mage1,
+    Mage2,
+    Mage3,
+    Mage4,
+    Mage5,
+    Mage6,
+    Mage7,
+    Mage8,
+    Mage9,
+    Enemy
 }
 public enum abilityClass
 {
@@ -44,17 +82,28 @@ public abstract class IAbility {
     [SerializeField] WeaponSet[] weaponSetReq;
     public WeaponSet[] WeaponReq { get { return weaponSetReq; } }
     int currentCharges = 0;
-    public int CurrentCharges { get { return CurrentCharges; } }
+    public int CurrentCharges { get { return currentCharges; } }
     float cooldownReduction = 0;
     protected bool loked = false;
+    bool outOfCharges = false;
     public bool Loked { get { return loked; } }
     public float Cooldown { get { return baseCooldown - (baseCooldown * cooldownReduction); } }
     float remainCooldown = 0;
     public float RemainCooldown { get { return remainCooldown; } }
     protected bool onCooldown = false;
     public bool OnCooldow { get { return onCooldown; } }
+    [SerializeField] protected BuffDebuffSystem.Buff[] buffToAply;
+    public BuffDebuffSystem.Buff[] Buff { get { return buffToAply; } }
+    [SerializeField] protected float[] buffPotencyPerLevel;
+    public float[] BuffPotencyPerLevel { get { return buffPotencyPerLevel; } }
+    [SerializeField] protected BuffDebuffSystem.Debuff[] debuffToAply;
+    public BuffDebuffSystem.Debuff[] Debuff { get { return debuffToAply; } }
+    [SerializeField] protected float[] debuffPotencyPerLevel;
+    public float[] DebuffPotencyPerLevel { get { return debuffPotencyPerLevel; } }
     Clock timer;
     public abstract bool TryCastAbility(GameObject target, GameObject caster, string validTargetTag);
+
+   
 
 
     public void SetCDR(float cdr)
@@ -65,6 +114,7 @@ public abstract class IAbility {
     {
         timer = Clock.Instance;
         timer.OnTick += ReduceCooldown;
+        currentCharges = maxCharges;
     }
     public void Lock()
     {
@@ -81,9 +131,13 @@ public abstract class IAbility {
         {
             remainCooldown -= time;
             if (remainCooldown <= 0)
-            {
-                currentCharges = maxCharges;
+            {                
                 onCooldown = false;
+                if (outOfCharges)
+                {
+                    currentCharges = maxCharges;
+                    outOfCharges = false;
+                }
             }
         }
     }
@@ -95,6 +149,7 @@ public abstract class IAbility {
         }
         else
         {
+            outOfCharges = true;
             onCooldown = true;
             remainCooldown = Cooldown;
         }

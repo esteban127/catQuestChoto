@@ -77,10 +77,10 @@ public class AnimationHandler : MonoBehaviour {
                     activeWeapons.Add(Staff);
                     break;
                 case WeaponSet.DualBlades:
-                    RSword.SetActive(true);
-                    LSword.SetActive(true);
-                    activeWeapons.Add(RSword);
-                    activeWeapons.Add(LSword);
+                    LDagger.SetActive(true);
+                    RDagger.SetActive(true);
+                    activeWeapons.Add(LDagger);
+                    activeWeapons.Add(RDagger);
                     break;
             }
 

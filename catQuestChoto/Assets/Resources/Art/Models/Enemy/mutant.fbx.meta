@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 26a6013b338c45343a466132136d58bd
-timeCreated: 1536263097
+timeCreated: 1543833234
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -90,20 +90,15 @@ ModelImporter:
     13700000: MutantMesh
   externalObjects:
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: mutant_M
-    second: {fileID: 2100000, guid: b15b03ff73553024a864be3c54ef60cc, type: 2}
-  - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Mutant_diffuse
-    second: {fileID: 2800000, guid: 8f95b96e4d98c3b41a54478e7d5b35c5, type: 3}
+    second: {fileID: 2800000, guid: 62ece680625c1d94693c4e5bd7ea87d8, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Mutant_normal
-    second: {fileID: 2800000, guid: 2a4cfa91a46e91f41a1420ec87c883df, type: 3}
+    second: {fileID: 2800000, guid: c9a393053eb3286439c7c0496d31b0e3, type: 3}
   materials:
     importMaterials: 1
     materialName: 0
@@ -133,7 +128,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.012
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importVisibility: 1
@@ -152,7 +147,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

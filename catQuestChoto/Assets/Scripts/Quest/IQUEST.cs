@@ -37,7 +37,7 @@ public class IQUEST {
         public string Target { get { return questTargetRef; } }
         [SerializeField] int amount;
         public int ReqAmount { get { return amount; } }
-        int currentAmount;
+        [SerializeField] int currentAmount;
         public int CurrentAmount { get { return currentAmount; } }
         bool completed = false;
         public bool Completed { get { return completed; } }

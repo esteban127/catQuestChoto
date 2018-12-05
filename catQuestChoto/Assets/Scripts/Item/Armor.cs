@@ -45,7 +45,7 @@ public class Armor : Iitem {
 
             mainStat = (Random.Range(1, 10) + ((int)tier * 5));
             percStat = ((float)Random.Range(1, 5) * 0.01f) + (float)tier * 0.025f;
-            regenStat = (float)Random.Range(1, 5) * 0.5f + (float)tier * 1.5f +1f;
+            regenStat = (float)Random.Range(1, 5) * 0.1f + (float)tier * 0.5f;
             switch (type)
             {                
                 case armorType.chest:
@@ -60,7 +60,7 @@ public class Armor : Iitem {
                 case armorType.offHand:
                 case armorType.helmet:
                 case armorType.gloves:
-                    regenStat *= 2.0f;
+                    regenStat *= 1.5f;
                     break;
 
             }

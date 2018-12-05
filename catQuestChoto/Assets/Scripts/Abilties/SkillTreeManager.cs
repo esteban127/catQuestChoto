@@ -53,24 +53,26 @@ public class SkillTreeManager : MonoBehaviour {
         sLManager = SaveLoad.Instance;
         aSystem = AbilitySystem.Instance;
         iManager = InventoryManager.Instance;
+        LoadSystem.OnEndLoading += EndLoad;
+        SaveLoad.BeforeClosing += Save;
         iManager.OnWeaponChange += actualizeWeaponAbility;
         iManager.OnStatChange += actualizateCDR;
         abilityInSlot = new AbilityInTree[aSystem.NumOfSpells];
         eAbilitiesFrame = new EquipedAbilities(EquipedAbilitiesParent);
         eAbilitiesFrame.CreateAbilities(aSystem.NumOfSpells, SkillTreeButtonPrefab, 3);            
-        setSkillButtonsPos();
-        Load(c_class.Mage);
-        actualizeWeaponAbility();
+        setSkillButtonsPos();    
         SetDelegates();
     }
-
-    private void Update()
+    private void OnDisable()
     {
-        if (Input.GetKey(KeyCode.P))
-        {
-            Save();
-        }
+        LoadSystem.OnEndLoading -= EndLoad;
     }
+    private void EndLoad()
+    {
+        Load(sLManager.currentClass);
+        actualizeWeaponAbility();
+        gameObject.SetActive(false);
+    }   
 
     private void actualizateCDR()
     {

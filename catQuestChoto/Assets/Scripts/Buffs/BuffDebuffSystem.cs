@@ -10,7 +10,7 @@ public enum BuffType
     shield,
     hpRegen,
     manaRegen,    
-    damageMultpy,     
+    damageBuff,     
     defenseBuff,
     critChanceBuff,
     precisionBuff,
@@ -22,14 +22,21 @@ public enum DebuffType
     damageOverTime,
     slow,
     damageReduction,
+    defenseReduction,
 }
+
 [System.Serializable]
 public class BuffDebuffSystem  {
 
     Clock timer;
     List<Buff> activeBuff;
+    public List<Buff> ActiveBuff { get { return activeBuff; } }
     List<Debuff> activeDebuff;
+    public List<Debuff> ActiveDebuff { get { return activeDebuff; } }
     List<int> posToRemove;
+    public delegate void StatusDelegate();
+    public StatusDelegate onStatusChange;
+
 
     public BuffDebuffSystem()
     {
@@ -55,13 +62,16 @@ public class BuffDebuffSystem  {
                 if (activeBuff[i].potency <= status.potency)
                 {
                     activeBuff[i] = status;
-                    
+                    if(onStatusChange!= null)
+                        onStatusChange();
                 }
             }                
         }
         if (!added)
         {
             activeBuff.Add(status);
+            if (onStatusChange != null)
+                onStatusChange();
         }
     }
     public void addBuff(Buff buff)
@@ -75,13 +85,16 @@ public class BuffDebuffSystem  {
                 if (activeBuff[i].potency <= buff.potency)
                 {
                     activeBuff[i] = buff;
-
+                    if (onStatusChange != null)
+                        onStatusChange();
                 }
             }
         }
         if (!added)
         {
             activeBuff.Add(buff);
+            if (onStatusChange != null)
+                onStatusChange();
         }
     }
 
@@ -92,7 +105,7 @@ public class BuffDebuffSystem  {
         {
             if (activeBuff[i].type == type)
             {
-                return activeBuff[i].potency;
+                return (activeBuff[i].potency*0.01f);
             }
         }
         return 0;
@@ -106,6 +119,8 @@ public class BuffDebuffSystem  {
                 activeBuff[i].potency-= potency;
                 if (activeBuff[i].potency < 0)
                     activeBuff[i].potency = 0;
+                if (onStatusChange != null)
+                    onStatusChange();
             }
         }        
     }
@@ -122,13 +137,16 @@ public class BuffDebuffSystem  {
                 if (activeDebuff[i].potency <= status.potency)
                 {
                     activeDebuff[i] = status;
-
+                    if (onStatusChange != null)
+                        onStatusChange();
                 }
             }
         }
         if (!added)
         {
             activeDebuff.Add(status);
+            if (onStatusChange != null)
+                onStatusChange();
         }
     }
     public void addDebuff(Debuff debuff)
@@ -142,13 +160,16 @@ public class BuffDebuffSystem  {
                 if (activeDebuff[i].potency <= debuff.potency)
                 {
                     activeDebuff[i] = debuff;
-
+                    if (onStatusChange != null)
+                        onStatusChange();
                 }
             }
         }
         if (!added)
         {
             activeDebuff.Add(debuff);
+            if (onStatusChange != null)
+                onStatusChange();
         }
     }
 
@@ -158,7 +179,7 @@ public class BuffDebuffSystem  {
         {
             if (activeDebuff[i].type == type)
             {
-                return activeDebuff[i].potency;
+               return (activeDebuff[i].potency*0.01f);
             }
         }
         return 0;
@@ -172,15 +193,24 @@ public class BuffDebuffSystem  {
                 activeDebuff[i].potency -= potency;
                 if (activeDebuff[i].potency < 0)
                     activeDebuff[i].potency = 0;
+                if (onStatusChange != null)
+                    onStatusChange();
             }
         }
     }
-
+    public void RemoveAllBuffAndDebuff()
+    {
+        activeBuff.Clear();
+        activeDebuff.Clear();
+        if (onStatusChange != null)
+            onStatusChange();
+    }
 
     private void reduceBuffDebuffTime(float time)
     {
+        
         for (int i = 0; i < activeBuff.Count; i++)
-        {
+        {            
             activeBuff[i].remainTime -= time;
             if(activeBuff[i].remainTime <= 0)
             {
@@ -190,6 +220,8 @@ public class BuffDebuffSystem  {
         for (int i = 0; i < posToRemove.Count; i++)
         {
             activeBuff.RemoveAt(posToRemove[posToRemove.Count-1- i]);
+            if (onStatusChange != null)
+                onStatusChange();
         }
         posToRemove.Clear();
         for (int i = 0; i < activeDebuff.Count; i++)
@@ -203,15 +235,27 @@ public class BuffDebuffSystem  {
         for (int i = 0; i < posToRemove.Count; i++)
         {
             activeDebuff.RemoveAt(posToRemove[posToRemove.Count-1- i]);
+            if (onStatusChange != null)
+                onStatusChange();
         }
         posToRemove.Clear();
-    }
+    }    
+  
+
     [System.Serializable]
-    public class Buff
+    public class Status
     {
-        public BuffType type;
+        protected float startingTime;
+        public float StartingTime { get { return startingTime; } }
         public float potency;
         public float remainTime;
+    }
+
+    [System.Serializable]
+    public class Buff : Status
+    {
+        
+        public BuffType type;        
 
         public void reduceTime(float amount)
         {
@@ -221,15 +265,21 @@ public class BuffDebuffSystem  {
         {
             type = ntype;
             potency = npotency;
-            nremainTime = remainTime;
-        }        
+            remainTime = nremainTime;
+            startingTime = nremainTime;
+        }
+        public Sprite getImage()
+        {
+
+            Sprite itemImage = null;
+            itemImage = Resources.Load<Sprite>("Art/BuffDebuffSprite/" + type);
+            return itemImage;
+        }
     }
     [System.Serializable]
-    public class Debuff
-    {
-        public DebuffType type;
-        public float potency;
-        public float remainTime;
+    public class Debuff : Status
+    {        
+        public DebuffType type;        
 
         public void reduceTime(float amount)
         {
@@ -239,7 +289,14 @@ public class BuffDebuffSystem  {
         {
             type = ntype;
             potency = npotency;
-            nremainTime = remainTime;
+            remainTime = nremainTime;
+            startingTime = nremainTime;
+        }
+        public Sprite getImage()
+        {
+            Sprite itemImage = null;
+            itemImage = Resources.Load<Sprite>("Art/BuffDebuffSprite/" + type);
+            return itemImage;
         }
     }
 

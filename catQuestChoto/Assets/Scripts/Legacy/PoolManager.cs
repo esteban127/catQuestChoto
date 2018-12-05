@@ -16,7 +16,7 @@ public class PoolManager : MonoBehaviour {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else if (instance != this)
             Destroy(gameObject);
@@ -266,7 +266,7 @@ public class PoolManager : MonoBehaviour {
         pool poolToAdd = new pool();
         poolToAdd.InitializePool(gameObject, size, poolName, expand, objectToPull);
         poolArray.Add(poolToAdd);
-    }
+    }    
 
     private pool SearchPoolForName(string poolName)
     {

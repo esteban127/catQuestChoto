@@ -1,0 +1,1 @@
+{"abilityName":"Pyroblast","abilityClass":2,"posInTree":8,"abilityAniamtion":1,"level":0,"abilitySprite":37,"range":7.0,"description":"Huge expensive and powerfull atack","baseCooldown":50.0,"maxCharges":0,"manaCost":100,"weaponSetReq":[6],"buffToAply":[],"buffPotencyPerLevel":[],"debuffToAply":[],"debuffPotencyPerLevel":[],"abilityDamageMultiplier":5.0,"damagePerLevel":0.75}

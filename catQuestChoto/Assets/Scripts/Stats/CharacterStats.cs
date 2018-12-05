@@ -13,15 +13,17 @@ public class CharacterStats : ActorStats
     equipmentStats currentEquipmentStats;
     [SerializeField] StatsFrameManager frameManager;
     [SerializeField] SkillTreeManager skillTree;
+    [SerializeField] GameObject deathPanel;
     float currentMana;
-    public float CurrentMana { get { return currentMana; } }
-    int actualUnasignedAtributePoints = 0;
+    public float CurrentMana { get { return currentMana; } }    
     SaveLoad sLManager;
+   
+
     //variables de escalado
-    float lifePerCons = 0.5f;
-    float lifeRegenPerCons = 0.1f;
-    float manaPerInt = 0.3f;
-    float manaRegenPerInt = 0.1f;
+    float lifePerCons = 1f;
+    float lifeRegenPerCons = 0.05f;
+    float manaPerInt = 1.0f;
+    float manaRegenPerInt = 0.035f;
     float coldownReductionPerInt = 0.002f;//porciento
     float damagePerStrength = 0.01f; //porciento
     float defensePerStrength = 0.2f;
@@ -31,19 +33,19 @@ public class CharacterStats : ActorStats
     float xpExtraPerLvl = 0.4f;
     float startingXpNeedValue = 100f;
 
-    private void Awake()
+    
+    private void MiddleLoad()
     {
-        sLManager = SaveLoad.Instance;
         Load();
+        status = new BuffDebuffSystem();
+        currentMana = MaxMana();
+        currentHealth = MaxHealth();
     }
-
-    private void Start()
-    {        
-        timer = Clock.Instance;
-        iManager = InventoryManager.Instance;
+    private void EndOfLoad()
+    {
         if (player != null)
         {
-            status = new BuffDebuffSystem();
+            status.onStatusChange += ActualizateStats;
             iManager.OnStatChange += ActualizateStats;
             iManager.OnConsume += getConsumable;
             ActualizateStats();
@@ -51,19 +53,23 @@ public class CharacterStats : ActorStats
             ActualizateXpInFrame();
             actualizateLvlInFrame();
             frameManager.setName(player.Name);
-            currentHealth = MaxHealth();
-            currentMana = MaxMana();
             timer.OnTick += ActualizateLife;
         }
     }
-    private void Update()
+    private void Start()
     {
-        if (Input.GetKey(KeyCode.P))
-        {
-            Save();
-        }
+        sLManager = SaveLoad.Instance;
+        SaveLoad.BeforeClosing += Save;
+        timer = Clock.Instance;
+        iManager = InventoryManager.Instance;
+        LoadSystem.OnEndLoading += EndOfLoad;
+        LoadSystem.OnMidleLoading += MiddleLoad;
     }
-
+    private void OnDisable()
+    {
+        LoadSystem.OnEndLoading -= EndOfLoad;
+        LoadSystem.OnMidleLoading -= MiddleLoad;
+    }
     private void Load()
     {
         string path = sLManager.SaveDirectory + "/Stats.json";
@@ -92,35 +98,36 @@ public class CharacterStats : ActorStats
         {
             status.addDebuff(itemToUse.Debuff[i]);
         }
+        if(itemToUse.Name == "Townportal scroll")
+        {
+            sLManager.ChangeScene("Town");
+        }
     }
 
     void ActualizateLife(float time)
     {
-        if (currentHealth < MaxHealth())
+        if (alive)
         {
-            ReplenishHealt(HealtRegen() * time);
-        }
-        else
-        {
-            currentHealth = MaxHealth();
+            if (currentHealth < MaxHealth())
+            {
+                ReplenishHealt(HealtRegen() * time);
+            }
+            else
+            {
+                currentHealth = MaxHealth();
+            }
+            if (currentMana < MaxMana())
+            {
+                ReplenishMana(ManaRegen() * time);
+            }
+            else
+            {
+                currentMana = MaxMana();
+            }
+            reciveDamage(status.getDebuffPotency(DebuffType.damageOverTime) * 50 * time);
         }        
-        if (currentMana < MaxMana())
-        {
-            ReplenishMana(ManaRegen()*time);
-        }
-        else
-        {
-            currentMana = MaxMana();
-        }
-        reciveDamage(status.getDebuffPotency(DebuffType.damageOverTime) * time);
     }
-
-    public void ReplenishHealt(float amount)
-    {
-        currentHealth += amount;
-        if (currentHealth > MaxHealth())
-            currentHealth = MaxHealth();
-    }
+    
     public void ReplenishMana(float amount)
     {
         currentMana += amount;
@@ -141,7 +148,7 @@ public class CharacterStats : ActorStats
     }
     public void addAttribute(attribute stat)
     {
-        actualUnasignedAtributePoints--;
+        player.UnasignedAtributePoints--;
         ActualizateAttributePointsInFrame();
         switch (stat)
         {
@@ -169,7 +176,7 @@ public class CharacterStats : ActorStats
         player.Level++;
         ReplenishHealt(9999);        
         skillTree.AddSkillPoint();
-        actualUnasignedAtributePoints += 5;
+        player.UnasignedAtributePoints += 5;
         ActualizateAttributePointsInFrame();
         actualizateLvlInFrame();
     }    
@@ -180,7 +187,7 @@ public class CharacterStats : ActorStats
     }
     public float HealtRegen()
     {
-        return currentEquipmentStats.stats.HealthRegen + ((player.Constitution + currentEquipmentStats.stats.Constitution) * lifeRegenPerCons) + status.getBuffPotency(BuffType.hpRegen);
+        return currentEquipmentStats.stats.HealthRegen + ((player.Constitution + currentEquipmentStats.stats.Constitution) * lifeRegenPerCons) + status.getBuffPotency(BuffType.hpRegen)*50;
     }
     public float MaxMana()
     {
@@ -188,14 +195,14 @@ public class CharacterStats : ActorStats
     }
     public float ManaRegen()
     {
-        return currentEquipmentStats.stats.ManaRegen + ((player.Inteligence + currentEquipmentStats.stats.Inteligence) * manaRegenPerInt) + status.getBuffPotency(BuffType.manaRegen);
+        return currentEquipmentStats.stats.ManaRegen + ((player.Inteligence + currentEquipmentStats.stats.Inteligence) * manaRegenPerInt) + status.getBuffPotency(BuffType.manaRegen)*50;
     }
     public override float MinDamage()
     {
         float minDamage = (player.minDamage + currentEquipmentStats.baseMinDamage) + (player.minDamage + currentEquipmentStats.baseMinDamage) * ((player.Strength + currentEquipmentStats.stats.Strength) * damagePerStrength);
-        if (status.getBuffPotency(BuffType.damageMultpy) > 0)
+        if (status.getBuffPotency(BuffType.damageBuff) > 0)
         {
-            minDamage += (minDamage * status.getBuffPotency(BuffType.damageMultpy));
+            minDamage += (minDamage * status.getBuffPotency(BuffType.damageBuff));
         }
         if (status.getDebuffPotency(DebuffType.damageReduction) < 0)
         {
@@ -206,9 +213,9 @@ public class CharacterStats : ActorStats
     public override float MaxDamage()
     {
         float maxDamage = (player.maxDamage + currentEquipmentStats.baseMaxDamage) + (player.maxDamage + currentEquipmentStats.baseMaxDamage) * ((player.Strength + currentEquipmentStats.stats.Strength) * damagePerStrength);
-        if (status.getBuffPotency(BuffType.damageMultpy) > 0)
+        if (status.getBuffPotency(BuffType.damageBuff) > 0)
         {
-            maxDamage += (maxDamage * status.getBuffPotency(BuffType.damageMultpy));
+            maxDamage += (maxDamage * status.getBuffPotency(BuffType.damageBuff));
         }
         if (status.getDebuffPotency(DebuffType.damageReduction) < 0)
         {
@@ -218,7 +225,8 @@ public class CharacterStats : ActorStats
     }
     public override int Defense()
     {
-        return currentEquipmentStats.defense + (int)((player.Strength + currentEquipmentStats.stats.Strength) * defensePerStrength)+ (int)status.getBuffPotency(BuffType.defenseBuff);
+        int def = currentEquipmentStats.defense + (int)((player.Strength + currentEquipmentStats.stats.Strength) * defensePerStrength)+ (int)status.getBuffPotency(BuffType.defenseBuff) - (int)status.getDebuffPotency(DebuffType.defenseReduction);
+        return def + (int)(def * status.getBuffPotency(BuffType.defenseBuff) - def * status.getDebuffPotency(DebuffType.defenseReduction));
     }
     public override float CritDamage()
     {
@@ -253,18 +261,21 @@ public class CharacterStats : ActorStats
 
     public override void reciveDamage(float damage)
     {
-        if(damage> 0)
+        if (alive)
         {
-            if (status.getBuffPotency(BuffType.shield) > 0)
-                status.ReduceBuffPotency((damage - (damage * (Defense() / (Defense() + 100)))), BuffType.shield);
-            else
-                currentHealth -= (damage - (damage * (Defense() / (Defense() + 100))));
-            if (currentHealth <= 0)
+            if (damage > 0)
             {
-                currentHealth = 0;
-                OnDie();//puta que sad                
+                if (status.getBuffPotency(BuffType.shield) > 0)
+                    status.ReduceBuffPotency((damage - (damage * (Defense() / (Defense() + 100)))) / 100, BuffType.shield);
+                else
+                    currentHealth -= (damage - (damage * (Defense() / (Defense() + 100))));
+                if (currentHealth <= 0)
+                {
+                    currentHealth = 0;
+                    OnDie();              
+                }
             }
-        }        
+        }              
     }       
 
     public override IACTOR getActor()
@@ -274,7 +285,16 @@ public class CharacterStats : ActorStats
 
     private void OnDie()
     {
-        Debug.Log("te moriste we"); 
+        alive = false;
+        status.RemoveAllBuffAndDebuff();
+        XpPenalty();
+        deathPanel.SetActive(true);
+    }
+
+    private void XpPenalty()
+    {
+        player.Experience = player.Experience * 0.5f;
+        ActualizateXpInFrame();
     }
 
     private void ActualizateStats()
@@ -313,7 +333,7 @@ public class CharacterStats : ActorStats
     }
     private void ActualizateAttributePointsInFrame()
     {
-        frameManager.setAttributePoints(actualUnasignedAtributePoints);
+        frameManager.setAttributePoints(player.UnasignedAtributePoints);
     }
     private void ActualizateXpInFrame()
     {
