@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Town.unity
     guid: 845fd4a979b854d42be4ddf0be5b6924
-  - enabled: 0
-    path: Assets/Scenes/Game.unity
-    guid: fad6ba50a2f9a3a45a2800b05a68cb54
+  - enabled: 1
+    path: Assets/Scenes/DarkCave.unity
+    guid: a29a2659a85831144ac38e0ea2b17460
+  - enabled: 1
+    path: Assets/Scenes/DarkLordChamber.unity
+    guid: 03d63fdfbcb6fca4584f52974fd3f5ac

@@ -6,6 +6,7 @@ public class EnemyStats : ActorStats
 {
 
     [SerializeField] EnemyActor enemy;
+    [SerializeField] string questDrop; 
     ItemFactory iFactory;    
     QuestManager qManager;    
     Clock timer;
@@ -25,11 +26,11 @@ public class EnemyStats : ActorStats
 
     //variables de escalado
     float lifePerLevel = 0.3f;
-    float precisionPerLevel= 0.2f;
+    float precisionPerLevel= 0.1f;
     float dodgePerLevel = 0.1f;
-    float damagePerLevel = 0.3f;
-    float defensePerLevel= 0.2f;
-    float xpPerLevel = 0.3f;
+    float damagePerLevel = 0.1f;
+    float defensePerLevel= 0.1f;
+    float xpPerLevel = 0.1f;
 
 
     void ActualizateLife(float time)
@@ -143,6 +144,10 @@ public class EnemyStats : ActorStats
                 iFactory.GenerateLoot(enemy.Drop[i].tier, transform.position);
                 roll = 100;
             }
+        }
+        if (questDrop != null && questDrop != "")
+        {
+            iFactory.GenerateItem(ItemTier.Tier0, ItemType.QuestItem, questDrop, transform.position);
         }
     }
 }

@@ -23,15 +23,15 @@ public class CharacterStats : ActorStats
     float lifePerCons = 1f;
     float lifeRegenPerCons = 0.05f;
     float manaPerInt = 1.0f;
-    float manaRegenPerInt = 0.035f;
+    float manaRegenPerInt = 0.075f;
     float coldownReductionPerInt = 0.002f;//porciento
     float damagePerStrength = 0.01f; //porciento
     float defensePerStrength = 0.2f;
     float dodgePerDext = 0.005f; //porciento
     float precisionPerDext = 0.005f;//porciento
     float CritPerLuck = 0.005f;//porciento
-    float xpExtraPerLvl = 0.4f;
-    float startingXpNeedValue = 100f;
+    float xpExtraPerLvl = 0.15f;
+    float startingXpNeedValue = 300f;
 
     
     private void MiddleLoad()

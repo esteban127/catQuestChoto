@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageText: {fileID: 114458184013618632}
-  basetextSpeed: 0.8
+  basetextSpeed: 45
   duration: 1
 --- !u!222 &222633265181762810
 CanvasRenderer:

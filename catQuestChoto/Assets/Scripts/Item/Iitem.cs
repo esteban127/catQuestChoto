@@ -59,7 +59,8 @@ public enum ItemImage
     ManaPotion,
     GreenPotion,
     YelowPotion,
-    TownPortal
+    TownPortal,
+    CastleKey
 }
 public enum ItemTier
 {

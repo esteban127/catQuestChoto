@@ -144,36 +144,152 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questList:
-  - questID: Hablar con Roberta
-    questDescription: Roberta esta rompiendo las bolas preguntale que le pasa
+  - questID: Present yourself in the village
+    questDescription: Ask to some local for information.
     dependanceID: 
-    xpReward: 500
+    xpReward: 0
     questRequirements:
     - objetive: 2
       questTargetRef: Roberta
       amount: 1
       currentAmount: 0
-    suggestedLvl: 300
-  - questID: Juntar las piedritas
-    questDescription: Roberta quiere las piedritas magicas de que se yo
-    dependanceID: Hablar con Roberta
-    xpReward: 500
+    suggestedLvl: 0
+  - questID: Ask Roberto for the job
+    questDescription: Aparently Roberto is having some problems and he can take a
+      hand.
+    dependanceID: Present yourself in the village
+    xpReward: 0
     questRequirements:
-    - objetive: 1
-      questTargetRef: Piedrita magica de que se yo
+    - objetive: 2
+      questTargetRef: Roberto
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 0
+  - questID: Kill the goblins
+    questDescription: Go for the goblins
+    dependanceID: Ask Roberto for the job
+    xpReward: 0
+    questRequirements:
+    - objetive: 0
+      questTargetRef: MeleGoblin
       amount: 3
       currentAmount: 0
-    suggestedLvl: 300
-  - questID: Devolver las piedritas a Roberta
-    questDescription: Devolvele las piedritas a la rompe bolas
-    dependanceID: Juntar las piedritas
-    xpReward: 500
+    - objetive: 0
+      questTargetRef: RangedGoblin
+      amount: 2
+      currentAmount: 0
+    suggestedLvl: 0
+  - questID: Present to Roberto
+    questDescription: Go with Roberto for you reward
+    dependanceID: Kill the goblins
+    xpReward: 300
+    questRequirements:
+    - objetive: 2
+      questTargetRef: Roberto
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 0
+  - questID: Exploration job
+    questDescription: Roberto has another job , ask him for more information
+    dependanceID: Present to Roberto
+    xpReward: 0
+    questRequirements:
+    - objetive: 2
+      questTargetRef: Roberto
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 0
+  - questID: The Pepita assignment
+    questDescription: Aparently pepita have some job for you, go and ask her
+    dependanceID: Present to Roberto
+    xpReward: 0
+    questRequirements:
+    - objetive: 2
+      questTargetRef: Pepita
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 0
+  - questID: Find and kill a ghoul
+    questDescription: Ghouls are strong and fast enemies, make sure to have enough
+      lvl
+    dependanceID: Exploration job
+    xpReward: 0
+    questRequirements:
+    - objetive: 0
+      questTargetRef: Ghoul
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 3
+  - questID: Report to Roberto
+    questDescription: Tell roberto about the ghouls
+    dependanceID: Find and kill a ghoul
+    xpReward: 600
+    questRequirements:
+    - objetive: 2
+      questTargetRef: Roberto
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 0
+  - questID: Ask to Pepita about the key
+    questDescription: We need the key, ask Pepita about it, she migth know something
+    dependanceID: Report to Roberto
+    xpReward: 0
+    questRequirements:
+    - objetive: 2
+      questTargetRef: Pepita
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 0
+  - questID: Find the runes
+    questDescription: Explore the cave to find Pepita's runes
+    dependanceID: The Pepita assignment
+    xpReward: 0
+    questRequirements:
+    - objetive: 1
+      questTargetRef: Magical Rune
+      amount: 4
+      currentAmount: 0
+    suggestedLvl: 6
+  - questID: Report to Pepita
+    questDescription: Give Pepita the runes who you find
+    dependanceID: Find the runes
+    xpReward: 1000
+    questRequirements:
+    - objetive: 2
+      questTargetRef: Pepita
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 0
+  - questID: Find the key
+    questDescription: Pepita says that the general in the cave might have the key
+    dependanceID: Ask to Pepita about the key
+    xpReward: 0
+    questRequirements:
+    - objetive: 1
+      questTargetRef: Castle key
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 10
+  - questID: Talk with Roberta
+    questDescription: Tell Roberta about the situation
+    dependanceID: Find the key
+    xpReward: 1800
     questRequirements:
     - objetive: 2
       questTargetRef: Roberta
       amount: 1
       currentAmount: 0
-    suggestedLvl: 300
+    suggestedLvl: 0
+  - questID: Defeat the dark lord
+    questDescription: Go into the castle and defeat his lord
+    dependanceID: Talk with Roberto
+    xpReward: 0
+    questRequirements:
+    - objetive: 0
+      questTargetRef: Dark Lord
+      amount: 1
+      currentAmount: 0
+    suggestedLvl: 15
   activeQuestDisplay: {fileID: 1204743984856242}
   questDescriptionText: {fileID: 114201775092103446}
   rowInActiveQuestDisplay: 7
@@ -265,9 +381,9 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 110
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1

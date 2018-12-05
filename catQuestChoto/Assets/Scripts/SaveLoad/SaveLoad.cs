@@ -21,6 +21,7 @@ public class SaveLoad : MonoBehaviour {
         if (instance == null)
         {
             instance = this;
+            CheckSaveFolder();
             DontDestroyOnLoad(gameObject);
         }
         else if (instance != this)
@@ -28,7 +29,17 @@ public class SaveLoad : MonoBehaviour {
             Destroy(gameObject);
         }        
     }
-    
+
+    private void CheckSaveFolder()
+    {
+        string path = Application.dataPath;
+        path += ("/Resources/Saves");
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path); 
+        }        
+    }
+
     private bool newDirectory(string directoryName)
     {
         string path = Application.dataPath;

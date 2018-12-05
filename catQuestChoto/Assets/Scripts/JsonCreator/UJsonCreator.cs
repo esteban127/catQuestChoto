@@ -58,7 +58,7 @@ public class UJsonCreator : MonoBehaviour
             case FileType.QItem:
                 jsonString = JsonUtility.ToJson(jsonQItem);
                 p_message = "Quest Item creation Ok";
-                path += "/Resources/Json/Items" + jsonQItem.Tier + "/QuestItem/" + jsonQItem.ID + ".Json";
+                path += "/Resources/Json/Items/" + jsonQItem.Tier + "/QuestItem/" + jsonQItem.ID + ".Json";
                 break;
             case FileType.Armor:
                 jsonString=JsonUtility.ToJson(jsonArmor);                

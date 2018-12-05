@@ -1985,7 +1985,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1346186576472122}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.14, y: 0.1, z: -0.43}
+  m_LocalPosition: {x: -14.567841, y: 0, z: 71.01947}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4127532160513316}
@@ -2034,7 +2034,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy:
-    name: KeyKeeper
+    name: Chaos general
     level: 0
     image: 8
     baseHealth: 100
@@ -2051,6 +2051,7 @@ MonoBehaviour:
     baseDodgeChance: 0.12
     basePrecision: 0.4
     critChance: 0.1
+  questDrop: Castle key
 --- !u!114 &114472740517175252
 MonoBehaviour:
   m_ObjectHideFlags: 1

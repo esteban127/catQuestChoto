@@ -13,8 +13,7 @@ public class CreateCharacter : MonoBehaviour {
     CharacterActor[] existentCharacters;
     private void Start()
     {
-        sLManager = SaveLoad.Instance;
-        existentCharacters = sLManager.getAllCharacters();
+        sLManager = SaveLoad.Instance;        
     }
 
     public void classSelect(string newClass)
@@ -42,6 +41,7 @@ public class CreateCharacter : MonoBehaviour {
 
     public void TryToConfirm()
     {
+        existentCharacters = sLManager.getAllCharacters();
         bool valid = true;
         if (classSelected)
         {

@@ -23,7 +23,7 @@ public class ItemFactory{
         model = (GameObject)Resources.Load("ItemPrefab/Weapon");
         myPoolManager.AddPool(model, 5, "Weapon", true);
         model = (GameObject)Resources.Load("ItemPrefab/QuestItem");
-        myPoolManager.AddPool(model, 5, "QuestItem", true);
+        myPoolManager.AddPool(model, 2, "QuestItem", true);
         model = (GameObject)Resources.Load("ItemPrefab/Consumables");
         myPoolManager.AddPool(model, 5, "Consumables", true);
     }
@@ -109,7 +109,7 @@ public class ItemFactory{
         
         string path = Application.dataPath + "/Resources/Json/Items/" + tier; 
         string[] fileArray;
-        int roll = Random.Range(0, 3);
+        int roll = Random.Range(0, 5);
         if(tier == ItemTier.Tier3)
         {
             roll = 2; // there are only weapons tier3
@@ -118,11 +118,13 @@ public class ItemFactory{
         switch (roll)
         {
             case 0:
+            case 3:
                 path += "/Consumable/";
                 fileArray = Directory.GetFiles(path, "*.Json");
                 return (JsonUtility.FromJson<Consumables>(File.ReadAllText(fileArray[Random.Range(0,fileArray.Length)])));
                 
             case 1:
+            case 4:
                 path += "/Armor/";
                 fileArray = Directory.GetFiles(path, "*.Json");                
                 Armor aStats = JsonUtility.FromJson<Armor>(File.ReadAllText(fileArray[Random.Range(0, fileArray.Length)]));

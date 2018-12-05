@@ -66,6 +66,8 @@ public class QuestManager : MonoBehaviour {
     void AddQuest(IQUEST quest)
     {
         activeQuest.Add(quest);
+        if(OnNewQuestStart!=null)
+            OnNewQuestStart();
         activeQuestKey.Add(quest.QuestID);
         qInterface.InitializeQuest(quest);
 
@@ -170,7 +172,7 @@ public class QuestManager : MonoBehaviour {
             if(questList[i].Dependance == quest.QuestID)
             {
                 AddQuest(questList[i]);
-                OnNewQuestStart();
+                
             }
         }
         playerStats.addXp(quest.XpReward);   
@@ -271,7 +273,8 @@ public class QuestManager : MonoBehaviour {
                 if (quest.Flags[i].Completed)
                     questText += "</color>";
             }
-
+            if (quest.XpReward > 0)
+                questText += "\nReward: " + quest.XpReward + " Xp";
 
             questDescription.text = questText;
         }

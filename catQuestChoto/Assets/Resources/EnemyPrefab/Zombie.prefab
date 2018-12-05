@@ -2040,7 +2040,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy:
-    name: Zombie
+    name: Ghoul
     level: 0
     image: 10
     baseHealth: 12
@@ -2055,6 +2055,7 @@ MonoBehaviour:
     baseDodgeChance: 0.2
     basePrecision: 0.1
     critChance: 0.03
+  questDrop: 
 --- !u!114 &114281326263913674
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -63,7 +63,7 @@ public class BuffDebuffFeed : MonoBehaviour {
         {
             text += ((BuffDebuffSystem.Debuff)actualStatus).type + "\n";
         }
-        text += " Potency: " + actualStatus.potency+ "\n";
+        text += "Potency: " + actualStatus.potency+ "\n";
         text += "Remain time: " + actualStatus.remainTime + " s";
         tooltip.ShowToolTip(text);
     }

@@ -12,6 +12,8 @@ public class DialogBoxComponent : MonoBehaviour {
     bool mouseOver;
     string[] dialog;
     int currentDialog;
+    public delegate void DialogBoxDelegate();
+    public DialogBoxDelegate onDialogEnd;
     public void Initialize(string[] newDialog, Sprite pict)
     {
         dialog = newDialog;
@@ -48,6 +50,8 @@ public class DialogBoxComponent : MonoBehaviour {
         }
         else
         {
+            if (onDialogEnd != null)
+                onDialogEnd();
             mouseOver = false;
             gameObject.SetActive(false);
         }
