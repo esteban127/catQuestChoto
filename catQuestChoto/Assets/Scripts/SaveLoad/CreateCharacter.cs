@@ -28,8 +28,8 @@ public class CreateCharacter : MonoBehaviour {
                 cClass = c_class.Mage;
                 classSelected = true;
                 break;
-            case "Archer":
-                cClass = c_class.Archer;
+            case "Ranger":
+                cClass = c_class.Ranger;
                 classSelected = true;
                 break;
         }        

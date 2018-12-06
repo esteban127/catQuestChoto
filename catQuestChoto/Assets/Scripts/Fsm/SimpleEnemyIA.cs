@@ -13,6 +13,7 @@ public class SimpleEnemyIA : MonoBehaviour {
     private Animator enemyAnimator;
     [SerializeField] float baseSpeed = 3.0f;
     float speed;
+    [SerializeField] bool usingPool = true;
     public float Speed { get { return speed; } }
     [SerializeField] int patrollDistance;
     public int PatrollDistance { get { return patrollDistance; } }
@@ -120,8 +121,11 @@ public class SimpleEnemyIA : MonoBehaviour {
         enemyAnimator.ResetTrigger("BasicAtack");
         enemyAnimator.ResetTrigger("Dead");
         StopRunning();
-        SetTransition(TransitionsID.Respawn);
-        myPoolManager.DeleteThisFromPool(transform.parent.name, gameObject);
+        if (usingPool)
+        {
+            myPoolManager.DeleteThisFromPool(transform.parent.name, gameObject);
+            SetTransition(TransitionsID.Respawn);
+        }
     }
 }
 public class EnemyIdleState : FSMState

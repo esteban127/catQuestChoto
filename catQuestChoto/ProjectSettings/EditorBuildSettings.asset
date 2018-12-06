@@ -10,7 +10,7 @@ EditorBuildSettings:
     guid: 058ef47226d1e6a409cb7de0868bec2f
   - enabled: 1
     path: Assets/Scenes/Town.unity
-    guid: 845fd4a979b854d42be4ddf0be5b6924
+    guid: 88a5bb329a7458b4da84c02c5231032d
   - enabled: 1
     path: Assets/Scenes/DarkCave.unity
     guid: a29a2659a85831144ac38e0ea2b17460

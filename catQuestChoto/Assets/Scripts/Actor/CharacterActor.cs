@@ -5,7 +5,7 @@ using UnityEngine;
 public enum c_class
 {
     Warrior,
-    Archer,
+    Ranger,
     Mage
 }
 

@@ -103,16 +103,22 @@ public class InventoryManager : MonoBehaviour {
         iFactory = ItemFactory.Instance;
         qManager = QuestManager.Instance;
         LoadSystem.OnEndLoading += EndOfLoad;
+        LoadSystem.OnMidleLoading += MidLoad;
         SaveLoad.BeforeClosing += Save;
     }
     private void OnDisable()
     {
         LoadSystem.OnEndLoading -= EndOfLoad;
+        LoadSystem.OnMidleLoading -= MidLoad;
 
+    }  
+    private void MidLoad()
+    {
+        Load();
     }
     private void EndOfLoad()
     {
-        Load();
+        OnWeaponChange();
         transform.parent.parent.gameObject.SetActive(false);
     }
     
@@ -756,8 +762,7 @@ public class InventoryManager : MonoBehaviour {
         toolTip.Hide();
     }
     public void Save()
-    {
-        Debug.Log("Save");
+    {       
         string path = sLManager.SaveDirectory + "Inventory.json";
         inventorySave.Save(equipedItems, inventorySpots);
         string save = JsonUtility.ToJson(inventorySave);

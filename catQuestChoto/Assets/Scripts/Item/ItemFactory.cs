@@ -126,6 +126,36 @@ public class ItemFactory{
             case 1:
             case 4:
                 path += "/Armor/";
+                roll = Random.Range(0, 8);
+                switch ((armorType)roll)
+                {
+                    case armorType.amulet:
+                        fileArray = Directory.GetFiles(path, "Amulet*.Json");
+                        break;
+                        case armorType.boots:
+                        fileArray = Directory.GetFiles(path, "Boots*.Json");
+                        break;
+                        case armorType.chest:
+                        fileArray = Directory.GetFiles(path, "Chest*.Json");
+                        break;
+                        case armorType.gloves:
+
+                        fileArray = Directory.GetFiles(path, "Gloves*.Json");
+                        break;
+                        case armorType.helmet:
+                        fileArray = Directory.GetFiles(path, "Helmet*.Json");
+                        break;
+                        case armorType.offHand:
+                        fileArray = Directory.GetFiles(path, "Shield*.Json");
+                        break;
+                        case armorType.pants:
+                        fileArray = Directory.GetFiles(path, "Pants*.Json");
+                        break;
+                    case armorType.ring:
+                        fileArray = Directory.GetFiles(path, "_Ring*.Json");
+                        break;
+                }
+
                 fileArray = Directory.GetFiles(path, "*.Json");                
                 Armor aStats = JsonUtility.FromJson<Armor>(File.ReadAllText(fileArray[Random.Range(0, fileArray.Length)]));
                 aStats.SetRandomProperty();

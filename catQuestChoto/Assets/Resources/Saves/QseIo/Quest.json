@@ -1,0 +1,1 @@
+{"quests":["{\"questID\":\"Defeat the dark lord\",\"questDescription\":\"Go into the castle and defeat his lord\",\"dependanceID\":\"Talk with Roberta\",\"xpReward\":0.0,\"questRequirements\":[{\"objetive\":0,\"questTargetRef\":\"Dark Lord\",\"amount\":1,\"currentAmount\":0}],\"suggestedLvl\":15}"]}

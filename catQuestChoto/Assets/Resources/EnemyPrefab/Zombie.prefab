@@ -2047,10 +2047,12 @@ MonoBehaviour:
     baseDamage: 12
     baseDefense: 15
     drop:
-    - chance: 30
+    - chance: 32
       tier: 2
     - chance: 60
       tier: 1
+    - chance: 8
+      tier: 3
     baseXpReward: 55
     baseDodgeChance: 0.2
     basePrecision: 0.1

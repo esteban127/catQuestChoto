@@ -54,9 +54,7 @@ public class SkillTreeManager : MonoBehaviour {
         aSystem = AbilitySystem.Instance;
         iManager = InventoryManager.Instance;
         LoadSystem.OnEndLoading += EndLoad;
-        SaveLoad.BeforeClosing += Save;
-        iManager.OnWeaponChange += actualizeWeaponAbility;
-        iManager.OnStatChange += actualizateCDR;
+        SaveLoad.BeforeClosing += Save;        
         abilityInSlot = new AbilityInTree[aSystem.NumOfSpells];
         eAbilitiesFrame = new EquipedAbilities(EquipedAbilitiesParent);
         eAbilitiesFrame.CreateAbilities(aSystem.NumOfSpells, SkillTreeButtonPrefab, 3);            
@@ -71,7 +69,11 @@ public class SkillTreeManager : MonoBehaviour {
     {
         Load(sLManager.currentClass);
         actualizeWeaponAbility();
+        iManager.OnWeaponChange += actualizeWeaponAbility;
+        actualizateCDR();
+        iManager.OnStatChange += actualizateCDR;
         gameObject.SetActive(false);
+        
     }   
 
     private void actualizateCDR()
@@ -344,7 +346,7 @@ public class SkillTreeManager : MonoBehaviour {
 
     public void Save()
     {
-        Debug.Log("Save");
+
         string path = sLManager.SaveDirectory + "/Abilities.json";
         savedState.Save(abilityInSlot,skillPoints,GetAbilityLvls());
         string save = JsonUtility.ToJson(savedState);
@@ -384,7 +386,7 @@ public class SkillTreeManager : MonoBehaviour {
                 SkillTreeTitle1.text = "Defense";
                 SkillTreeTitle2.text = "Atack";
                 break;
-            case c_class.Archer:
+            case c_class.Ranger:
                 SkillTreeTitle1.text = "Hunter";
                 SkillTreeTitle2.text = "Thief";
                 break;

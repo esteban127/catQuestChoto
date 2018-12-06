@@ -18,6 +18,10 @@ public class SkillTreeButton : MonoBehaviour {
     {
         pos = newPos;
     }
+    private void OnDisable()
+    {
+        isOver = false;
+    }
     public void SetSprite(Sprite sprite, bool isGray)
     {
         GetComponent<Image>().sprite = sprite;

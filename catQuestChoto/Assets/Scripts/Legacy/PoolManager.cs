@@ -111,9 +111,7 @@ public class PoolManager : MonoBehaviour {
                 if(i==myArray.Length-1)
                 {
                     poolIsFull = true;
-                    if (!forceExpand)                    
-                        Debug.LogError("Pool is full");    
-                    else
+                    if (forceExpand) 
                     {
                         ExpandPool();
                         objectToReturn = myArray[i];

@@ -2167,12 +2167,13 @@ MonoBehaviour:
     drop:
     - chance: 15
       tier: 1
-    - chance: 70
+    - chance: 85
       tier: 0
     baseXpReward: 35
     baseDodgeChance: 0.05
     basePrecision: 0.1
     critChance: 0.03
+  questDrop: 
 --- !u!114 &114620451033183148
 MonoBehaviour:
   m_ObjectHideFlags: 1

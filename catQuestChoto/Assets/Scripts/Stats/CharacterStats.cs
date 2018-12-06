@@ -37,23 +37,23 @@ public class CharacterStats : ActorStats
     private void MiddleLoad()
     {
         Load();
-        status = new BuffDebuffSystem();
-        currentMana = MaxMana();
-        currentHealth = MaxHealth();
+        status = new BuffDebuffSystem();                
     }
     private void EndOfLoad()
     {
         if (player != null)
-        {
+        {            
             status.onStatusChange += ActualizateStats;
             iManager.OnStatChange += ActualizateStats;
-            iManager.OnConsume += getConsumable;
             ActualizateStats();
+            currentHealth = MaxHealth();
+            currentMana = MaxMana();
+            iManager.OnConsume += getConsumable;            
             ActualizateAttributePointsInFrame();
             ActualizateXpInFrame();
             actualizateLvlInFrame();
             frameManager.setName(player.Name);
-            timer.OnTick += ActualizateLife;
+            timer.OnTick += ActualizateLife;            
         }
     }
     private void Start()
@@ -81,7 +81,6 @@ public class CharacterStats : ActorStats
 
     public void Save()
     {
-        Debug.Log("Save");
         string path = sLManager.SaveDirectory + "/Stats.json";        
         string save = JsonUtility.ToJson(player);
 

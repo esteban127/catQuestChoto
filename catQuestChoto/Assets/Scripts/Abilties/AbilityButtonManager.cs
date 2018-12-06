@@ -66,7 +66,10 @@ public class AbilityButtonManager : MonoBehaviour {
     }
 
 
-   
+    private void OnDisable()
+    {
+        isOver = false;
+    }
     public void MousueEnter()
     {
         aSystem.ShowToolTip(ability);

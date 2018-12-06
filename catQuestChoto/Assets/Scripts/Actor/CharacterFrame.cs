@@ -35,10 +35,10 @@ public class CharacterFrame : MonoBehaviour {
     }
     public void Actualize(float time)
     {
-        if (playerStats.CurrentHealth - lastHealt > 1)
+        if (lastHealt != 0.0f && playerStats.CurrentHealth - lastHealt > 1)
             GenerateDamageText((int)(playerStats.CurrentHealth - lastHealt), Color.green);
         else
-            if (playerStats.CurrentHealth - lastHealt < -1)
+            if (lastHealt != 0.0f && playerStats.CurrentHealth - lastHealt < -1)
             GenerateDamageText((int)(playerStats.CurrentHealth - lastHealt), Color.red);  
         lastHealt = playerStats.CurrentHealth;
         healtBar.UpdateFillBar(playerStats.CurrentHealth / playerStats.MaxHealth());        

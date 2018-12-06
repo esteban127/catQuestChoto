@@ -27,6 +27,10 @@ public class EquipmentFrame : MonoBehaviour {
             }
         }
     }
+    private void OnDisable()
+    {
+        isOver = false;
+    }
     public void OnLeftClick()
     {
         iManager.OnLeftButtonClicked(slot);

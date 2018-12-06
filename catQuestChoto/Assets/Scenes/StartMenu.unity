@@ -1001,7 +1001,7 @@ GameObject:
   - component: {fileID: 435576674}
   - component: {fileID: 435576673}
   m_Layer: 5
-  m_Name: Archer
+  m_Name: Ranger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1073,7 +1073,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Archer
+          m_StringArgument: Ranger
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -2378,7 +2378,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Archer
+  m_Text: Ranger
 --- !u!222 &836144948
 CanvasRenderer:
   m_ObjectHideFlags: 0

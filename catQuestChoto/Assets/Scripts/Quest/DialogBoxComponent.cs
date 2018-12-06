@@ -40,6 +40,10 @@ public class DialogBoxComponent : MonoBehaviour {
             }
         }
     }
+    private void OnDisable()
+    {
+        mouseOver = false;
+    }
 
     private void NextDialog()
     {

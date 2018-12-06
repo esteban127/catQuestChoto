@@ -1351,7 +1351,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1702677437729630}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -22.235916, y: 0.00000011920929, z: 38.116}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4548609607864530}
@@ -2211,10 +2211,8 @@ MonoBehaviour:
     baseDamage: 20
     baseDefense: 60
     drop:
-    - chance: 50
+    - chance: 100
       tier: 3
-    - chance: 50
-      tier: 2
     baseXpReward: 500
     baseDodgeChance: 0.12
     basePrecision: 0.8

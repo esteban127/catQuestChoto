@@ -81,7 +81,6 @@ public class AtackAbility : IAbility{
         if (roll < chanceTocrit)
         {
             damage *= caster.CritDamage();
-            Debug.Log("CRIIIT! " + damage);
         }
 
         return damage;
@@ -93,8 +92,7 @@ public class AtackAbility : IAbility{
         float roll = Random.Range(0.0f, 1.0f);
         float chanceToDodge = target.DodgeChance() - caster.Precision();        
         if (roll < chanceToDodge)
-        {
-            Debug.Log("Miss");
+        {            
             return false;
         }
         else

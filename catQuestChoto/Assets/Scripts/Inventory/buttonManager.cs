@@ -38,6 +38,10 @@ public class buttonManager:MonoBehaviour {
     {        
         iManager.OnRightButtonClicked(bCol, bRow);        
     }
+    private void OnDisable()
+    {
+        isOver = false;
+    }
 
 
     public void SetPos(int col, int row)
