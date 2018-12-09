@@ -72,15 +72,13 @@ public class TargetSistem : MonoBehaviour
                     else
                     {
                         toolTip.Hide();
-                        if (Input.GetMouseButtonDown(1))
+                        if (Input.GetMouseButtonDown(0))
                         {
-
-                            if (hit.transform.tag != "Drop" && hit.transform.tag != "Enemy" && hit.transform.tag != "Player" && hit.transform.tag != "NPC")
-                            {
-                                targetBase.SetActive(false);
-                                currentTarget = null;
-                                targetBar.SetActive(false);
-                            }
+                            
+                            targetBase.SetActive(false);
+                            currentTarget = null;
+                            targetBar.SetActive(false);
+                           
                         }
                     }
                 }

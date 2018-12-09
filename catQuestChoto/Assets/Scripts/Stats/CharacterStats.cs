@@ -91,11 +91,12 @@ public class CharacterStats : ActorStats
     {
         for (int i = 0; i < itemToUse.Buff.Length; i++)
         {
-            status.addBuff(itemToUse.Buff[i]);
+
+            reciveBuff(itemToUse.Buff[i]);
         }
         for (int i = 0; i < itemToUse.Debuff.Length; i++)
         {
-            status.addDebuff(itemToUse.Debuff[i]);
+            reciveDebuff(itemToUse.Debuff[i]);
         }
         if(itemToUse.Name == "Townportal scroll")
         {
