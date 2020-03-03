@@ -18,7 +18,9 @@ public class AbilitySystem : MonoBehaviour {
     Animator playerAnimator;
     Clock timer;    
     [SerializeField] float castTime = 0.6f;
-    float currentCast = 0;
+    float currentCastTime = 0;
+    IAbility castingAbility;
+    GameObject castTarget;
     static private AbilitySystem instance = null;
     static public AbilitySystem Instance { get { return instance; } }
 
@@ -53,10 +55,11 @@ public class AbilitySystem : MonoBehaviour {
     }
     private void CastingTime(float time)
     {
-        if (currentCast>0)
+        if (currentCastTime>0)
         {
-            currentCast -= time;
-            if (currentCast <= 0)
+            currentCastTime -= time;
+            if (currentCastTime <= 0)
+                castingAbility.CastEffect(castTarget.GetComponent<ActorStats>(), playerRef.GetComponent<ActorStats>());
                 playerRef.GetComponent<InputController>().Casting = false;
         }
     }
@@ -104,7 +107,9 @@ public class AbilitySystem : MonoBehaviour {
             {
                 playerAnimator.SetTrigger(aInterface.GetSlot(pos).GetComponent<AbilityButtonManager>().Ability.AbilityAnimation.ToString());
                 TriggerGlobalColdown();
-                currentCast = castTime;
+                castingAbility = aInterface.GetSlot(pos).GetComponent<AbilityButtonManager>().Ability;
+                castTarget = playerRef.GetComponent<TargetSistem>().GetTarget();
+                currentCastTime = castTime;
                 playerRef.GetComponent<InputController>().Casting = true;
                 return true;
             }

@@ -16,6 +16,7 @@ public class SimpleEnemyIA : MonoBehaviour {
     [SerializeField] bool usingPool = true;
     public float Speed { get { return speed; } }
     [SerializeField] int patrollDistance;
+    [SerializeField] float castTime = 0.6f;
     public int PatrollDistance { get { return patrollDistance; } }
     [SerializeField] float detectionRange;
     public float DetectionRange { get { return detectionRange; } }
@@ -94,11 +95,18 @@ public class SimpleEnemyIA : MonoBehaviour {
         {
             if (ability.TryCastAbility(player, gameObject, "Player"))
             {
-                enemyAnimator.SetTrigger(ability.AbilityAnimation.ToString());                
+                enemyAnimator.SetTrigger(ability.AbilityAnimation.ToString());
+                StartCoroutine(Casting(ability, player.GetComponent<ActorStats>(), gameObject.GetComponent<ActorStats>()));
                 return true;
             }
         }
         return false;
+    }
+    IEnumerator Casting(IAbility ability, ActorStats target, ActorStats caster)
+    {
+        yield return new WaitForSeconds(castTime);
+        ability.CastEffect(target, caster);
+        yield return null;
     }
 
     public void TriggerAnim(string triggerName)
@@ -151,6 +159,7 @@ public class EnemyIdleState : FSMState
         if (Vector3.Magnitude(player.transform.position - enemy.transform.position) < enemy.GetComponent<SimpleEnemyIA>().DetectionRange)
         {
             //Debug.Log("Te vi vieja");
+            enemy.GetComponent<soundPlayer>().playSoud(Sounds.Spot);
             enemy.GetComponent<SimpleEnemyIA>().SetTransition(TransitionsID.SawPlayer);
             enemy.GetComponent<SimpleEnemyIA>().Run();
 
@@ -198,6 +207,7 @@ public class EnemyPatrollState : FSMState
         if (Vector3.Magnitude(player.transform.position - enemy.transform.position) < enemy.GetComponent<SimpleEnemyIA>().DetectionRange)
         {
             //Debug.Log("Te vi vieja");
+            enemy.GetComponent<soundPlayer>().playSoud(Sounds.Spot);
             enemy.GetComponent<SimpleEnemyIA>().SetTransition(TransitionsID.SawPlayer);
             enemy.GetComponent<SimpleEnemyIA>().Run();
 
@@ -245,6 +255,7 @@ public class EnemyChasePlayerState : FSMState
         {
             player.GetComponent<CharacterStats>().addXp(enemy.GetComponent<EnemyStats>().XpReward());
             enemy.GetComponent<SimpleEnemyIA>().TriggerAnim("Dead");
+            enemy.GetComponent<soundPlayer>().playSoud(Sounds.Die);
             enemy.GetComponent<SimpleEnemyIA>().SetTransition(TransitionsID.Dying);
         }
         else
@@ -302,6 +313,7 @@ public class EnemyResetPosition : FSMState
         {
             player.GetComponent<CharacterStats>().addXp(enemy.GetComponent<EnemyStats>().XpReward());
             enemy.GetComponent<SimpleEnemyIA>().TriggerAnim("Dead");
+            enemy.GetComponent<soundPlayer>().playSoud(Sounds.Die);
             enemy.GetComponent<SimpleEnemyIA>().SetTransition(TransitionsID.Dying);
         }
         else
@@ -351,6 +363,7 @@ public class EnemyAtackingState : FSMState
         {
             player.GetComponent<CharacterStats>().addXp(enemy.GetComponent<EnemyStats>().XpReward());
             enemy.GetComponent<SimpleEnemyIA>().TriggerAnim("Dead");
+            enemy.GetComponent<soundPlayer>().playSoud(Sounds.Die);
             enemy.GetComponent<SimpleEnemyIA>().SetTransition(TransitionsID.Dying);
         }
         else
@@ -382,7 +395,11 @@ public class EnemyAtackingState : FSMState
        
 
         enemy.transform.LookAt(new Vector3(player.transform.position.x, enemy.transform.position.y, player.transform.position.z));
-        enemy.GetComponent<SimpleEnemyIA>().TryCast(enemy.GetComponent<EnemyAbilitySystem>().Ability);
+        if (enemy.GetComponent<SimpleEnemyIA>().TryCast(enemy.GetComponent<EnemyAbilitySystem>().Ability))
+        {
+            enemy.GetComponent<soundPlayer>().playSoud(Sounds.Atk);
+            
+        }
     }
 }
 
@@ -398,6 +415,7 @@ public class EnemyStunnedState : FSMState
         {
             player.GetComponent<CharacterStats>().addXp(enemy.GetComponent<EnemyStats>().XpReward());
             enemy.GetComponent<SimpleEnemyIA>().TriggerAnim("Dead");
+            enemy.GetComponent<soundPlayer>().playSoud(Sounds.Die);
             enemy.GetComponent<SimpleEnemyIA>().SetTransition(TransitionsID.Dying);
         }
         else

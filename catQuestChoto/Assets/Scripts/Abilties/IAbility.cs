@@ -102,8 +102,9 @@ public abstract class IAbility {
     public float[] DebuffPotencyPerLevel { get { return debuffPotencyPerLevel; } }
     Clock timer;
     public abstract bool TryCastAbility(GameObject target, GameObject caster, string validTargetTag);
+    public abstract void CastEffect(ActorStats target, ActorStats caster);
 
-   
+
 
 
     public void SetCDR(float cdr)

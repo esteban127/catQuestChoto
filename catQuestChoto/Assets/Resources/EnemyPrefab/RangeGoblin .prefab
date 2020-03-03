@@ -399,6 +399,8 @@ GameObject:
   - component: {fileID: 143222525357534450}
   - component: {fileID: 114347244946904280}
   - component: {fileID: 114620451033183148}
+  - component: {fileID: 114105430830925690}
+  - component: {fileID: 82237922534079592}
   m_Layer: 0
   m_Name: 'RangeGoblin '
   m_TagString: Enemy
@@ -2115,6 +2117,86 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1550101130984588}
   m_Mesh: {fileID: 4300000, guid: f9daf41ee441145289fca40ce1878964, type: 3}
+--- !u!82 &82237922534079592
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1373261707059528}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95229045663066604
 Animator:
   serializedVersion: 3
@@ -2132,6 +2214,25 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114105430830925690
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1373261707059528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a635d2d5c2aff1419e43a031b52476f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spotSfx: {fileID: 8300000, guid: a30f69da87337814c8d892a0d45634dc, type: 3}
+  dieSfx: {fileID: 8300000, guid: 718356d737ea5364595d1099e9cd699e, type: 3}
+  atackSfx: {fileID: 8300000, guid: b16b4a9980e190d46a4b0d9ad3ab23ee, type: 3}
+  getDmgSfx: {fileID: 0}
+  slash0: {fileID: 0}
+  slash1: {fileID: 0}
+  slash2: {fileID: 0}
+  lvlUp: {fileID: 0}
 --- !u!114 &114347244946904280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2144,7 +2245,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseSpeed: 3
+  usingPool: 1
   patrollDistance: 5
+  castTime: 0.6
   detectionRange: 7.5
 --- !u!114 &114489442004946040
 MonoBehaviour:

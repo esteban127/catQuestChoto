@@ -172,7 +172,8 @@ public class CharacterStats : ActorStats
     }
 
     private void LevelUp()
-    {        
+    {
+        gameObject.GetComponent<soundPlayer>().playSoud(Sounds.LvlUp);
         player.Level++;
         ReplenishHealt(9999);        
         skillTree.AddSkillPoint();
@@ -268,10 +269,14 @@ public class CharacterStats : ActorStats
                 if (status.getBuffPotency(BuffType.shield) > 0)
                     status.ReduceBuffPotency((damage - (damage * (Defense() / (Defense() + 100)))) / 100, BuffType.shield);
                 else
+                {
+                    gameObject.GetComponent<soundPlayer>().playSoud(Sounds.Dmg);
                     currentHealth -= (damage - (damage * (Defense() / (Defense() + 100))));
+                }
                 if (currentHealth <= 0)
                 {
                     currentHealth = 0;
+                    gameObject.GetComponent<soundPlayer>().playSoud(Sounds.Die);
                     OnDie();              
                 }
             }

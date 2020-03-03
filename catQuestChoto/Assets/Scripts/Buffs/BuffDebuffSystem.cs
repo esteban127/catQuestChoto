@@ -76,6 +76,7 @@ public class BuffDebuffSystem  {
     }
     public void addBuff(Buff buff)
     {
+        buff.startingTime = buff.remainTime;
         bool added = false;        
         for (int i = 0; i < activeBuff.Count; i++)
         {
@@ -151,6 +152,7 @@ public class BuffDebuffSystem  {
     }
     public void addDebuff(Debuff debuff)
     {
+        debuff.startingTime = debuff.remainTime;
         bool added = false;
         for (int i = 0; i < activeDebuff.Count; i++)
         {
@@ -245,8 +247,7 @@ public class BuffDebuffSystem  {
     [System.Serializable]
     public class Status
     {
-        protected float startingTime;
-        public float StartingTime { get { return startingTime; } }
+        public float startingTime;
         public float potency;
         public float remainTime;
     }

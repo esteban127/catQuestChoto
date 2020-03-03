@@ -731,6 +731,8 @@ GameObject:
   - component: {fileID: 143794698424182682}
   - component: {fileID: 114323005326549174}
   - component: {fileID: 114253718811844714}
+  - component: {fileID: 114199801634108066}
+  - component: {fileID: 82567752881237570}
   m_Layer: 0
   m_Name: DarkLord
   m_TagString: Enemy
@@ -2148,6 +2150,86 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1811539378338366}
   m_Mesh: {fileID: 4300000, guid: 39056ee0a0abf404ab95e013e677fe8c, type: 3}
+--- !u!82 &82567752881237570
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1702677437729630}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95368917305181182
 Animator:
   serializedVersion: 3
@@ -2165,6 +2247,25 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114199801634108066
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1702677437729630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a635d2d5c2aff1419e43a031b52476f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spotSfx: {fileID: 8300000, guid: a30f69da87337814c8d892a0d45634dc, type: 3}
+  dieSfx: {fileID: 8300000, guid: 0b590a19a73ff5e4dbdae94b493f1f73, type: 3}
+  atackSfx: {fileID: 0}
+  getDmgSfx: {fileID: 0}
+  slash0: {fileID: 0}
+  slash1: {fileID: 0}
+  slash2: {fileID: 0}
+  lvlUp: {fileID: 0}
 --- !u!114 &114253718811844714
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2190,7 +2291,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseSpeed: 1
+  usingPool: 1
   patrollDistance: 2
+  castTime: 0.6
   detectionRange: 15
 --- !u!114 &114831770815826442
 MonoBehaviour:

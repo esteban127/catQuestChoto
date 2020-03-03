@@ -25,8 +25,8 @@ public class soundPlayer : MonoBehaviour {
     [SerializeField] AudioClip slash1;
     [SerializeField] AudioClip slash2;
     [SerializeField] AudioClip lvlUp;
-    [SerializeField] float vol = 1;
-    [SerializeField] float atkVol = 1;
+    float vol = 0.3f;
+    float atkVol = 0.3f;
     private AudioSource source;
 
     void Awake()

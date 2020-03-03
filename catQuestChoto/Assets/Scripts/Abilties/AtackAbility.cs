@@ -36,11 +36,6 @@ public class AtackAbility : IAbility{
             if (((CharacterStats)caster).TryToSpendMana(manaCost))
             {
                 ResetCooldown();
-                if (calculateIfHits(caster, target))
-                {
-                    ApplyBuffAndDebuff(target, caster);
-                    target.reciveDamage((int)(calculateDamage(caster) * (abilityDamageMultiplier + damagePerLevel*level)));
-                }
                 return true;
             }
             return false;
@@ -48,15 +43,17 @@ public class AtackAbility : IAbility{
         else
         {
             ResetCooldown();
-            if (calculateIfHits(caster, target))
-            {
-                ApplyBuffAndDebuff(target, caster);
-                target.reciveDamage((int)(calculateDamage(caster) * (abilityDamageMultiplier + +damagePerLevel * level)));
-            }
             return true;
         }
     }
-
+    public override void CastEffect(ActorStats target, ActorStats caster)
+    {
+        if (calculateIfHits(caster, target))
+        {
+            ApplyBuffAndDebuff(target, caster);
+            target.reciveDamage((int)(calculateDamage(caster) * (abilityDamageMultiplier + damagePerLevel * level)));
+        }
+    }
     private void ApplyBuffAndDebuff(ActorStats target, ActorStats caster)
     {
         BuffDebuffSystem.Debuff debuff;

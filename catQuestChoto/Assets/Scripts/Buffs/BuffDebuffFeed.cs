@@ -32,8 +32,8 @@ public class BuffDebuffFeed : MonoBehaviour {
         buffdebuffIco.sprite = debuff.getImage();
     }
     public void Actualizate()
-    {
-        fillIco.fillAmount = (actualStatus.remainTime/actualStatus.StartingTime);
+    {        
+        fillIco.fillAmount = 1 - (actualStatus.remainTime/actualStatus.startingTime);
         if(actualStatus.potency == 0)
         {
             gameObject.SetActive(false);            
@@ -64,7 +64,7 @@ public class BuffDebuffFeed : MonoBehaviour {
             text += ((BuffDebuffSystem.Debuff)actualStatus).type + "\n";
         }
         text += "Potency: " + actualStatus.potency+ "\n";
-        text += "Remain time: " + actualStatus.remainTime + " s";
+        text += "Remain time: " + actualStatus.remainTime.ToString("0.##") + " s";
         tooltip.ShowToolTip(text);
     }
 }

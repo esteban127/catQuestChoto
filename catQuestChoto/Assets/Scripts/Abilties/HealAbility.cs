@@ -33,9 +33,7 @@ public class HealAbility : IAbility {
         {
             if (((CharacterStats)caster).TryToSpendMana(manaCost))
             {
-                ResetCooldown();           
-                ApplyBuffAndDebuff(caster);
-                caster.ReplenishHealt(healAmount + (healPerLevel * level));
+                ResetCooldown();
                 return true;
             }
             return false;
@@ -43,10 +41,13 @@ public class HealAbility : IAbility {
         else
         {
             ResetCooldown();
-            ApplyBuffAndDebuff(caster);
-            caster.ReplenishHealt(healAmount + (healPerLevel * level));
             return true;
         }
+    }
+    public override void CastEffect(ActorStats target, ActorStats caster)
+    {
+        ApplyBuffAndDebuff(caster);
+        caster.ReplenishHealt(healAmount + (healPerLevel * level));
     }
 
     private void ApplyBuffAndDebuff(ActorStats caster)

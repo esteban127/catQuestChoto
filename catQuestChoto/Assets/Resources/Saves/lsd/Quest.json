@@ -1,0 +1,1 @@
+{"quests":["{\"questID\":\"Kill the goblins\",\"questDescription\":\"Go for the goblins\",\"dependanceID\":\"Ask Roberto for the job\",\"xpReward\":0.0,\"questRequirements\":[{\"objetive\":0,\"questTargetRef\":\"MeleGoblin\",\"amount\":3,\"currentAmount\":0},{\"objetive\":0,\"questTargetRef\":\"RangedGoblin\",\"amount\":2,\"currentAmount\":0}],\"suggestedLvl\":0}"]}
